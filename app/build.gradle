@@ -26,6 +26,10 @@ dependencies {
 
     compile 'com.android.support:appcompat-v7:25.1.0'
 
+    final daggerVersion = '2.8'
+    annotationProcessor "com.google.dagger:dagger-compiler:$daggerVersion"
+    compile "com.google.dagger:dagger:$daggerVersion"
+
     compile 'io.reactivex.rxjava2:rxjava:2.0.3'
     compile 'io.reactivex.rxjava2:rxandroid:2.0.1'
 
