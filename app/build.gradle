@@ -27,4 +27,6 @@ dependencies {
     compile 'com.android.support:appcompat-v7:25.1.0'
 
     testCompile 'junit:junit:4.12'
+    testCompile 'org.mockito:mockito-core:2.2.9'
+    testCompile 'org.robolectric:robolectric:3.1.4'
 }
