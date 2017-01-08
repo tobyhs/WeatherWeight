@@ -30,6 +30,10 @@ dependencies {
     annotationProcessor "com.google.dagger:dagger-compiler:$daggerVersion"
     compile "com.google.dagger:dagger:$daggerVersion"
 
+    final mosbyVersion = '2.0.1'
+    compile "com.hannesdorfmann.mosby:mvp:$mosbyVersion"
+    compile "com.hannesdorfmann.mosby:viewstate:$mosbyVersion"
+
     compile 'io.reactivex.rxjava2:rxjava:2.0.3'
     compile 'io.reactivex.rxjava2:rxandroid:2.0.1'
 
