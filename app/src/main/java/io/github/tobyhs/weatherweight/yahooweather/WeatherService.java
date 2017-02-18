@@ -11,7 +11,7 @@ import io.github.tobyhs.weatherweight.yahooweather.model.WeatherResponse;
 /**
  * Retrofit service interface to get data from the Yahoo Weather API
  */
-interface WeatherService {
+public interface WeatherService {
     /**
      * Finds weather data with the given YQL.
      *
