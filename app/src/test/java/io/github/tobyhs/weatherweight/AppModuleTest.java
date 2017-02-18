@@ -16,12 +16,12 @@ public class AppModuleTest extends BaseTestCase {
     @InjectMocks private AppModule module;
 
     @Test
-    public void testProvideContext() {
+    public void testProvideApp() {
         assertThat(module.provideApp(), is(app));
     }
 
     @Test
-    public void testSchedulerProvider() {
+    public void testProvideSchedulerProvider() {
         Class schedulerProviderCls = module.provideSchedulerProvider().getClass();
         assertThat(schedulerProviderCls, is(equalTo((Class) SchedulerProvider.class)));
     }
