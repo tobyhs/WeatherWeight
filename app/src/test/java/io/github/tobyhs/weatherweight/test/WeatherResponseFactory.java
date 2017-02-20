@@ -33,7 +33,10 @@ public class WeatherResponseFactory {
         Location location = new Location()
                 .setCity("Oakland").setRegion("CA").setCountry("United States");
         Item item = new Item().setForecast(forecast);
-        Channel channel = new Channel().setItem(item).setLocation(location);
+        Channel channel = new Channel()
+                .setLocation(location)
+                .setItem(item)
+                .setLink("http://us.rd.yahoo.com/dailynews/rss/weather/Country__Country/*https://weather.yahoo.com/country/state/city-2463583/");
         Results results = new Results().setChannel(channel);
 
         return new WeatherResponse().setQuery(new Query().setResults(results));
