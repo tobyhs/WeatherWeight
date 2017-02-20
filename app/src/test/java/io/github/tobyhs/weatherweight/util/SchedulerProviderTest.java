@@ -14,8 +14,8 @@ public class SchedulerProviderTest {
     private SchedulerProvider provider = new SchedulerProvider();
 
     @Test
-    public void testMain() {
-        assertThat(provider.main(), is(AndroidSchedulers.mainThread()));
+    public void testUi() {
+        assertThat(provider.ui(), is(AndroidSchedulers.mainThread()));
     }
 
     @Test

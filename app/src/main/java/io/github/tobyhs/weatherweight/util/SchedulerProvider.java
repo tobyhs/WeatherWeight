@@ -9,9 +9,9 @@ import io.reactivex.schedulers.Schedulers;
  */
 public class SchedulerProvider {
     /**
-     * @return scheduler for main/UI thread
+     * @return scheduler for UI thread
      */
-    public Scheduler main() {
+    public Scheduler ui() {
         return AndroidSchedulers.mainThread();
     }
 
