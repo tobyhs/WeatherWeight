@@ -1,4 +1,5 @@
 <resources>
     <string name="app_name">Weather Weight</string>
     <string name="locationLabel">Location:</string>
+    <string name="poweredByYahoo">Powered by Yahoo</string>
 </resources>

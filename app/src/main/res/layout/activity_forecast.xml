@@ -62,4 +62,11 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content" />
     </FrameLayout>
+
+    <ImageView
+        android:id="@+id/poweredByYahooImage"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:src="@drawable/powered_by_yahoo"
+        android:contentDescription="@string/poweredByYahoo" />
 </LinearLayout>
