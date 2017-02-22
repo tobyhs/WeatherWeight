@@ -15,8 +15,8 @@ public class ForecastPresenter extends MvpBasePresenter<ForecastContract.View> {
     private final WeatherRepository weatherRepository;
 
     /**
-     * @param schedulerProvider
-     * @param weatherRepository
+     * @param schedulerProvider RX scheduler provider
+     * @param weatherRepository weather repository object to obtain forecast data
      */
     @Inject
     public ForecastPresenter(SchedulerProvider schedulerProvider, WeatherRepository weatherRepository) {
