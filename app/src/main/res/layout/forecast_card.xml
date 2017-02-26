@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.v7.widget.CardView
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="horizontal">
+
+        <TextView
+            android:id="@+id/date"
+            android:layout_width="@dimen/forecast_card_date_width"
+            android:layout_height="wrap_content"
+            tools:text="22 Feb 2017" />
+
+        <TextView
+            android:id="@+id/temperatureLow"
+            android:layout_width="@dimen/forecast_card_temperature_width"
+            android:layout_height="wrap_content"
+            tools:text="75" />
+
+        <TextView
+            android:id="@+id/temperatureHigh"
+            android:layout_width="@dimen/forecast_card_temperature_width"
+            android:layout_height="wrap_content"
+            tools:text="86" />
+
+        <TextView
+            android:id="@+id/description"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            tools:text="Cloudy" />
+    </LinearLayout>
+</android.support.v7.widget.CardView>
