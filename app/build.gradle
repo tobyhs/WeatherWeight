@@ -34,6 +34,8 @@ dependencies {
     annotationProcessor "com.jakewharton:butterknife-compiler:$butterKnifeVersion"
     compile "com.jakewharton:butterknife:$butterKnifeVersion"
 
+    compile 'com.prokkypew:clearrecycleradapter:1.1.0'
+
     final daggerVersion = '2.8'
     annotationProcessor "com.google.dagger:dagger-compiler:$daggerVersion"
     compile "com.google.dagger:dagger:$daggerVersion"
