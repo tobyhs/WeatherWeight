@@ -8,7 +8,7 @@ import org.mockito.Mock;
 import retrofit2.Retrofit;
 
 import io.github.tobyhs.weatherweight.test.BaseTestCase;
-import io.github.tobyhs.weatherweight.util.SchedulerProvider;
+import io.github.tobyhs.weatherweight.util.AppSchedulerProvider;
 import io.github.tobyhs.weatherweight.yahooweather.WeatherRepository;
 import io.github.tobyhs.weatherweight.yahooweather.WeatherRepositoryImpl;
 import io.github.tobyhs.weatherweight.yahooweather.WeatherService;
@@ -32,7 +32,7 @@ public class AppModuleTest extends BaseTestCase {
     @Test
     public void testProvideSchedulerProvider() {
         Class schedulerProviderCls = module.provideSchedulerProvider().getClass();
-        assertThat(schedulerProviderCls, is(equalTo((Class) SchedulerProvider.class)));
+        assertThat(schedulerProviderCls, is(equalTo((Class) AppSchedulerProvider.class)));
     }
 
     @Test

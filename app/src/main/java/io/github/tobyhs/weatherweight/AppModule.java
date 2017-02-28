@@ -9,6 +9,7 @@ import dagger.Module;
 import dagger.Provides;
 import retrofit2.Retrofit;
 
+import io.github.tobyhs.weatherweight.util.AppSchedulerProvider;
 import io.github.tobyhs.weatherweight.util.SchedulerProvider;
 import io.github.tobyhs.weatherweight.yahooweather.WeatherRepository;
 import io.github.tobyhs.weatherweight.yahooweather.WeatherRepositoryImpl;
@@ -43,7 +44,7 @@ public class AppModule {
     @Provides
     @Singleton
     SchedulerProvider provideSchedulerProvider() {
-        return new SchedulerProvider();
+        return new AppSchedulerProvider();
     }
 
     /**

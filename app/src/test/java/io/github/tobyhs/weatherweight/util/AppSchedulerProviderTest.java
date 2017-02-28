@@ -10,16 +10,16 @@ import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.MatcherAssert.assertThat;
 
 @RunWith(RobolectricTestRunner.class)
-public class SchedulerProviderTest {
-    private SchedulerProvider provider = new SchedulerProvider();
+public class AppSchedulerProviderTest {
+    private AppSchedulerProvider provider = new AppSchedulerProvider();
 
     @Test
-    public void testUi() {
+    public void ui() {
         assertThat(provider.ui(), is(AndroidSchedulers.mainThread()));
     }
 
     @Test
-    public void testIo() {
+    public void io() {
         assertThat(provider.io(), is(Schedulers.io()));
     }
 }
