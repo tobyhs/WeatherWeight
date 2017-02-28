@@ -8,6 +8,8 @@ import io.github.tobyhs.weatherweight.yahooweather.model.Channel;
  * A repository to fetch weather/forecast data
  */
 public interface WeatherRepository {
+    public static final String ATTRIBUTION_URL = "https://www.yahoo.com/?ilc=401";
+
     /**
      * Fetches a forecast for the given location.
      *

@@ -11,6 +11,7 @@ import io.github.tobyhs.weatherweight.yahooweather.WeatherRepository;
  * Presenter for the forecast activity
  */
 public class ForecastPresenter extends MvpBasePresenter<ForecastContract.View> {
+    private String attributionUrl;
     private final SchedulerProvider schedulerProvider;
     private final WeatherRepository weatherRepository;
 
@@ -20,7 +21,15 @@ public class ForecastPresenter extends MvpBasePresenter<ForecastContract.View> {
      */
     @Inject
     public ForecastPresenter(SchedulerProvider schedulerProvider, WeatherRepository weatherRepository) {
+        attributionUrl = WeatherRepository.ATTRIBUTION_URL;
         this.schedulerProvider = schedulerProvider;
         this.weatherRepository = weatherRepository;
+    }
+
+    /**
+     * @return attribution URL to link to
+     */
+    public String getAttributionUrl() {
+        return attributionUrl;
     }
 }
