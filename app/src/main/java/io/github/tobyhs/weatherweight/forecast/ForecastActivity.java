@@ -33,6 +33,7 @@ public class ForecastActivity
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_forecast);
 
+        setRetainInstance(true);
         ButterKnife.bind(this);
     }
 

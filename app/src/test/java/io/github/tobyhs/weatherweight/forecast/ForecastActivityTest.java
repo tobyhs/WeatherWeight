@@ -37,6 +37,11 @@ public class ForecastActivityTest extends BaseTestCase {
     }
 
     @Test
+    public void isRetainInstance() {
+        assertThat(activity.isRetainInstance(), is(true));
+    }
+
+    @Test
     public void createPresenter() {
         assertThat(activity.createPresenter(), is(notNullValue()));
     }
