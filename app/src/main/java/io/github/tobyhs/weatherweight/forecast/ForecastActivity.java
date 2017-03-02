@@ -4,8 +4,12 @@ import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
+import android.support.v7.widget.RecyclerView;
+import android.widget.EditText;
 import android.widget.LinearLayout;
+import android.widget.TextView;
 
+import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 import com.hannesdorfmann.mosby.mvp.viewstate.lce.LceViewState;
@@ -23,6 +27,11 @@ public class ForecastActivity
         extends MvpLceViewStateActivity<LinearLayout, Channel, ForecastContract.View, ForecastPresenter>
         implements ForecastContract.View {
     private ForecastComponent forecastComponent;
+
+    @BindView(R.id.locationInput) EditText locationInput;
+    @BindView(R.id.locationFound) TextView locationFoundView;
+    @BindView(R.id.timeFetched) TextView timeFetchedView;
+    @BindView(R.id.forecastRecyclerView) RecyclerView forecastRecyclerView;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
