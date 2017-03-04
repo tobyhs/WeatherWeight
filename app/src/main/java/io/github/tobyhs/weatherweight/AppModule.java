@@ -4,10 +4,10 @@ import javax.inject.Named;
 import javax.inject.Singleton;
 
 import com.github.aurae.retrofit2.LoganSquareConverterFactory;
-import com.jakewharton.retrofit2.adapter.rxjava2.RxJava2CallAdapterFactory;
 import dagger.Module;
 import dagger.Provides;
 import retrofit2.Retrofit;
+import retrofit2.adapter.rxjava2.RxJava2CallAdapterFactory;
 
 import io.github.tobyhs.weatherweight.util.AppSchedulerProvider;
 import io.github.tobyhs.weatherweight.util.SchedulerProvider;

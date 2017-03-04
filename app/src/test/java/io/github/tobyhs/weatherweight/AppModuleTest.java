@@ -1,11 +1,11 @@
 package io.github.tobyhs.weatherweight;
 
 import com.github.aurae.retrofit2.LoganSquareConverterFactory;
-import com.jakewharton.retrofit2.adapter.rxjava2.RxJava2CallAdapterFactory;
 import org.junit.Test;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import retrofit2.Retrofit;
+import retrofit2.adapter.rxjava2.RxJava2CallAdapterFactory;
 
 import io.github.tobyhs.weatherweight.test.BaseTestCase;
 import io.github.tobyhs.weatherweight.util.AppSchedulerProvider;
