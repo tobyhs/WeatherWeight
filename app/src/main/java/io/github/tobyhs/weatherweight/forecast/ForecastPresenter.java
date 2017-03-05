@@ -6,12 +6,13 @@ import com.hannesdorfmann.mosby.mvp.MvpBasePresenter;
 
 import io.github.tobyhs.weatherweight.util.SchedulerProvider;
 import io.github.tobyhs.weatherweight.yahooweather.WeatherRepository;
+import io.github.tobyhs.weatherweight.yahooweather.model.Channel;
 
 /**
  * Presenter for the forecast activity
  */
 public class ForecastPresenter extends MvpBasePresenter<ForecastContract.View> {
-    private String attributionUrl;
+    private Channel channel;
     private final SchedulerProvider schedulerProvider;
     private final WeatherRepository weatherRepository;
 
@@ -21,15 +22,25 @@ public class ForecastPresenter extends MvpBasePresenter<ForecastContract.View> {
      */
     @Inject
     public ForecastPresenter(SchedulerProvider schedulerProvider, WeatherRepository weatherRepository) {
-        attributionUrl = WeatherRepository.ATTRIBUTION_URL;
         this.schedulerProvider = schedulerProvider;
         this.weatherRepository = weatherRepository;
+    }
+
+    /**
+     * @return object with the forecast data we are presenting
+     */
+    public Channel getChannel() {
+        return channel;
     }
 
     /**
      * @return attribution URL to link to
      */
     public String getAttributionUrl() {
-        return attributionUrl;
+        if (channel == null) {
+            return WeatherRepository.ATTRIBUTION_URL;
+        } else {
+            return channel.getLink();
+        }
     }
 }
