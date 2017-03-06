@@ -58,7 +58,7 @@ public class ForecastActivity
 
     @Override
     public Channel getData() {
-        return null;
+        return getPresenter().getChannel();
     }
 
     @Override

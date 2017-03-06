@@ -15,6 +15,7 @@ import org.robolectric.shadows.ShadowActivity;
 
 import io.github.tobyhs.weatherweight.R;
 import io.github.tobyhs.weatherweight.test.BaseTestCase;
+import io.github.tobyhs.weatherweight.test.WeatherResponseFactory;
 import io.github.tobyhs.weatherweight.yahooweather.model.Channel;
 
 import static org.hamcrest.CoreMatchers.equalTo;
@@ -39,6 +40,14 @@ public class ForecastActivityTest extends BaseTestCase {
     @Test
     public void isRetainInstance() {
         assertThat(activity.isRetainInstance(), is(true));
+    }
+
+    @Test
+    public void getData() {
+        Channel channel = WeatherResponseFactory.createChannel();
+        when(presenter.getChannel()).thenReturn(channel);
+
+        assertThat(activity.getData(), is(channel));
     }
 
     @Test
