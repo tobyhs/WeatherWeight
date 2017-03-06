@@ -3,6 +3,7 @@ package io.github.tobyhs.weatherweight.forecast;
 import javax.inject.Inject;
 
 import com.hannesdorfmann.mosby.mvp.MvpBasePresenter;
+import io.reactivex.observers.DisposableSingleObserver;
 
 import io.github.tobyhs.weatherweight.util.SchedulerProvider;
 import io.github.tobyhs.weatherweight.yahooweather.WeatherRepository;
@@ -24,6 +25,37 @@ public class ForecastPresenter extends MvpBasePresenter<ForecastContract.View> {
     public ForecastPresenter(SchedulerProvider schedulerProvider, WeatherRepository weatherRepository) {
         this.schedulerProvider = schedulerProvider;
         this.weatherRepository = weatherRepository;
+    }
+
+    /**
+     * Obtains forecast data for the given location
+     *
+     * @param location location to obtain forecast for
+     */
+    public void search(String location) {
+        channel = null;
+        getView().showLoading(false);
+
+        weatherRepository.getForecast(location)
+                .subscribeOn(schedulerProvider.io())
+                .observeOn(schedulerProvider.ui())
+                .subscribe(new DisposableSingleObserver<Channel>() {
+                    @Override
+                    public void onSuccess(Channel channel) {
+                        ForecastPresenter.this.channel = channel;
+                        if (isViewAttached()) {
+                            getView().setData(channel);
+                            getView().showContent();
+                        }
+                    }
+
+                    @Override
+                    public void onError(Throwable e) {
+                        if (isViewAttached()) {
+                            getView().showError(e, false);
+                        }
+                    }
+                });
     }
 
     /**
