@@ -14,11 +14,13 @@ import static org.hamcrest.MatcherAssert.assertThat;
 public class ForecastPresenterTest extends BaseTestCase {
     private TestSchedulerProvider schedulerProvider = new TestSchedulerProvider();
     @Mock private WeatherRepository weatherRepository;
+    @Mock private ForecastContract.View view;
     private ForecastPresenter presenter;
 
     @Before
     public void setup() {
         presenter = new ForecastPresenter(schedulerProvider, weatherRepository);
+        presenter.attachView(view);
     }
 
     @Test
