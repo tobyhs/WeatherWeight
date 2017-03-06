@@ -6,18 +6,27 @@ import io.reactivex.schedulers.TestScheduler;
 import io.github.tobyhs.weatherweight.util.SchedulerProvider;
 
 /**
- * A {@link SchedulerProvider} that provides a {@link TestScheduler} instance for testing.
+ * A {@link SchedulerProvider} that provides {@link TestScheduler} instances for testing.
  */
 public class TestSchedulerProvider implements SchedulerProvider {
-    private final Scheduler scheduler = new TestScheduler();
-
-    @Override
-    public Scheduler ui() {
-        return scheduler;
-    }
+    private final TestScheduler ioScheduler = new TestScheduler();
+    private final TestScheduler uiScheduler = new TestScheduler();
 
     @Override
     public Scheduler io() {
-        return scheduler;
+        return ioScheduler;
+    }
+
+    @Override
+    public Scheduler ui() {
+        return uiScheduler;
+    }
+
+    /**
+     * Triggers actions on all of this provider's schedulers
+     */
+    public void triggerActions() {
+        ioScheduler.triggerActions();
+        uiScheduler.triggerActions();
     }
 }
