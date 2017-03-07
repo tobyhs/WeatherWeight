@@ -4,6 +4,7 @@ import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
+import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.widget.EditText;
 import android.widget.LinearLayout;
@@ -27,6 +28,7 @@ public class ForecastActivity
         extends MvpLceViewStateActivity<LinearLayout, Channel, ForecastContract.View, ForecastPresenter>
         implements ForecastContract.View {
     private ForecastComponent forecastComponent;
+    private ForecastCardAdapter forecastCardAdapter;
 
     @BindView(R.id.locationInput) EditText locationInput;
     @BindView(R.id.locationFound) TextView locationFoundView;
@@ -44,6 +46,10 @@ public class ForecastActivity
 
         setRetainInstance(true);
         ButterKnife.bind(this);
+
+        forecastCardAdapter = new ForecastCardAdapter();
+        forecastRecyclerView.setLayoutManager(new LinearLayoutManager(this));
+        forecastRecyclerView.setAdapter(forecastCardAdapter);
     }
 
     @Override
@@ -63,6 +69,8 @@ public class ForecastActivity
 
     @Override
     public void setData(Channel channel) {
+        locationFoundView.setText(channel.getLocation().toString());
+        forecastCardAdapter.set(channel.getItem().getForecast());
     }
 
     @Override
