@@ -6,6 +6,7 @@ import android.content.Intent;
 import android.net.Uri;
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
+import android.view.inputmethod.EditorInfo;
 import android.widget.TextView;
 
 import com.hannesdorfmann.mosby.mvp.viewstate.lce.LceViewState;
@@ -28,6 +29,8 @@ import static org.hamcrest.CoreMatchers.equalTo;
 import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.CoreMatchers.notNullValue;
 import static org.hamcrest.MatcherAssert.assertThat;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.verifyZeroInteractions;
 import static org.mockito.Mockito.when;
 import static org.robolectric.Shadows.shadowOf;
 
@@ -98,6 +101,24 @@ public class ForecastActivityTest extends BaseTestCase {
     public void createViewState() {
         LceViewState<Channel, ForecastContract.View> viewState = activity.createViewState();
         assertThat(viewState.getClass(), is(equalTo((Class) RetainingLceViewState.class)));
+    }
+
+    @Test
+    public void submitLocation() {
+        String location = "New York, NY";
+        activity.locationInput.setText(location);
+
+        activity.locationInput.onEditorAction(EditorInfo.IME_ACTION_GO);
+        verify(presenter).search(location);
+    }
+
+    @Test
+    public void submitLocationWithIrrelevantActionId() {
+        String location = "blah";
+        activity.locationInput.setText(location);
+
+        assertThat(activity.submitLocation(EditorInfo.IME_ACTION_PREVIOUS), is(false));
+        verifyZeroInteractions(presenter);
     }
 
     @Test

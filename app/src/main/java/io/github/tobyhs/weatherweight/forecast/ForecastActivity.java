@@ -6,6 +6,7 @@ import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.view.inputmethod.EditorInfo;
 import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.TextView;
@@ -13,6 +14,7 @@ import android.widget.TextView;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
+import butterknife.OnEditorAction;
 import com.hannesdorfmann.mosby.mvp.viewstate.lce.LceViewState;
 import com.hannesdorfmann.mosby.mvp.viewstate.lce.MvpLceViewStateActivity;
 import com.hannesdorfmann.mosby.mvp.viewstate.lce.data.RetainingLceViewState;
@@ -82,6 +84,15 @@ public class ForecastActivity
     @NonNull
     public LceViewState<Channel, ForecastContract.View> createViewState() {
         return new RetainingLceViewState<>();
+    }
+
+    @OnEditorAction(R.id.locationInput)
+    public boolean submitLocation(int actionId) {
+        if (actionId == EditorInfo.IME_ACTION_GO) {
+            getPresenter().search(locationInput.getText().toString());
+            return true;
+        }
+        return false;
     }
 
     /**
