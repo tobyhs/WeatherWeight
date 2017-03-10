@@ -71,6 +71,7 @@ public class ForecastActivityTest extends BaseTestCase {
 
         String location = channel.getLocation().toString();
         assertThat(activity.locationFoundView.getText().toString(), is(location));
+        assertThat(activity.pubDateView.getText().toString(), is(channel.getItem().getPubDate()));
 
         activity.forecastRecyclerView.measure(0, 0);
         activity.forecastRecyclerView.layout(0, 0, 100, 10000);

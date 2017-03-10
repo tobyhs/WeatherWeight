@@ -72,6 +72,7 @@ public class ForecastActivity
     @Override
     public void setData(Channel channel) {
         locationFoundView.setText(channel.getLocation().toString());
+        pubDateView.setText(channel.getItem().getPubDate());
         forecastCardAdapter.set(channel.getItem().getForecast());
     }
 
