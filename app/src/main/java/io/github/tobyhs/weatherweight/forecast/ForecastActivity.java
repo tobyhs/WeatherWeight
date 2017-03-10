@@ -34,7 +34,7 @@ public class ForecastActivity
 
     @BindView(R.id.locationInput) EditText locationInput;
     @BindView(R.id.locationFound) TextView locationFoundView;
-    @BindView(R.id.timeFetched) TextView timeFetchedView;
+    @BindView(R.id.pubDate) TextView pubDateView;
     @BindView(R.id.forecastRecyclerView) RecyclerView forecastRecyclerView;
 
     @Override
