@@ -38,7 +38,7 @@ public class WeatherResponseFactory {
 
         Location location = new Location()
                 .setCity("Oakland").setRegion("CA").setCountry("United States");
-        Item item = new Item().setForecast(forecast);
+        Item item = new Item().setForecast(forecast).setPubDate("Sun, 05 Feb 2017 08:00 PM PST");
         String link = "http://us.rd.yahoo.com/dailynews/rss/weather/Country__Country/*https://weather.yahoo.com/country/state/city-2463583/";
         return new Channel()
                 .setLocation(location)

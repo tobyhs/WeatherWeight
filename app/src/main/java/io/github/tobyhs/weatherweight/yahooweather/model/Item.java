@@ -10,6 +10,7 @@ import com.bluelinelabs.logansquare.annotation.JsonObject;
 @JsonObject(fieldDetectionPolicy = JsonObject.FieldDetectionPolicy.NONPRIVATE_FIELDS_AND_ACCESSORS)
 public class Item {
     private List<SingleForecast> forecast;
+    private String pubDate;
 
     /**
      * @return a list of daily forecasts for today and upcoming days
@@ -18,8 +19,20 @@ public class Item {
         return forecast;
     }
 
+    /**
+     * @return publication date of forecast
+     */
+    public String getPubDate() {
+        return pubDate;
+    }
+
     public Item setForecast(List<SingleForecast> forecast) {
         this.forecast = forecast;
+        return this;
+    }
+
+    public Item setPubDate(String pubDate) {
+        this.pubDate = pubDate;
         return this;
     }
 }
