@@ -42,11 +42,7 @@ public class ForecastPresenter extends MvpBasePresenter<ForecastContract.View> {
                 .subscribe(new DisposableSingleObserver<Channel>() {
                     @Override
                     public void onSuccess(Channel channel) {
-                        ForecastPresenter.this.channel = channel;
-                        if (isViewAttached()) {
-                            getView().setData(channel);
-                            getView().showContent();
-                        }
+                        setChannel(channel);
                     }
 
                     @Override
@@ -73,6 +69,19 @@ public class ForecastPresenter extends MvpBasePresenter<ForecastContract.View> {
             return WeatherRepository.ATTRIBUTION_URL;
         } else {
             return channel.getLink();
+        }
+    }
+
+    /**
+     * Displays the given forecast data
+     *
+     * @param channel object with forecast data to set and display
+     */
+    private void setChannel(Channel channel) {
+        this.channel = channel;
+        if (isViewAttached()) {
+            getView().setData(channel);
+            getView().showContent();
         }
     }
 }
