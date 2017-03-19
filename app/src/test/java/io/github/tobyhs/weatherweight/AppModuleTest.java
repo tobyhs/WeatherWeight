@@ -20,7 +20,6 @@ import io.github.tobyhs.weatherweight.yahooweather.WeatherRepository;
 import io.github.tobyhs.weatherweight.yahooweather.WeatherRepositoryImpl;
 import io.github.tobyhs.weatherweight.yahooweather.WeatherService;
 
-import static org.hamcrest.CoreMatchers.equalTo;
 import static org.hamcrest.CoreMatchers.hasItem;
 import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.CoreMatchers.isA;
@@ -52,8 +51,7 @@ public class AppModuleTest extends BaseTestCase {
 
     @Test
     public void provideSchedulerProvider() {
-        Class schedulerProviderCls = module.provideSchedulerProvider().getClass();
-        assertThat(schedulerProviderCls, is(equalTo((Class) AppSchedulerProvider.class)));
+        assertThat(module.provideSchedulerProvider(), isA((Class) AppSchedulerProvider.class));
     }
 
     @Test
@@ -74,7 +72,7 @@ public class AppModuleTest extends BaseTestCase {
     public void provideWeatherRepository() {
         WeatherService weatherService = mock(WeatherService.class);
         WeatherRepository repo = module.provideWeatherRepository(weatherService);
-        assertThat(repo.getClass(), is(equalTo((Class) WeatherRepositoryImpl.class)));
+        assertThat(repo, isA((Class) WeatherRepositoryImpl.class));
     }
 
     @Test

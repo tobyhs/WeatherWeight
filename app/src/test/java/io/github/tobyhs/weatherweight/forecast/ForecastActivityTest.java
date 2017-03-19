@@ -9,7 +9,6 @@ import android.view.View;
 import android.view.inputmethod.EditorInfo;
 import android.widget.TextView;
 
-import com.hannesdorfmann.mosby.mvp.viewstate.lce.LceViewState;
 import com.hannesdorfmann.mosby.mvp.viewstate.lce.data.RetainingLceViewState;
 import org.junit.Before;
 import org.junit.Test;
@@ -25,8 +24,8 @@ import io.github.tobyhs.weatherweight.test.WeatherResponseFactory;
 import io.github.tobyhs.weatherweight.yahooweather.model.Channel;
 import io.github.tobyhs.weatherweight.yahooweather.model.SingleForecast;
 
-import static org.hamcrest.CoreMatchers.equalTo;
 import static org.hamcrest.CoreMatchers.is;
+import static org.hamcrest.CoreMatchers.isA;
 import static org.hamcrest.CoreMatchers.notNullValue;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.mockito.Mockito.verify;
@@ -100,8 +99,7 @@ public class ForecastActivityTest extends BaseTestCase {
 
     @Test
     public void createViewState() {
-        LceViewState<Channel, ForecastContract.View> viewState = activity.createViewState();
-        assertThat(viewState.getClass(), is(equalTo((Class) RetainingLceViewState.class)));
+        assertThat(activity.createViewState(), isA((Class) RetainingLceViewState.class));
     }
 
     @Test
