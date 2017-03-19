@@ -1,12 +1,19 @@
 package io.github.tobyhs.weatherweight;
 
+import android.content.SharedPreferences;
+
 import com.github.aurae.retrofit2.LoganSquareConverterFactory;
+import org.junit.Before;
 import org.junit.Test;
-import org.mockito.InjectMocks;
-import org.mockito.Mock;
+import org.junit.runner.RunWith;
+import org.robolectric.RobolectricTestRunner;
+import org.robolectric.RuntimeEnvironment;
+import org.robolectric.annotation.Config;
 import retrofit2.Retrofit;
 import retrofit2.adapter.rxjava2.RxJava2CallAdapterFactory;
 
+import io.github.tobyhs.weatherweight.storage.LastForecastStore;
+import io.github.tobyhs.weatherweight.storage.SharedPrefLastForecastStore;
 import io.github.tobyhs.weatherweight.test.BaseTestCase;
 import io.github.tobyhs.weatherweight.util.AppSchedulerProvider;
 import io.github.tobyhs.weatherweight.yahooweather.WeatherRepository;
@@ -17,26 +24,40 @@ import static org.hamcrest.CoreMatchers.equalTo;
 import static org.hamcrest.CoreMatchers.hasItem;
 import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.CoreMatchers.isA;
+import static org.hamcrest.CoreMatchers.notNullValue;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.mockito.Mockito.mock;
 
+@RunWith(RobolectricTestRunner.class)
+@Config(application = App.class)
 public class AppModuleTest extends BaseTestCase {
-    @Mock private App app;
-    @InjectMocks private AppModule module;
+    private App app;
+    private AppModule module;
+
+    @Before
+    public void setup() {
+        app = (App) RuntimeEnvironment.application;
+        module = new AppModule(app);
+    }
 
     @Test
-    public void testProvideApp() {
+    public void provideApp() {
         assertThat(module.provideApp(), is(app));
     }
 
     @Test
-    public void testProvideSchedulerProvider() {
+    public void provideSharedPreferences() {
+        assertThat(module.provideSharedPreferences(), is(notNullValue()));
+    }
+
+    @Test
+    public void provideSchedulerProvider() {
         Class schedulerProviderCls = module.provideSchedulerProvider().getClass();
         assertThat(schedulerProviderCls, is(equalTo((Class) AppSchedulerProvider.class)));
     }
 
     @Test
-    public void testProvideYahooRetrofit() {
+    public void provideYahooRetrofit() {
         Retrofit retrofit = module.provideYahooRetrofit();
         assertThat(retrofit.baseUrl().toString(), is("https://query.yahooapis.com/"));
         assertThat(retrofit.callAdapterFactories(), hasItem(isA(RxJava2CallAdapterFactory.class)));
@@ -44,15 +65,22 @@ public class AppModuleTest extends BaseTestCase {
     }
 
     @Test
-    public void testProvideWeatherService() {
+    public void provideWeatherService() {
         Retrofit retrofit = new Retrofit.Builder().baseUrl("http://localhost/").build();
         assertThat(module.provideWeatherService(retrofit), isA(WeatherService.class));
     }
 
     @Test
-    public void testProvideWeatherRepository() {
+    public void provideWeatherRepository() {
         WeatherService weatherService = mock(WeatherService.class);
         WeatherRepository repo = module.provideWeatherRepository(weatherService);
         assertThat(repo.getClass(), is(equalTo((Class) WeatherRepositoryImpl.class)));
+    }
+
+    @Test
+    public void provideLastForecastStore() {
+        SharedPreferences sharedPreferences = mock(SharedPreferences.class);
+        LastForecastStore store = module.provideLastForecastStore(sharedPreferences);
+        assertThat(store, isA((Class) SharedPrefLastForecastStore.class));
     }
 }

@@ -1,5 +1,8 @@
 package io.github.tobyhs.weatherweight;
 
+import android.content.SharedPreferences;
+import android.preference.PreferenceManager;
+
 import javax.inject.Named;
 import javax.inject.Singleton;
 
@@ -9,6 +12,8 @@ import dagger.Provides;
 import retrofit2.Retrofit;
 import retrofit2.adapter.rxjava2.RxJava2CallAdapterFactory;
 
+import io.github.tobyhs.weatherweight.storage.LastForecastStore;
+import io.github.tobyhs.weatherweight.storage.SharedPrefLastForecastStore;
 import io.github.tobyhs.weatherweight.util.AppSchedulerProvider;
 import io.github.tobyhs.weatherweight.util.SchedulerProvider;
 import io.github.tobyhs.weatherweight.yahooweather.WeatherRepository;
@@ -36,6 +41,15 @@ public class AppModule {
     @Singleton
     App provideApp() {
         return app;
+    }
+
+    /**
+     * @return {@link SharedPreferences} instance for the application
+     */
+    @Provides
+    @Singleton
+    SharedPreferences provideSharedPreferences() {
+        return PreferenceManager.getDefaultSharedPreferences(app);
     }
 
     /**
@@ -78,5 +92,15 @@ public class AppModule {
     @Singleton
     WeatherRepository provideWeatherRepository(WeatherService weatherService) {
         return new WeatherRepositoryImpl(weatherService);
+    }
+
+    /**
+     * @param sharedPreferences {@link SharedPreferences} instance for the application
+     * @return store to save or get the last forecast
+     */
+    @Provides
+    @Singleton
+    LastForecastStore provideLastForecastStore(SharedPreferences sharedPreferences) {
+        return new SharedPrefLastForecastStore(sharedPreferences);
     }
 }
