@@ -4,6 +4,7 @@ import javax.inject.Singleton;
 
 import dagger.Component;
 
+import io.github.tobyhs.weatherweight.storage.LastForecastStore;
 import io.github.tobyhs.weatherweight.util.SchedulerProvider;
 import io.github.tobyhs.weatherweight.yahooweather.WeatherRepository;
 
@@ -15,4 +16,5 @@ import io.github.tobyhs.weatherweight.yahooweather.WeatherRepository;
 public interface AppComponent {
     SchedulerProvider schedulerProvider();
     WeatherRepository weatherRepository();
+    LastForecastStore lastForecastStore();
 }

@@ -5,6 +5,7 @@ import org.junit.Before;
 import org.junit.Test;
 import org.mockito.Mock;
 
+import io.github.tobyhs.weatherweight.storage.LastForecastStore;
 import io.github.tobyhs.weatherweight.test.BaseTestCase;
 import io.github.tobyhs.weatherweight.test.TestSchedulerProvider;
 import io.github.tobyhs.weatherweight.test.WeatherResponseFactory;
@@ -21,12 +22,13 @@ import static org.mockito.Mockito.when;
 public class ForecastPresenterTest extends BaseTestCase {
     private TestSchedulerProvider schedulerProvider = new TestSchedulerProvider();
     @Mock private WeatherRepository weatherRepository;
+    @Mock private LastForecastStore lastForecastStore;
     @Mock private ForecastContract.View view;
     private ForecastPresenter presenter;
 
     @Before
     public void setup() {
-        presenter = new ForecastPresenter(schedulerProvider, weatherRepository);
+        presenter = new ForecastPresenter(schedulerProvider, weatherRepository, lastForecastStore);
         presenter.attachView(view);
     }
 

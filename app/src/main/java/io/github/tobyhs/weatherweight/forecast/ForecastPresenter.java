@@ -5,6 +5,7 @@ import javax.inject.Inject;
 import com.hannesdorfmann.mosby.mvp.MvpBasePresenter;
 import io.reactivex.observers.DisposableSingleObserver;
 
+import io.github.tobyhs.weatherweight.storage.LastForecastStore;
 import io.github.tobyhs.weatherweight.util.SchedulerProvider;
 import io.github.tobyhs.weatherweight.yahooweather.WeatherRepository;
 import io.github.tobyhs.weatherweight.yahooweather.model.Channel;
@@ -16,15 +17,22 @@ public class ForecastPresenter extends MvpBasePresenter<ForecastContract.View> {
     private Channel channel;
     private final SchedulerProvider schedulerProvider;
     private final WeatherRepository weatherRepository;
+    private final LastForecastStore lastForecastStore;
 
     /**
      * @param schedulerProvider RX scheduler provider
      * @param weatherRepository weather repository object to obtain forecast data
+     * @param lastForecastStore store to save or get the last forecast
      */
     @Inject
-    public ForecastPresenter(SchedulerProvider schedulerProvider, WeatherRepository weatherRepository) {
+    public ForecastPresenter(
+            SchedulerProvider schedulerProvider,
+            WeatherRepository weatherRepository,
+            LastForecastStore lastForecastStore
+    ) {
         this.schedulerProvider = schedulerProvider;
         this.weatherRepository = weatherRepository;
+        this.lastForecastStore = lastForecastStore;
     }
 
     /**
