@@ -91,5 +91,6 @@ public class ForecastPresenter extends MvpBasePresenter<ForecastContract.View> {
             getView().setData(channel);
             getView().showContent();
         }
+        lastForecastStore.save(channel).subscribeOn(schedulerProvider.io()).subscribe();
     }
 }

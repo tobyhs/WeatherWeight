@@ -1,6 +1,11 @@
 package io.github.tobyhs.weatherweight.forecast;
 
+import android.util.MutableBoolean;
+
+import io.reactivex.Completable;
 import io.reactivex.Single;
+import io.reactivex.disposables.Disposable;
+import io.reactivex.functions.Consumer;
 import org.junit.Before;
 import org.junit.Test;
 import org.mockito.Mock;
@@ -38,6 +43,15 @@ public class ForecastPresenterTest extends BaseTestCase {
         Channel channel = WeatherResponseFactory.createChannel();
         when(weatherRepository.getForecast(location)).thenReturn(Single.just(channel));
 
+        final MutableBoolean completableSubscribed = new MutableBoolean(false);
+        Completable saveCompletable = Completable.complete().doOnSubscribe(new Consumer<Disposable>() {
+            @Override
+            public void accept(Disposable disposable) throws Exception {
+                completableSubscribed.value = true;
+            }
+        });
+        when(lastForecastStore.save(channel)).thenReturn(saveCompletable);
+
         presenter.search(location);
         verify(view).showLoading(false);
 
@@ -45,6 +59,9 @@ public class ForecastPresenterTest extends BaseTestCase {
         assertThat(presenter.getChannel(), is(channel));
         verify(view).setData(channel);
         verify(view).showContent();
+
+        schedulerProvider.triggerActions();
+        assertThat(completableSubscribed.value, is(true));
 
         assertThat(presenter.getAttributionUrl(), is(channel.getLink()));
     }
