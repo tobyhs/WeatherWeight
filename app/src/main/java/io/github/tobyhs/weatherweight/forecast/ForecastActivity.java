@@ -39,9 +39,7 @@ public class ForecastActivity
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
-        forecastComponent = DaggerForecastComponent.builder()
-                .appComponent(((App) getApplication()).getAppComponent())
-                .build();
+        forecastComponent = ((App) getApplication()).createForecastComponent();
 
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_forecast);

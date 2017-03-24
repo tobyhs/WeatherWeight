@@ -13,10 +13,8 @@ import com.hannesdorfmann.mosby.mvp.viewstate.lce.data.RetainingLceViewState;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
-import org.mockito.Mock;
 import org.robolectric.Robolectric;
 import org.robolectric.RobolectricTestRunner;
-import org.robolectric.shadows.ShadowActivity;
 
 import io.github.tobyhs.weatherweight.R;
 import io.github.tobyhs.weatherweight.test.BaseTestCase;
@@ -28,21 +26,20 @@ import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.CoreMatchers.isA;
 import static org.hamcrest.CoreMatchers.notNullValue;
 import static org.hamcrest.MatcherAssert.assertThat;
+import static org.mockito.ArgumentMatchers.anyString;
+import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.verifyZeroInteractions;
 import static org.mockito.Mockito.when;
 import static org.robolectric.Shadows.shadowOf;
 
 @RunWith(RobolectricTestRunner.class)
 public class ForecastActivityTest extends BaseTestCase {
-    @Mock private ForecastPresenter presenter;
+    private ForecastPresenter presenter;
     private ForecastActivity activity = Robolectric.setupActivity(ForecastActivity.class);
-    private ShadowActivity shadowActivity;
 
     @Before
     public void setup() {
-        shadowActivity = shadowOf(activity);
-        activity.setPresenter(presenter);
+        presenter = activity.getPresenter();
     }
 
     @Test
@@ -117,7 +114,7 @@ public class ForecastActivityTest extends BaseTestCase {
         activity.locationInput.setText(location);
 
         assertThat(activity.submitLocation(EditorInfo.IME_ACTION_PREVIOUS), is(false));
-        verifyZeroInteractions(presenter);
+        verify(presenter, never()).search(anyString());
     }
 
     @Test
@@ -127,7 +124,7 @@ public class ForecastActivityTest extends BaseTestCase {
 
         activity.findViewById(R.id.poweredByYahooImage).performClick();
 
-        Intent actual = shadowActivity.getNextStartedActivity();
+        Intent actual = shadowOf(activity).getNextStartedActivity();
         Intent expected = new Intent(Intent.ACTION_VIEW, Uri.parse(attributionUrl));
         assertThat(actual.filterEquals(expected), is(true));
     }

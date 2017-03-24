@@ -2,6 +2,9 @@ package io.github.tobyhs.weatherweight;
 
 import android.app.Application;
 
+import io.github.tobyhs.weatherweight.forecast.DaggerForecastComponent;
+import io.github.tobyhs.weatherweight.forecast.ForecastComponent;
+
 /**
  * Application instance
  */
@@ -18,9 +21,11 @@ public class App extends Application {
     }
 
     /**
-     * @return Dagger component for this application
+     * @return Dagger component for {@link .forecast.ForecastActivity}
      */
-    public AppComponent getAppComponent() {
-        return appComponent;
+    public ForecastComponent createForecastComponent() {
+        return DaggerForecastComponent.builder()
+                .appComponent(appComponent)
+                .build();
     }
 }

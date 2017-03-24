@@ -10,7 +10,7 @@ import io.github.tobyhs.weatherweight.util.ActivityScoped;
  */
 @ActivityScoped
 @Component(dependencies = AppComponent.class)
-interface ForecastComponent {
+public interface ForecastComponent {
     /**
      * @return presenter for the forecast activity
      */

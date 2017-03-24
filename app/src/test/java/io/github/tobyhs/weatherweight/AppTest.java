@@ -5,12 +5,14 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.robolectric.RobolectricTestRunner;
 import org.robolectric.RuntimeEnvironment;
+import org.robolectric.annotation.Config;
 
 import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.CoreMatchers.notNullValue;
 import static org.hamcrest.MatcherAssert.assertThat;
 
 @RunWith(RobolectricTestRunner.class)
+@Config(application = App.class)
 public class AppTest {
     private App app;
 
@@ -20,7 +22,7 @@ public class AppTest {
     }
 
     @Test
-    public void testGetAppComponent() {
-        assertThat(app.getAppComponent(), is(notNullValue()));
+    public void createForecastComponent() {
+        assertThat(app.createForecastComponent(), is(notNullValue()));
     }
 }
