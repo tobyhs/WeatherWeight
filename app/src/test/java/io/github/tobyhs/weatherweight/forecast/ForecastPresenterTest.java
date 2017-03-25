@@ -1,6 +1,6 @@
 package io.github.tobyhs.weatherweight.forecast;
 
-import android.util.MutableBoolean;
+import java.util.concurrent.atomic.AtomicBoolean;
 
 import io.reactivex.Completable;
 import io.reactivex.Maybe;
@@ -73,11 +73,11 @@ public class ForecastPresenterTest extends BaseTestCase {
         Channel channel = WeatherResponseFactory.createChannel();
         when(weatherRepository.getForecast(location)).thenReturn(Single.just(channel));
 
-        final MutableBoolean completableSubscribed = new MutableBoolean(false);
+        final AtomicBoolean completableSubscribed = new AtomicBoolean(false);
         Completable saveCompletable = Completable.complete().doOnSubscribe(new Consumer<Disposable>() {
             @Override
             public void accept(Disposable disposable) throws Exception {
-                completableSubscribed.value = true;
+                completableSubscribed.set(true);
             }
         });
         when(lastForecastStore.save(channel)).thenReturn(saveCompletable);
@@ -89,7 +89,7 @@ public class ForecastPresenterTest extends BaseTestCase {
         checkChannelSet(channel);
 
         schedulerProvider.triggerActions();
-        assertThat(completableSubscribed.value, is(true));
+        assertThat(completableSubscribed.get(), is(true));
 
         assertThat(presenter.getAttributionUrl(), is(channel.getLink()));
     }
