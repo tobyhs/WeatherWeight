@@ -4,6 +4,7 @@ import java.util.List;
 
 import android.content.Intent;
 import android.net.Uri;
+import android.os.Bundle;
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
 import android.view.inputmethod.EditorInfo;
@@ -15,6 +16,7 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.robolectric.Robolectric;
 import org.robolectric.RobolectricTestRunner;
+import org.robolectric.util.ActivityController;
 
 import io.github.tobyhs.weatherweight.R;
 import io.github.tobyhs.weatherweight.test.BaseTestCase;
@@ -40,6 +42,20 @@ public class ForecastActivityTest extends BaseTestCase {
     @Before
     public void setup() {
         presenter = activity.getPresenter();
+    }
+
+    @Test
+    public void onCreateWithNullSavedInstanceState() {
+        verify(presenter).loadLastForecast();
+    }
+
+    @Test
+    public void onCreateWithPresentSavedInstanceState() {
+        ActivityController<ForecastActivity> controller = Robolectric.buildActivity(ForecastActivity.class);
+        controller.create(new Bundle());
+
+        presenter = controller.get().getPresenter();
+        verify(presenter, never()).loadLastForecast();
     }
 
     @Test

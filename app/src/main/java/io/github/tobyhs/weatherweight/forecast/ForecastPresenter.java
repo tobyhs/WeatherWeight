@@ -3,6 +3,7 @@ package io.github.tobyhs.weatherweight.forecast;
 import javax.inject.Inject;
 
 import com.hannesdorfmann.mosby.mvp.MvpBasePresenter;
+import io.reactivex.observers.DisposableMaybeObserver;
 import io.reactivex.observers.DisposableSingleObserver;
 
 import io.github.tobyhs.weatherweight.storage.LastForecastStore;
@@ -36,6 +37,37 @@ public class ForecastPresenter extends MvpBasePresenter<ForecastContract.View> {
     }
 
     /**
+     * Loads the last forecast ({@link Channel}) that was retrieved when the activity first starts.
+     */
+    public void loadLastForecast() {
+        lastForecastStore.get()
+                .subscribeOn(schedulerProvider.io())
+                .observeOn(schedulerProvider.ui())
+                .subscribe(new DisposableMaybeObserver<Channel>() {
+                               @Override
+                               public void onSuccess(Channel channel) {
+                                   if (isViewAttached()) {
+                                       setChannel(channel);
+                                   }
+                               }
+
+                               @Override
+                               public void onError(Throwable e) {
+                                   if (isViewAttached()) {
+                                       getView().showError(e, false);
+                                   }
+                               }
+
+                               @Override
+                               public void onComplete() {
+                                   if (isViewAttached()) {
+                                       getView().showContent();
+                                   }
+                               }
+                           });
+    }
+
+    /**
      * Obtains forecast data for the given location
      *
      * @param location location to obtain forecast for
@@ -51,6 +83,7 @@ public class ForecastPresenter extends MvpBasePresenter<ForecastContract.View> {
                     @Override
                     public void onSuccess(Channel channel) {
                         setChannel(channel);
+                        lastForecastStore.save(channel).subscribeOn(schedulerProvider.io()).subscribe();
                     }
 
                     @Override
@@ -91,6 +124,5 @@ public class ForecastPresenter extends MvpBasePresenter<ForecastContract.View> {
             getView().setData(channel);
             getView().showContent();
         }
-        lastForecastStore.save(channel).subscribeOn(schedulerProvider.io()).subscribe();
     }
 }

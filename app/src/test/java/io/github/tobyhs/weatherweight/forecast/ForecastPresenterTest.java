@@ -3,6 +3,7 @@ package io.github.tobyhs.weatherweight.forecast;
 import android.util.MutableBoolean;
 
 import io.reactivex.Completable;
+import io.reactivex.Maybe;
 import io.reactivex.Single;
 import io.reactivex.disposables.Disposable;
 import io.reactivex.functions.Consumer;
@@ -38,6 +39,35 @@ public class ForecastPresenterTest extends BaseTestCase {
     }
 
     @Test
+    public void loadLastForecastOnSuccess() {
+        Channel channel = WeatherResponseFactory.createChannel();
+        when(lastForecastStore.get()).thenReturn(Maybe.just(channel));
+
+        presenter.loadLastForecast();
+        schedulerProvider.triggerActions();
+        checkChannelSet(channel);
+    }
+
+    @Test
+    public void loadLastForecastOnError() {
+        Throwable error = new Exception("testing");
+        when(lastForecastStore.get()).thenReturn(Maybe.<Channel>error(error));
+
+        presenter.loadLastForecast();
+        schedulerProvider.triggerActions();
+        verify(view).showError(error, false);
+    }
+
+    @Test
+    public void loadLastForecastOnComplete() {
+        when(lastForecastStore.get()).thenReturn(Maybe.<Channel>empty());
+
+        presenter.loadLastForecast();
+        schedulerProvider.triggerActions();
+        verify(view).showContent();
+    }
+
+    @Test
     public void searchOnSuccess() {
         String location = "San Francisco, CA";
         Channel channel = WeatherResponseFactory.createChannel();
@@ -56,9 +86,7 @@ public class ForecastPresenterTest extends BaseTestCase {
         verify(view).showLoading(false);
 
         schedulerProvider.triggerActions();
-        assertThat(presenter.getChannel(), is(channel));
-        verify(view).setData(channel);
-        verify(view).showContent();
+        checkChannelSet(channel);
 
         schedulerProvider.triggerActions();
         assertThat(completableSubscribed.value, is(true));
@@ -84,5 +112,16 @@ public class ForecastPresenterTest extends BaseTestCase {
     @Test
     public void getAttributionUrl() {
         assertThat(presenter.getAttributionUrl(), is(WeatherRepository.ATTRIBUTION_URL));
+    }
+
+    /**
+     * Checks that the given channel was set on the presenter
+     *
+     * @param channel {@link Channel} to check against
+     */
+    private void checkChannelSet(Channel channel) {
+        assertThat(presenter.getChannel(), is(channel));
+        verify(view).setData(channel);
+        verify(view).showContent();
     }
 }

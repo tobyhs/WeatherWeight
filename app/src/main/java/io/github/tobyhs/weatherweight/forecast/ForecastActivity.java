@@ -50,6 +50,10 @@ public class ForecastActivity
         forecastCardAdapter = new ForecastCardAdapter();
         forecastRecyclerView.setLayoutManager(new LinearLayoutManager(this));
         forecastRecyclerView.setAdapter(forecastCardAdapter);
+
+        if (savedInstanceState == null) {
+            getPresenter().loadLastForecast();
+        }
     }
 
     @Override
