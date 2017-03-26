@@ -89,6 +89,11 @@ public class ForecastActivity
         return new RetainingLceViewState<>();
     }
 
+    @Override
+    public void setLocationInputText(String location) {
+        locationInput.setText(location);
+    }
+
     @OnEditorAction(R.id.locationInput)
     public boolean submitLocation(int actionId) {
         if (actionId == EditorInfo.IME_ACTION_GO) {

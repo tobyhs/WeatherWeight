@@ -116,6 +116,13 @@ public class ForecastActivityTest extends BaseTestCase {
     }
 
     @Test
+    public void setLocationInputText() {
+        String location = "Saved City, SC";
+        activity.setLocationInputText(location);
+        assertThat(activity.locationInput.getText().toString(), is(location));
+    }
+
+    @Test
     public void submitLocation() {
         String location = "New York, NY";
         activity.locationInput.setText(location);

@@ -46,6 +46,7 @@ public class ForecastPresenterTest extends BaseTestCase {
         presenter.loadLastForecast();
         schedulerProvider.triggerActions();
         checkChannelSet(channel);
+        verify(view).setLocationInputText(channel.getLocation().toString());
     }
 
     @Test

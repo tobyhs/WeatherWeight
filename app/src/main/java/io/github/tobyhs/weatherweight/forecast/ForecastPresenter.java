@@ -46,8 +46,10 @@ public class ForecastPresenter extends MvpBasePresenter<ForecastContract.View> {
                 .subscribe(new DisposableMaybeObserver<Channel>() {
                                @Override
                                public void onSuccess(Channel channel) {
+                                   setChannel(channel);
                                    if (isViewAttached()) {
-                                       setChannel(channel);
+                                       String location = channel.getLocation().toString();
+                                       getView().setLocationInputText(location);
                                    }
                                }
 
