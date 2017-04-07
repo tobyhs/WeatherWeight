@@ -11,9 +11,4 @@
   <line stroke="black" stroke-width="2" x1="41" y1="87" x2="27" y2="101" />
   <line stroke="black" stroke-width="2" x1="32" y1="64" x2="12" y2="64" />
   <line stroke="black" stroke-width="2" x1="41" y1="41" x2="27" y2="27" />
-
-  <path fill="brown"
-    d="M 42 64 Q 80 50 96 85 Q 64 100 42 64"
-  />
-  <line stroke="black" stroke-width="2" x1="110" y1="90" x2="42" y2="64" />
 </svg>
