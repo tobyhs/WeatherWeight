@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/activity_forecast"
     android:layout_width="match_parent"
@@ -12,6 +12,7 @@
     tools:context="io.github.tobyhs.weatherweight.forecast.ForecastActivity">
 
     <TextView
+        android:id="@+id/locationLabel"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:labelFor="@+id/locationInput"
@@ -21,13 +22,15 @@
         android:id="@id/locationInput"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:layout_below="@id/locationLabel"
         android:inputType="text"
         android:imeOptions="actionGo" />
 
     <FrameLayout
         android:layout_width="match_parent"
-        android:layout_height="0dp"
-        android:layout_weight="1">
+        android:layout_height="match_parent"
+        android:layout_below="@id/locationInput"
+        android:layout_above="@+id/poweredByYahooImage">
 
         <ProgressBar
             android:id="@+id/loadingView"
@@ -65,9 +68,10 @@
     </FrameLayout>
 
     <ImageView
-        android:id="@+id/poweredByYahooImage"
+        android:id="@id/poweredByYahooImage"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
         android:src="@drawable/powered_by_yahoo"
         android:contentDescription="@string/poweredByYahoo" />
-</LinearLayout>
+</RelativeLayout>
