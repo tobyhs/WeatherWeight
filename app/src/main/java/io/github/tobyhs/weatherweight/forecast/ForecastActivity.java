@@ -94,10 +94,24 @@ public class ForecastActivity
         locationInput.setText(location);
     }
 
+    /**
+     * Submits the location to the presenter to query the weather API
+     */
+    @OnClick(R.id.submitButton)
+    public void submitLocation() {
+        getPresenter().search(locationInput.getText().toString());
+    }
+
+    /**
+     * Handler for tapping the "go" button on the keyboard when focused on the location input
+     *
+     * @param actionId ID of action performed on the location input
+     * @return true iff {@code actionId} is something we trigger a submission on
+     */
     @OnEditorAction(R.id.locationInput)
     public boolean submitLocation(int actionId) {
         if (actionId == EditorInfo.IME_ACTION_GO) {
-            getPresenter().search(locationInput.getText().toString());
+            submitLocation();
             return true;
         }
         return false;

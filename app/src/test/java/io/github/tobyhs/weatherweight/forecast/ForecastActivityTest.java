@@ -123,7 +123,16 @@ public class ForecastActivityTest extends BaseTestCase {
     }
 
     @Test
-    public void submitLocation() {
+    public void submitLocationWithSubmitButton() {
+        String location = "San Francisco, CA";
+        activity.locationInput.setText(location);
+
+        activity.findViewById(R.id.submitButton).performClick();
+        verify(presenter).search(location);
+    }
+
+    @Test
+    public void submitLocationWithImeActionGo() {
         String location = "New York, NY";
         activity.locationInput.setText(location);
 
