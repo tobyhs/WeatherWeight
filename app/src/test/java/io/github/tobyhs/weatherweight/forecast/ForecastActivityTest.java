@@ -105,6 +105,11 @@ public class ForecastActivityTest extends BaseTestCase {
     }
 
     @Test
+    public void setDataWithNull() {
+        activity.setData(null);
+    }
+
+    @Test
     public void getErrorMessage() {
         Throwable throwable = new Throwable("test error");
         assertThat(activity.getErrorMessage(throwable, false), is(throwable.toString()));
