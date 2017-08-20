@@ -7,6 +7,7 @@ import javax.inject.Named;
 import javax.inject.Singleton;
 
 import com.github.aurae.retrofit2.LoganSquareConverterFactory;
+import com.github.tobyhs.rxsecretary.SchedulerProvider;
 import dagger.Module;
 import dagger.Provides;
 import retrofit2.Retrofit;
@@ -15,7 +16,6 @@ import retrofit2.adapter.rxjava2.RxJava2CallAdapterFactory;
 import io.github.tobyhs.weatherweight.storage.LastForecastStore;
 import io.github.tobyhs.weatherweight.storage.SharedPrefLastForecastStore;
 import io.github.tobyhs.weatherweight.util.AppSchedulerProvider;
-import io.github.tobyhs.weatherweight.util.SchedulerProvider;
 import io.github.tobyhs.weatherweight.yahooweather.WeatherRepository;
 import io.github.tobyhs.weatherweight.yahooweather.WeatherRepositoryImpl;
 import io.github.tobyhs.weatherweight.yahooweather.WeatherService;

@@ -1,5 +1,6 @@
 package io.github.tobyhs.weatherweight.util;
 
+import com.github.tobyhs.rxsecretary.SchedulerProvider;
 import io.reactivex.Scheduler;
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.schedulers.Schedulers;

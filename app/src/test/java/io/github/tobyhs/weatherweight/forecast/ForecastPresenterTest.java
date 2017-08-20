@@ -2,6 +2,7 @@ package io.github.tobyhs.weatherweight.forecast;
 
 import java.util.concurrent.atomic.AtomicBoolean;
 
+import com.github.tobyhs.rxsecretary.TestSchedulerProvider;
 import io.reactivex.Completable;
 import io.reactivex.Maybe;
 import io.reactivex.Single;
@@ -13,7 +14,6 @@ import org.mockito.Mock;
 
 import io.github.tobyhs.weatherweight.storage.LastForecastStore;
 import io.github.tobyhs.weatherweight.test.BaseTestCase;
-import io.github.tobyhs.weatherweight.test.TestSchedulerProvider;
 import io.github.tobyhs.weatherweight.test.WeatherResponseFactory;
 import io.github.tobyhs.weatherweight.yahooweather.LocationNotFoundError;
 import io.github.tobyhs.weatherweight.yahooweather.WeatherRepository;
