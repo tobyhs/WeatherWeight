@@ -1,0 +1,149 @@
+{
+  "query": {
+    "count": 1,
+    "created": "2017-09-10T21:34:19Z",
+    "lang": "en-US",
+    "results": {
+      "channel": {
+        "astronomy": {
+          "sunrise": "6:47 am",
+          "sunset": "7:26 pm"
+        },
+        "atmosphere": {
+          "humidity": "60",
+          "pressure": "1011.0",
+          "rising": "0",
+          "visibility": "16.1"
+        },
+        "description": "Yahoo! Weather for San Francisco, CA, US",
+        "image": {
+          "height": "18",
+          "link": "http://weather.yahoo.com",
+          "title": "Yahoo! Weather",
+          "url": "http://l.yimg.com/a/i/brand/purplelogo//uh/us/news-wea.gif",
+          "width": "142"
+        },
+        "item": {
+          "condition": {
+            "code": "32",
+            "date": "Sun, 10 Sep 2017 01:00 PM PDT",
+            "temp": "78",
+            "text": "Sunny"
+          },
+          "description": "<![CDATA[<img src=\"http://l.yimg.com/a/i/us/we/52/32.gif\"/>\n<BR />\n<b>Current Conditions:</b>\n<BR />Sunny\n<BR />\n<BR />\n<b>Forecast:</b>\n<BR /> Sun - Sunny. High: 84Low: 59\n<BR /> Mon - Partly Cloudy. High: 74Low: 63\n<BR /> Tue - Partly Cloudy. High: 72Low: 63\n<BR /> Wed - Breezy. High: 68Low: 62\n<BR /> Thu - Breezy. High: 67Low: 59\n<BR />\n<BR />\n<a href=\"http://us.rd.yahoo.com/dailynews/rss/weather/Country__Country/*https://weather.yahoo.com/country/state/city-2487956/\">Full Forecast at Yahoo! Weather</a>\n<BR />\n<BR />\n<BR />\n]]>",
+          "forecast": [
+            {
+              "code": "32",
+              "date": "10 Sep 2017",
+              "day": "Sun",
+              "high": "84",
+              "low": "59",
+              "text": "Sunny"
+            },
+            {
+              "code": "30",
+              "date": "11 Sep 2017",
+              "day": "Mon",
+              "high": "74",
+              "low": "63",
+              "text": "Partly Cloudy"
+            },
+            {
+              "code": "30",
+              "date": "12 Sep 2017",
+              "day": "Tue",
+              "high": "72",
+              "low": "63",
+              "text": "Partly Cloudy"
+            },
+            {
+              "code": "23",
+              "date": "13 Sep 2017",
+              "day": "Wed",
+              "high": "68",
+              "low": "62",
+              "text": "Breezy"
+            },
+            {
+              "code": "23",
+              "date": "14 Sep 2017",
+              "day": "Thu",
+              "high": "67",
+              "low": "59",
+              "text": "Breezy"
+            },
+            {
+              "code": "32",
+              "date": "15 Sep 2017",
+              "day": "Fri",
+              "high": "68",
+              "low": "60",
+              "text": "Sunny"
+            },
+            {
+              "code": "30",
+              "date": "16 Sep 2017",
+              "day": "Sat",
+              "high": "68",
+              "low": "59",
+              "text": "Partly Cloudy"
+            },
+            {
+              "code": "30",
+              "date": "17 Sep 2017",
+              "day": "Sun",
+              "high": "68",
+              "low": "59",
+              "text": "Partly Cloudy"
+            },
+            {
+              "code": "30",
+              "date": "18 Sep 2017",
+              "day": "Mon",
+              "high": "68",
+              "low": "60",
+              "text": "Partly Cloudy"
+            },
+            {
+              "code": "23",
+              "date": "19 Sep 2017",
+              "day": "Tue",
+              "high": "68",
+              "low": "60",
+              "text": "Breezy"
+            }
+          ],
+          "guid": {
+            "isPermaLink": "false"
+          },
+          "lat": "37.747398",
+          "link": "http://us.rd.yahoo.com/dailynews/rss/weather/Country__Country/*https://weather.yahoo.com/country/state/city-2487956/",
+          "long": "-122.439217",
+          "pubDate": "Sun, 10 Sep 2017 01:00 PM PDT",
+          "title": "Conditions for San Francisco, CA, US at 01:00 PM PDT"
+        },
+        "language": "en-us",
+        "lastBuildDate": "Sun, 10 Sep 2017 02:34 PM PDT",
+        "link": "http://us.rd.yahoo.com/dailynews/rss/weather/Country__Country/*https://weather.yahoo.com/country/state/city-2487956/",
+        "location": {
+          "city": "San Francisco",
+          "country": "United States",
+          "region": " CA"
+        },
+        "title": "Yahoo! Weather - San Francisco, CA, US",
+        "ttl": "60",
+        "units": {
+          "distance": "mi",
+          "pressure": "in",
+          "speed": "mph",
+          "temperature": "F"
+        },
+        "wind": {
+          "chill": "77",
+          "direction": "265",
+          "speed": "14"
+        }
+      }
+    }
+  }
+}
