@@ -1,7 +1,6 @@
 package io.github.tobyhs.weatherweight.util;
 
 import io.reactivex.android.schedulers.AndroidSchedulers;
-import io.reactivex.schedulers.Schedulers;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.robolectric.RobolectricTestRunner;
@@ -16,10 +15,5 @@ public class AppSchedulerProviderTest {
     @Test
     public void ui() {
         assertThat(provider.ui(), is(AndroidSchedulers.mainThread()));
-    }
-
-    @Test
-    public void io() {
-        assertThat(provider.io(), is(Schedulers.io()));
     }
 }
