@@ -24,6 +24,7 @@ public class WeatherResponseTest {
             assertThat(item.getPubDate(), is("Sun, 10 Sep 2017 01:00 PM PDT"));
             SingleForecast forecast = item.getForecast().get(0);
             assertThat(forecast.getDate(), is("10 Sep 2017"));
+            assertThat(forecast.getDay(), is("Sun"));
             assertThat(forecast.getHigh(), is("84"));
             assertThat(forecast.getLow(), is("59"));
             assertThat(forecast.getText(), is("Sunny"));

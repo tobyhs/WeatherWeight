@@ -28,11 +28,11 @@ public class WeatherResponseFactory {
      */
     public static Channel createChannel() {
         List<SingleForecast> forecast = Arrays.asList(
-                new SingleForecast().setDate("05 Feb 2017")
+                new SingleForecast().setDate("05 Feb 2017").setDay("Sun")
                         .setLow("50").setHigh("55").setText("Showers"),
-                new SingleForecast().setDate("06 Feb 2017")
+                new SingleForecast().setDate("06 Feb 2017").setDay("Mon")
                         .setLow("60").setHigh("63").setText("Cloudy"),
-                new SingleForecast().setDate("07 Feb 2017")
+                new SingleForecast().setDate("07 Feb 2017").setDay("Tue")
                         .setLow("72").setHigh("76").setText("Sunny")
         );
 
