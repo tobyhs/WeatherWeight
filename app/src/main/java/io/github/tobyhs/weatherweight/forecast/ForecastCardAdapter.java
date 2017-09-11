@@ -41,7 +41,7 @@ public class ForecastCardAdapter extends ClearRecyclerAdapter<SingleForecast> {
 
         @Override
         public void bind(SingleForecast forecast) {
-            date.setText(forecast.getDate());
+            date.setText(forecast.getDay() + ", " + forecast.getDate());
             temperatureLow.setText(forecast.getLow());
             temperatureHigh.setText(forecast.getHigh());
             description.setText(forecast.getText());

@@ -29,18 +29,20 @@ public class ForecastCardAdapterTest {
         viewHolder = (ForecastCardAdapter.ViewHolder) adapter.getViewHolder(view, 0);
 
         String date = "26 Feb 2017";
+        String day = "Sun";
         String low = "70";
         String high = "79";
         String description = "Rainy";
         SingleForecast forecast = new SingleForecast()
                 .setDate(date)
+                .setDay(day)
                 .setLow(low)
                 .setHigh(high)
                 .setText(description);
 
         viewHolder.bind(forecast);
 
-        verify(viewHolder.date).setText(date);
+        verify(viewHolder.date).setText(day + ", " + date);
         verify(viewHolder.temperatureLow).setText(low);
         verify(viewHolder.temperatureHigh).setText(high);
         verify(viewHolder.description).setText(description);

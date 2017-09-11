@@ -3,6 +3,6 @@
     <dimen name="activity_horizontal_margin">16dp</dimen>
     <dimen name="activity_vertical_margin">16dp</dimen>
 
-    <dimen name="forecast_card_date_width">100dp</dimen>
+    <dimen name="forecast_card_date_width">128dp</dimen>
     <dimen name="forecast_card_temperature_width">35dp</dimen>
 </resources>
