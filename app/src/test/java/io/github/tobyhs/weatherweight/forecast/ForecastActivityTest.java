@@ -107,6 +107,7 @@ public class ForecastActivityTest extends BaseTestCase {
 
     @Test
     public void setDataWithNull() {
+        // To check that a NullPointerException isn't thrown
         activity.setData(null);
     }
 
