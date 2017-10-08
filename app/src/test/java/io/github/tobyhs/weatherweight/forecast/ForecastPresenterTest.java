@@ -2,7 +2,8 @@ package io.github.tobyhs.weatherweight.forecast;
 
 import java.util.concurrent.atomic.AtomicBoolean;
 
-import com.github.tobyhs.rxsecretary.TestSchedulerProvider;
+import com.github.tobyhs.rxsecretary.SchedulerProvider;
+import com.github.tobyhs.rxsecretary.TrampolineSchedulerProvider;
 import io.reactivex.Completable;
 import io.reactivex.Maybe;
 import io.reactivex.Single;
@@ -26,7 +27,7 @@ import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 public class ForecastPresenterTest extends BaseTestCase {
-    private TestSchedulerProvider schedulerProvider = new TestSchedulerProvider();
+    private SchedulerProvider schedulerProvider = new TrampolineSchedulerProvider();
     @Mock private WeatherRepository weatherRepository;
     @Mock private LastForecastStore lastForecastStore;
     @Mock private ForecastContract.View view;
@@ -44,7 +45,6 @@ public class ForecastPresenterTest extends BaseTestCase {
         when(lastForecastStore.get()).thenReturn(Maybe.just(channel));
 
         presenter.loadLastForecast();
-        schedulerProvider.triggerActions();
         checkChannelSet(channel);
         verify(view).setLocationInputText(channel.getLocation().toString());
     }
@@ -55,7 +55,6 @@ public class ForecastPresenterTest extends BaseTestCase {
         when(lastForecastStore.get()).thenReturn(Maybe.<Channel>error(error));
 
         presenter.loadLastForecast();
-        schedulerProvider.triggerActions();
         verify(view).showError(error, false);
     }
 
@@ -64,7 +63,6 @@ public class ForecastPresenterTest extends BaseTestCase {
         when(lastForecastStore.get()).thenReturn(Maybe.<Channel>empty());
 
         presenter.loadLastForecast();
-        schedulerProvider.triggerActions();
         verify(view).showContent();
     }
 
@@ -84,14 +82,10 @@ public class ForecastPresenterTest extends BaseTestCase {
         when(lastForecastStore.save(channel)).thenReturn(saveCompletable);
 
         presenter.search(location);
+
         verify(view).showLoading(false);
-
-        schedulerProvider.triggerActions();
         checkChannelSet(channel);
-
-        schedulerProvider.triggerActions();
         assertThat(completableSubscribed.get(), is(true));
-
         assertThat(presenter.getAttributionUrl(), is(channel.getLink()));
     }
 
@@ -103,9 +97,8 @@ public class ForecastPresenterTest extends BaseTestCase {
         when(weatherRepository.getForecast(location)).thenReturn(single);
 
         presenter.search(location);
-        verify(view).showLoading(false);
 
-        schedulerProvider.triggerActions();
+        verify(view).showLoading(false);
         assertThat(presenter.getChannel(), is(nullValue()));
         verify(view).showError(locationError, false);
     }
