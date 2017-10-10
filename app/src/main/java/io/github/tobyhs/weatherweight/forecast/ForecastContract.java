@@ -1,6 +1,6 @@
 package io.github.tobyhs.weatherweight.forecast;
 
-import com.hannesdorfmann.mosby.mvp.lce.MvpLceView;
+import com.hannesdorfmann.mosby3.mvp.lce.MvpLceView;
 
 import io.github.tobyhs.weatherweight.yahooweather.model.Channel;
 

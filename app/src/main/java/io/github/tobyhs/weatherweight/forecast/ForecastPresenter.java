@@ -3,7 +3,7 @@ package io.github.tobyhs.weatherweight.forecast;
 import javax.inject.Inject;
 
 import com.github.tobyhs.rxsecretary.SchedulerProvider;
-import com.hannesdorfmann.mosby.mvp.MvpBasePresenter;
+import com.hannesdorfmann.mosby3.mvp.MvpBasePresenter;
 import io.reactivex.observers.DisposableMaybeObserver;
 import io.reactivex.observers.DisposableSingleObserver;
 

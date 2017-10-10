@@ -15,9 +15,9 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 import butterknife.OnEditorAction;
-import com.hannesdorfmann.mosby.mvp.viewstate.lce.LceViewState;
-import com.hannesdorfmann.mosby.mvp.viewstate.lce.MvpLceViewStateActivity;
-import com.hannesdorfmann.mosby.mvp.viewstate.lce.data.RetainingLceViewState;
+import com.hannesdorfmann.mosby3.mvp.viewstate.lce.LceViewState;
+import com.hannesdorfmann.mosby3.mvp.viewstate.lce.MvpLceViewStateActivity;
+import com.hannesdorfmann.mosby3.mvp.viewstate.lce.data.RetainingLceViewState;
 
 import io.github.tobyhs.weatherweight.App;
 import io.github.tobyhs.weatherweight.R;
@@ -44,7 +44,6 @@ public class ForecastActivity
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_forecast);
 
-        setRetainInstance(true);
         ButterKnife.bind(this);
 
         forecastCardAdapter = new ForecastCardAdapter();

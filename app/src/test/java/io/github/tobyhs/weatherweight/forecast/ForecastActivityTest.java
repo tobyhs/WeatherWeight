@@ -10,7 +10,7 @@ import android.view.View;
 import android.view.inputmethod.EditorInfo;
 import android.widget.TextView;
 
-import com.hannesdorfmann.mosby.mvp.viewstate.lce.data.RetainingLceViewState;
+import com.hannesdorfmann.mosby3.mvp.viewstate.lce.data.RetainingLceViewState;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -56,11 +56,6 @@ public class ForecastActivityTest extends BaseTestCase {
 
         presenter = controller.get().getPresenter();
         verify(presenter, never()).loadLastForecast();
-    }
-
-    @Test
-    public void isRetainInstance() {
-        assertThat(activity.isRetainInstance(), is(true));
     }
 
     @Test

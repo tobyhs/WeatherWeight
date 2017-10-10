@@ -44,9 +44,10 @@ dependencies {
     annotationProcessor "com.bluelinelabs:logansquare-compiler:$loganSquareVersion"
     compile "com.bluelinelabs:logansquare:$loganSquareVersion"
 
-    final mosbyVersion = '2.0.1'
-    compile "com.hannesdorfmann.mosby:mvp:$mosbyVersion"
-    compile "com.hannesdorfmann.mosby:viewstate:$mosbyVersion"
+    final mosbyVersion = '3.0.4'
+    compile "com.hannesdorfmann.mosby3:mvp:$mosbyVersion"
+    compile "com.hannesdorfmann.mosby3:viewstate:$mosbyVersion"
+    compile "com.hannesdorfmann.mosby3:mvp-lce:$mosbyVersion"
 
     compile 'io.reactivex.rxjava2:rxjava:2.0.3'
     compile 'io.reactivex.rxjava2:rxandroid:2.0.1'
