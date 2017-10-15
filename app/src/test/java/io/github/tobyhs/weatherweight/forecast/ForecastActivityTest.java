@@ -89,9 +89,10 @@ public class ForecastActivityTest extends BaseTestCase {
 
         View view = layoutManager.findViewByPosition(0);
         SingleForecast singleForecast = forecasts.get(0);
+        TextView dayView = (TextView) view.findViewById(R.id.day);
+        assertThat(dayView.getText().toString(), is(singleForecast.getDay()));
         TextView dateView = (TextView) view.findViewById(R.id.date);
-        String date = singleForecast.getDay() + ", " + singleForecast.getDate();
-        assertThat(dateView.getText().toString(), is(date));
+        assertThat(dateView.getText().toString(), is(singleForecast.getDate()));
         TextView lowView = (TextView) view.findViewById(R.id.temperatureLow);
         assertThat(lowView.getText().toString(), is(singleForecast.getLow()));
         TextView highView = (TextView) view.findViewById(R.id.temperatureHigh);

@@ -29,6 +29,7 @@ public class ForecastCardAdapter extends ClearRecyclerAdapter<SingleForecast> {
      * View holder for {@link ForecastCardAdapter}
      */
     static class ViewHolder extends ClearRecyclerViewHolder<SingleForecast> {
+        @BindView(R.id.day) TextView day;
         @BindView(R.id.date) TextView date;
         @BindView(R.id.temperatureLow) TextView temperatureLow;
         @BindView(R.id.temperatureHigh) TextView temperatureHigh;
@@ -41,7 +42,8 @@ public class ForecastCardAdapter extends ClearRecyclerAdapter<SingleForecast> {
 
         @Override
         public void bind(SingleForecast forecast) {
-            date.setText(forecast.getDay() + ", " + forecast.getDate());
+            day.setText(forecast.getDay());
+            date.setText(forecast.getDate());
             temperatureLow.setText(forecast.getLow());
             temperatureHigh.setText(forecast.getHigh());
             description.setText(forecast.getText());

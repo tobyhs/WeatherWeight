@@ -42,7 +42,8 @@ public class ForecastCardAdapterTest {
 
         viewHolder.bind(forecast);
 
-        verify(viewHolder.date).setText(day + ", " + date);
+        verify(viewHolder.day).setText(day);
+        verify(viewHolder.date).setText(date);
         verify(viewHolder.temperatureLow).setText(low);
         verify(viewHolder.temperatureHigh).setText(high);
         verify(viewHolder.description).setText(description);
@@ -50,7 +51,13 @@ public class ForecastCardAdapterTest {
 
     private static View mockView() {
         View view = mock(View.class);
-        int[] viewIds = {R.id.date, R.id.temperatureLow, R.id.temperatureHigh, R.id.description};
+        int[] viewIds = {
+                R.id.day,
+                R.id.date,
+                R.id.temperatureLow,
+                R.id.temperatureHigh,
+                R.id.description,
+        };
         for (int viewId : viewIds) {
             when(view.findViewById(viewId)).thenReturn(mock(TextView.class));
         }
