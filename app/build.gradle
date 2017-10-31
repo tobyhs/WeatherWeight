@@ -37,8 +37,13 @@ dependencies {
     compile 'com.prokkypew:clearrecycleradapter:1.1.0'
 
     final daggerVersion = '2.12'
-    annotationProcessor "com.google.dagger:dagger-compiler:$daggerVersion"
-    annotationProcessor "com.google.dagger:dagger-android-processor:$daggerVersion"
+    [
+            "com.google.dagger:dagger-compiler:$daggerVersion",
+            "com.google.dagger:dagger-android-processor:$daggerVersion",
+    ].each {
+        annotationProcessor it
+        testAnnotationProcessor it
+    }
     compile "com.google.dagger:dagger:$daggerVersion"
     compile "com.google.dagger:dagger-android:$daggerVersion"
 
