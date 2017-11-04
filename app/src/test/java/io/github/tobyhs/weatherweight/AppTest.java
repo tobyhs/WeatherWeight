@@ -22,7 +22,7 @@ public class AppTest {
     }
 
     @Test
-    public void createForecastComponent() {
-        assertThat(app.createForecastComponent(), is(notNullValue()));
+    public void applicationInjector() {
+        assertThat(app.applicationInjector(), is(notNullValue()));
     }
 }

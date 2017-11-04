@@ -1,14 +1,13 @@
 package io.github.tobyhs.weatherweight;
 
-import io.github.tobyhs.weatherweight.forecast.ForecastComponent;
-import io.github.tobyhs.weatherweight.forecast.TestForecastComponent;
+import dagger.android.AndroidInjector;
 
 /**
  * Application class for unit tests
  */
 public class TestApp extends App {
     @Override
-    public ForecastComponent createForecastComponent() {
-        return new TestForecastComponent();
+    protected AndroidInjector<App> applicationInjector() {
+        return DaggerTestAppComponent.builder().create(this);
     }
 }

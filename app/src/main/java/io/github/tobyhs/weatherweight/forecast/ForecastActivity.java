@@ -19,7 +19,11 @@ import com.hannesdorfmann.mosby3.mvp.viewstate.lce.LceViewState;
 import com.hannesdorfmann.mosby3.mvp.viewstate.lce.MvpLceViewStateActivity;
 import com.hannesdorfmann.mosby3.mvp.viewstate.lce.data.RetainingLceViewState;
 
-import io.github.tobyhs.weatherweight.App;
+import javax.inject.Inject;
+
+import dagger.Lazy;
+import dagger.android.AndroidInjection;
+
 import io.github.tobyhs.weatherweight.R;
 import io.github.tobyhs.weatherweight.yahooweather.model.Channel;
 
@@ -29,7 +33,9 @@ import io.github.tobyhs.weatherweight.yahooweather.model.Channel;
 public class ForecastActivity
         extends MvpLceViewStateActivity<LinearLayout, Channel, ForecastContract.View, ForecastPresenter>
         implements ForecastContract.View {
-    private ForecastComponent forecastComponent;
+    @Inject
+    protected Lazy<ForecastPresenter> lazyPresenter;
+
     private ForecastCardAdapter forecastCardAdapter;
 
     @BindView(R.id.locationInput) EditText locationInput;
@@ -39,8 +45,7 @@ public class ForecastActivity
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
-        forecastComponent = ((App) getApplication()).createForecastComponent();
-
+        AndroidInjection.inject(this);
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_forecast);
 
@@ -58,7 +63,7 @@ public class ForecastActivity
     @Override
     @NonNull
     public ForecastPresenter createPresenter() {
-        return forecastComponent.forecastPresenter();
+        return lazyPresenter.get();
     }
 
     @Override
