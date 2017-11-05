@@ -31,8 +31,4 @@ public interface AppComponent extends AndroidInjector<App> {
 
         abstract Builder appModule(AppModule appModule);
     }
-
-    SchedulerProvider schedulerProvider();
-    WeatherRepository weatherRepository();
-    LastForecastStore lastForecastStore();
 }
