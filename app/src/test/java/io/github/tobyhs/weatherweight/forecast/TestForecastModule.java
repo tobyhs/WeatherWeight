@@ -18,7 +18,7 @@ public abstract class TestForecastModule {
      * @return mock presenter
      */
     @Provides
-    public static ForecastPresenter forecastPresenter() {
+    public static ForecastPresenter provideForecastPresenter() {
         return mock(ForecastPresenter.class);
     }
 }
