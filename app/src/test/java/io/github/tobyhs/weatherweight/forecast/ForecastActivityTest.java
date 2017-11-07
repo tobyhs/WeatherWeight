@@ -19,7 +19,6 @@ import org.robolectric.RobolectricTestRunner;
 import org.robolectric.util.ActivityController;
 
 import io.github.tobyhs.weatherweight.R;
-import io.github.tobyhs.weatherweight.test.BaseTestCase;
 import io.github.tobyhs.weatherweight.test.WeatherResponseFactory;
 import io.github.tobyhs.weatherweight.yahooweather.model.Channel;
 import io.github.tobyhs.weatherweight.yahooweather.model.SingleForecast;
@@ -35,7 +34,7 @@ import static org.mockito.Mockito.when;
 import static org.robolectric.Shadows.shadowOf;
 
 @RunWith(RobolectricTestRunner.class)
-public class ForecastActivityTest extends BaseTestCase {
+public class ForecastActivityTest {
     private ForecastPresenter presenter;
     private ForecastActivity activity = Robolectric.setupActivity(ForecastActivity.class);
 

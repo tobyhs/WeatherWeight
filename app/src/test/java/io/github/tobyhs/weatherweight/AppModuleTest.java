@@ -14,7 +14,6 @@ import retrofit2.adapter.rxjava2.RxJava2CallAdapterFactory;
 
 import io.github.tobyhs.weatherweight.storage.LastForecastStore;
 import io.github.tobyhs.weatherweight.storage.SharedPrefLastForecastStore;
-import io.github.tobyhs.weatherweight.test.BaseTestCase;
 import io.github.tobyhs.weatherweight.util.AppSchedulerProvider;
 import io.github.tobyhs.weatherweight.yahooweather.WeatherRepository;
 import io.github.tobyhs.weatherweight.yahooweather.WeatherRepositoryImpl;
@@ -29,7 +28,7 @@ import static org.mockito.Mockito.mock;
 
 @RunWith(RobolectricTestRunner.class)
 @Config(application = App.class)
-public class AppModuleTest extends BaseTestCase {
+public class AppModuleTest {
     private App app;
     private AppModule module;
 
