@@ -68,6 +68,6 @@ dependencies {
     compile 'com.github.aurae.retrofit2:converter-logansquare:1.4.1'
 
     testCompile 'junit:junit:4.12'
-    testCompile 'org.mockito:mockito-core:2.2.9'
+    testCompile 'org.mockito:mockito-core:2.11.0'
     testCompile 'org.robolectric:robolectric:3.1.4'
 }
