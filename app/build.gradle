@@ -51,6 +51,12 @@ dependencies {
     annotationProcessor "com.bluelinelabs:logansquare-compiler:$loganSquareVersion"
     compile "com.bluelinelabs:logansquare:$loganSquareVersion"
 
+    compile 'com.google.code.gson:gson:2.8.2'
+
+    final gsonValueVersion = '0.7'
+    annotationProcessor "me.tatarka.gsonvalue:gsonvalue-processor:$gsonValueVersion"
+    compile "me.tatarka.gsonvalue:gsonvalue:$gsonValueVersion"
+
     final mosbyVersion = '3.0.4'
     compile "com.hannesdorfmann.mosby3:mvp:$mosbyVersion"
     compile "com.hannesdorfmann.mosby3:viewstate:$mosbyVersion"
@@ -65,6 +71,7 @@ dependencies {
     compile 'com.squareup.okhttp3:okhttp:3.6.0'
     compile "com.squareup.retrofit2:retrofit:$retrofitVersion"
     compile "com.squareup.retrofit2:adapter-rxjava2:$retrofitVersion"
+    compile "com.squareup.retrofit2:converter-gson:$retrofitVersion"
     compile 'com.github.aurae.retrofit2:converter-logansquare:1.4.1'
 
     testCompile 'junit:junit:4.12'
