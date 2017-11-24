@@ -11,6 +11,7 @@ import org.robolectric.RuntimeEnvironment;
 import org.robolectric.annotation.Config;
 import retrofit2.Retrofit;
 import retrofit2.adapter.rxjava2.RxJava2CallAdapterFactory;
+import retrofit2.converter.gson.GsonConverterFactory;
 
 import io.github.tobyhs.weatherweight.storage.LastForecastStore;
 import io.github.tobyhs.weatherweight.storage.SharedPrefLastForecastStore;
@@ -54,11 +55,17 @@ public class AppModuleTest {
     }
 
     @Test
+    public void provideGson() {
+        assertThat(AppModule.provideGson(), is(notNullValue()));
+    }
+
+    @Test
     public void provideYahooRetrofit() {
-        Retrofit retrofit = module.provideYahooRetrofit();
+        Retrofit retrofit = module.provideYahooRetrofit(AppModule.provideGson());
         assertThat(retrofit.baseUrl().toString(), is("https://query.yahooapis.com/"));
         assertThat(retrofit.callAdapterFactories(), hasItem(isA(RxJava2CallAdapterFactory.class)));
         assertThat(retrofit.converterFactories(), hasItem(isA(LoganSquareConverterFactory.class)));
+        assertThat(retrofit.converterFactories(), hasItem(isA(GsonConverterFactory.class)));
     }
 
     @Test

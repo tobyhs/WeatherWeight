@@ -8,14 +8,20 @@ import javax.inject.Singleton;
 
 import com.github.aurae.retrofit2.LoganSquareConverterFactory;
 import com.github.tobyhs.rxsecretary.SchedulerProvider;
+
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
+
 import dagger.Module;
 import dagger.Provides;
 import retrofit2.Retrofit;
 import retrofit2.adapter.rxjava2.RxJava2CallAdapterFactory;
+import retrofit2.converter.gson.GsonConverterFactory;
 
 import io.github.tobyhs.weatherweight.storage.LastForecastStore;
 import io.github.tobyhs.weatherweight.storage.SharedPrefLastForecastStore;
 import io.github.tobyhs.weatherweight.util.AppSchedulerProvider;
+import io.github.tobyhs.weatherweight.util.GVTypeAdapterFactory;
 import io.github.tobyhs.weatherweight.yahooweather.WeatherRepository;
 import io.github.tobyhs.weatherweight.yahooweather.WeatherRepositoryImpl;
 import io.github.tobyhs.weatherweight.yahooweather.WeatherService;
@@ -62,15 +68,28 @@ public class AppModule {
     }
 
     /**
+     * @return a Gson instance
+     */
+    @Provides
+    @Singleton
+    public static Gson provideGson() {
+        return new GsonBuilder()
+                .registerTypeAdapterFactory(GVTypeAdapterFactory.create())
+                .create();
+    }
+
+    /**
+     * @param gson Gson instance for parsing JSON response bodies
      * @return a Retrofit instance for Yahoo's public API
      */
     @Provides @Named("yahooRetrofit")
     @Singleton
-    Retrofit provideYahooRetrofit() {
+    Retrofit provideYahooRetrofit(Gson gson) {
         return new Retrofit.Builder()
                 .baseUrl("https://query.yahooapis.com/")
                 .addCallAdapterFactory(RxJava2CallAdapterFactory.create())
                 .addConverterFactory(LoganSquareConverterFactory.create())
+                .addConverterFactory(GsonConverterFactory.create(gson))
                 .build();
     }
 
