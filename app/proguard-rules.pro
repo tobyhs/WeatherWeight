@@ -12,3 +12,6 @@
 -keepattributes Signature
 # Retain declared checked exceptions for use by a Proxy instance.
 -keepattributes Exceptions
+
+# For dagger-android
+-dontwarn com.google.errorprone.annotations.*
