@@ -1,9 +1,14 @@
 package io.github.tobyhs.weatherweight.yahooweather.model;
 
 import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.io.Reader;
 
-import com.bluelinelabs.logansquare.LoganSquare;
+import com.google.gson.Gson;
+
 import org.junit.Test;
+
+import io.github.tobyhs.weatherweight.AppModule;
 
 import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.MatcherAssert.assertThat;
@@ -11,8 +16,12 @@ import static org.hamcrest.MatcherAssert.assertThat;
 public class WeatherResponseTest {
     @Test
     public void parseJson() throws Exception {
-        try (InputStream stream = getClass().getResourceAsStream("/weatherResponse.json")) {
-            WeatherResponse response = LoganSquare.parse(stream, WeatherResponse.class);
+        try (
+                InputStream stream = getClass().getResourceAsStream("/weatherResponse.json");
+                Reader reader = new InputStreamReader(stream);
+        ) {
+            Gson gson = AppModule.provideGson();
+            WeatherResponse response = gson.fromJson(reader, WeatherResponse.class);
             Channel channel = response.getQuery().getResults().getChannel();
 
             Location location = channel.getLocation();

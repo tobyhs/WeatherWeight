@@ -24,7 +24,9 @@ public class WeatherRepositoryImplTest extends BaseTestCase {
 
     @Test
     public void getForecastWithNotFoundLocationThrowsError() {
-        WeatherResponse weatherResponse = new WeatherResponse().setQuery(new Query());
+        WeatherResponse weatherResponse = WeatherResponse.builder()
+                .setQuery(Query.builder().build())
+                .build();
         Response<WeatherResponse> response = Response.success(weatherResponse);
         when(weatherService.getByYql(anyString())).thenReturn(Single.just(response));
 

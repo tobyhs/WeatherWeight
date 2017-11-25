@@ -5,7 +5,8 @@ import android.content.SharedPreferences;
 import java.io.IOException;
 import java.util.concurrent.Callable;
 
-import com.bluelinelabs.logansquare.LoganSquare;
+import com.google.gson.Gson;
+
 import io.reactivex.Completable;
 import io.reactivex.Maybe;
 import io.reactivex.functions.Action;
@@ -20,12 +21,15 @@ public class SharedPrefLastForecastStore implements LastForecastStore {
     private static String KEY = "lastForecast";
 
     private SharedPreferences sharedPreferences;
+    private Gson gson;
 
     /**
      * @param sharedPreferences the {@link SharedPreferences} to use
+     * @param gson Gson instance to serialize data
      */
-    public SharedPrefLastForecastStore(SharedPreferences sharedPreferences) {
+    public SharedPrefLastForecastStore(SharedPreferences sharedPreferences, Gson gson) {
         this.sharedPreferences = sharedPreferences;
+        this.gson = gson;
     }
 
     @Override
@@ -37,7 +41,7 @@ public class SharedPrefLastForecastStore implements LastForecastStore {
                 if (json == null) {
                     return null;
                 }
-                return LoganSquare.parse(json, Channel.class);
+                return gson.fromJson(json, Channel.class);
             }
         });
     }
@@ -47,7 +51,7 @@ public class SharedPrefLastForecastStore implements LastForecastStore {
         return Completable.fromAction(new Action() {
             @Override
             public void run() throws Exception {
-                String json = LoganSquare.serialize(channel);
+                String json = gson.toJson(channel);
                 SharedPreferences.Editor editor = sharedPreferences.edit();
                 editor.putString(KEY, json);
                 if (!editor.commit()) {

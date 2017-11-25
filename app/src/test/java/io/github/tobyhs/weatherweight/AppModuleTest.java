@@ -3,6 +3,9 @@ package io.github.tobyhs.weatherweight;
 import android.content.SharedPreferences;
 
 import com.github.aurae.retrofit2.LoganSquareConverterFactory;
+
+import com.google.gson.Gson;
+
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -84,7 +87,8 @@ public class AppModuleTest {
     @Test
     public void provideLastForecastStore() {
         SharedPreferences sharedPreferences = mock(SharedPreferences.class);
-        LastForecastStore store = module.provideLastForecastStore(sharedPreferences);
+        Gson gson = AppModule.provideGson();
+        LastForecastStore store = module.provideLastForecastStore(sharedPreferences, gson);
         assertThat(store, isA((Class) SharedPrefLastForecastStore.class));
     }
 }

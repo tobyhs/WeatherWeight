@@ -1,23 +1,30 @@
 package io.github.tobyhs.weatherweight.yahooweather.model;
 
-import com.bluelinelabs.logansquare.annotation.JsonObject;
+import android.support.annotation.Nullable;
+
+import com.google.auto.value.AutoValue;
+
+import me.tatarka.gsonvalue.annotations.GsonBuilder;
 
 /**
  * Resulting metadata and data from a Yahoo Weather API query
  */
-@JsonObject(fieldDetectionPolicy = JsonObject.FieldDetectionPolicy.NONPRIVATE_FIELDS_AND_ACCESSORS)
-public class Query {
-    private Results results;
-
+@AutoValue
+public abstract class Query {
     /**
      * @return resulting data
      */
-    public Results getResults() {
-        return results;
+    @Nullable
+    public abstract Results getResults();
+
+    @GsonBuilder
+    public static Builder builder() {
+        return new AutoValue_Query.Builder();
     }
 
-    public Query setResults(Results results) {
-        this.results = results;
-        return this;
+    @AutoValue.Builder
+    public abstract static class Builder {
+        public abstract Builder setResults(Results results);
+        public abstract Query build();
     }
 }

@@ -115,11 +115,12 @@ public class AppModule {
 
     /**
      * @param sharedPreferences {@link SharedPreferences} instance for the application
+     * @param gson Gson instance to serialize data
      * @return store to save or get the last forecast
      */
     @Provides
     @Singleton
-    LastForecastStore provideLastForecastStore(SharedPreferences sharedPreferences) {
-        return new SharedPrefLastForecastStore(sharedPreferences);
+    LastForecastStore provideLastForecastStore(SharedPreferences sharedPreferences, Gson gson) {
+        return new SharedPrefLastForecastStore(sharedPreferences, gson);
     }
 }

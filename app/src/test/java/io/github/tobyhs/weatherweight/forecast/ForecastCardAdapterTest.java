@@ -33,12 +33,13 @@ public class ForecastCardAdapterTest {
         String low = "70";
         String high = "79";
         String description = "Rainy";
-        SingleForecast forecast = new SingleForecast()
+        SingleForecast forecast = SingleForecast.builder()
                 .setDate(date)
                 .setDay(day)
                 .setLow(low)
                 .setHigh(high)
-                .setText(description);
+                .setText(description)
+                .build();
 
         viewHolder.bind(forecast);
 

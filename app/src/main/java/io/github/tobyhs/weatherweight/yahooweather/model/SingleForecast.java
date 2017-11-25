@@ -1,75 +1,51 @@
 package io.github.tobyhs.weatherweight.yahooweather.model;
 
-import com.bluelinelabs.logansquare.annotation.JsonObject;
+import com.google.auto.value.AutoValue;
+
+import me.tatarka.gsonvalue.annotations.GsonBuilder;
 
 /**
  * This models a forecast for a particular day.
  */
-@JsonObject(fieldDetectionPolicy = JsonObject.FieldDetectionPolicy.NONPRIVATE_FIELDS_AND_ACCESSORS)
-public class SingleForecast {
-    private String date;
-    private String day;
-    private String high;
-    private String low;
-    private String text;
-
+@AutoValue
+public abstract class SingleForecast {
     /**
      * @return the date this forecast is for
      */
-    public String getDate() {
-        return date;
-    }
+    public abstract String getDate();
 
     /**
      * @return day of week for the date this forecast is for
      */
-    public String getDay() {
-        return day;
-    }
+    public abstract String getDay();
 
     /**
      * @return forecasted high temperature
      */
-    public String getHigh() {
-        return high;
-    }
+    public abstract String getHigh();
 
     /**
      * @return forecasted low temperature
      */
-    public String getLow() {
-        return low;
-    }
+    public abstract String getLow();
 
     /**
      * @return description of forecasted conditions
      */
-    public String getText() {
-        return text;
+    public abstract String getText();
+
+    @GsonBuilder
+    public static Builder builder() {
+        return new AutoValue_SingleForecast.Builder();
     }
 
-    public SingleForecast setDate(String date) {
-        this.date = date;
-        return this;
-    }
-
-    public SingleForecast setDay(String day) {
-        this.day = day;
-        return this;
-    }
-
-    public SingleForecast setHigh(String high) {
-        this.high = high;
-        return this;
-    }
-
-    public SingleForecast setLow(String low) {
-        this.low = low;
-        return this;
-    }
-
-    public SingleForecast setText(String text) {
-        this.text = text;
-        return this;
+    @AutoValue.Builder
+    public abstract static class Builder {
+        public abstract Builder setDate(String date);
+        public abstract Builder setDay(String day);
+        public abstract Builder setHigh(String high);
+        public abstract Builder setLow(String low);
+        public abstract Builder setText(String text);
+        public abstract SingleForecast build();
     }
 }

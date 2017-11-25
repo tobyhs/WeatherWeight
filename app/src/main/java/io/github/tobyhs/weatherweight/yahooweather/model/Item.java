@@ -2,37 +2,34 @@ package io.github.tobyhs.weatherweight.yahooweather.model;
 
 import java.util.List;
 
-import com.bluelinelabs.logansquare.annotation.JsonObject;
+import com.google.auto.value.AutoValue;
+
+import me.tatarka.gsonvalue.annotations.GsonBuilder;
 
 /**
  * An item contains forecast data.
  */
-@JsonObject(fieldDetectionPolicy = JsonObject.FieldDetectionPolicy.NONPRIVATE_FIELDS_AND_ACCESSORS)
-public class Item {
-    private List<SingleForecast> forecast;
-    private String pubDate;
-
+@AutoValue
+public abstract class Item {
     /**
      * @return a list of daily forecasts for today and upcoming days
      */
-    public List<SingleForecast> getForecast() {
-        return forecast;
-    }
+    public abstract List<SingleForecast> getForecast();
 
     /**
      * @return publication date of forecast
      */
-    public String getPubDate() {
-        return pubDate;
+    public abstract String getPubDate();
+
+    @GsonBuilder
+    public static Builder builder() {
+        return new AutoValue_Item.Builder();
     }
 
-    public Item setForecast(List<SingleForecast> forecast) {
-        this.forecast = forecast;
-        return this;
-    }
-
-    public Item setPubDate(String pubDate) {
-        this.pubDate = pubDate;
-        return this;
+    @AutoValue.Builder
+    public abstract static class Builder {
+        public abstract Builder setForecast(List<SingleForecast> forecast);
+        public abstract Builder setPubDate(String pubDate);
+        public abstract Item build();
     }
 }
