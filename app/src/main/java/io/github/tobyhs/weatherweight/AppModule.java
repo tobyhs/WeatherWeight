@@ -6,7 +6,6 @@ import android.preference.PreferenceManager;
 import javax.inject.Named;
 import javax.inject.Singleton;
 
-import com.github.aurae.retrofit2.LoganSquareConverterFactory;
 import com.github.tobyhs.rxsecretary.SchedulerProvider;
 
 import com.google.gson.Gson;
@@ -88,7 +87,6 @@ public class AppModule {
         return new Retrofit.Builder()
                 .baseUrl("https://query.yahooapis.com/")
                 .addCallAdapterFactory(RxJava2CallAdapterFactory.create())
-                .addConverterFactory(LoganSquareConverterFactory.create())
                 .addConverterFactory(GsonConverterFactory.create(gson))
                 .build();
     }

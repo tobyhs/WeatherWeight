@@ -2,8 +2,6 @@ package io.github.tobyhs.weatherweight;
 
 import android.content.SharedPreferences;
 
-import com.github.aurae.retrofit2.LoganSquareConverterFactory;
-
 import com.google.gson.Gson;
 
 import org.junit.Before;
@@ -67,7 +65,6 @@ public class AppModuleTest {
         Retrofit retrofit = module.provideYahooRetrofit(AppModule.provideGson());
         assertThat(retrofit.baseUrl().toString(), is("https://query.yahooapis.com/"));
         assertThat(retrofit.callAdapterFactories(), hasItem(isA(RxJava2CallAdapterFactory.class)));
-        assertThat(retrofit.converterFactories(), hasItem(isA(LoganSquareConverterFactory.class)));
         assertThat(retrofit.converterFactories(), hasItem(isA(GsonConverterFactory.class)));
     }
 

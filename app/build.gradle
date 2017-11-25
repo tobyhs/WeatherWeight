@@ -47,10 +47,6 @@ dependencies {
     compile "com.google.dagger:dagger:$daggerVersion"
     compile "com.google.dagger:dagger-android:$daggerVersion"
 
-    final loganSquareVersion = '1.3.6'
-    annotationProcessor "com.bluelinelabs:logansquare-compiler:$loganSquareVersion"
-    compile "com.bluelinelabs:logansquare:$loganSquareVersion"
-
     final autoValue = 'com.google.auto.value:auto-value:1.5.2'
     compileOnly autoValue
     annotationProcessor autoValue
@@ -76,7 +72,6 @@ dependencies {
     compile "com.squareup.retrofit2:retrofit:$retrofitVersion"
     compile "com.squareup.retrofit2:adapter-rxjava2:$retrofitVersion"
     compile "com.squareup.retrofit2:converter-gson:$retrofitVersion"
-    compile 'com.github.aurae.retrofit2:converter-logansquare:1.4.1'
 
     testCompile 'junit:junit:4.12'
     testCompile 'org.mockito:mockito-core:2.11.0'
