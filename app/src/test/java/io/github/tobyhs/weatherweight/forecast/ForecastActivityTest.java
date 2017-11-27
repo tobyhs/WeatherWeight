@@ -88,15 +88,15 @@ public class ForecastActivityTest {
 
         View view = layoutManager.findViewByPosition(0);
         SingleForecast singleForecast = forecasts.get(0);
-        TextView dayView = (TextView) view.findViewById(R.id.day);
+        TextView dayView = view.findViewById(R.id.day);
         assertThat(dayView.getText().toString(), is(singleForecast.getDay()));
-        TextView dateView = (TextView) view.findViewById(R.id.date);
+        TextView dateView = view.findViewById(R.id.date);
         assertThat(dateView.getText().toString(), is(singleForecast.getDate()));
-        TextView lowView = (TextView) view.findViewById(R.id.temperatureLow);
+        TextView lowView = view.findViewById(R.id.temperatureLow);
         assertThat(lowView.getText().toString(), is(singleForecast.getLow()));
-        TextView highView = (TextView) view.findViewById(R.id.temperatureHigh);
+        TextView highView = view.findViewById(R.id.temperatureHigh);
         assertThat(highView.getText().toString(), is(singleForecast.getHigh()));
-        TextView descriptionView = (TextView) view.findViewById(R.id.description);
+        TextView descriptionView = view.findViewById(R.id.description);
         assertThat(descriptionView.getText().toString(), is(singleForecast.getText()));
     }
 
