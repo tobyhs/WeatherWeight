@@ -50,7 +50,7 @@ public class SharedPrefLastForecastStoreTest {
         editor.apply();
 
         Channel storedChannel = store.get().blockingGet();
-        compareChannels(storedChannel, channel);
+        assertThat(storedChannel, is(channel));
     }
 
     @Test
@@ -61,7 +61,7 @@ public class SharedPrefLastForecastStoreTest {
 
         String json = sharedPreferences.getString("lastForecast", null);
         Channel storedChannel = gson.fromJson(json, Channel.class);
-        compareChannels(storedChannel, channel);
+        assertThat(storedChannel, is(channel));
     }
 
     @Test
@@ -75,10 +75,5 @@ public class SharedPrefLastForecastStoreTest {
 
         Throwable error = store.save(channel).blockingGet();
         assertThat(error, is(instanceOf(IOException.class)));
-    }
-
-    private void compareChannels(Channel actual, Channel expected) {
-        assertThat(actual.getLocation().toString(), is(expected.getLocation().toString()));
-        assertThat(actual.getItem().getPubDate(), is(expected.getItem().getPubDate()));
     }
 }
