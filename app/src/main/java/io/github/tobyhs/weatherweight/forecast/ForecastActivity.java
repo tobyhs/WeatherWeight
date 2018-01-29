@@ -6,15 +6,13 @@ import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.view.inputmethod.EditorInfo;
-import android.widget.EditText;
 import android.widget.LinearLayout;
+import android.widget.SearchView;
 import android.widget.TextView;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
-import butterknife.OnEditorAction;
 import com.hannesdorfmann.mosby3.mvp.viewstate.lce.LceViewState;
 import com.hannesdorfmann.mosby3.mvp.viewstate.lce.MvpLceViewStateActivity;
 import com.hannesdorfmann.mosby3.mvp.viewstate.lce.data.RetainingLceViewState;
@@ -32,13 +30,13 @@ import io.github.tobyhs.weatherweight.yahooweather.model.Channel;
  */
 public class ForecastActivity
         extends MvpLceViewStateActivity<LinearLayout, Channel, ForecastContract.View, ForecastPresenter>
-        implements ForecastContract.View {
+        implements ForecastContract.View, SearchView.OnQueryTextListener {
     @Inject
     protected Lazy<ForecastPresenter> lazyPresenter;
 
     private ForecastCardAdapter forecastCardAdapter;
 
-    @BindView(R.id.locationInput) EditText locationInput;
+    @BindView(R.id.locationSearch) SearchView locationSearch;
     @BindView(R.id.locationFound) TextView locationFoundView;
     @BindView(R.id.pubDate) TextView pubDateView;
     @BindView(R.id.forecastRecyclerView) RecyclerView forecastRecyclerView;
@@ -50,6 +48,9 @@ public class ForecastActivity
         setContentView(R.layout.activity_forecast);
 
         ButterKnife.bind(this);
+
+        locationSearch.setOnQueryTextListener(this);
+        locationSearch.setSubmitButtonEnabled(true);
 
         forecastCardAdapter = new ForecastCardAdapter();
         forecastRecyclerView.setLayoutManager(new LinearLayoutManager(this));
@@ -99,30 +100,18 @@ public class ForecastActivity
 
     @Override
     public void setLocationInputText(String location) {
-        locationInput.setText(location);
+        locationSearch.setQuery(location, false);
     }
 
-    /**
-     * Submits the location to the presenter to query the weather API
-     */
-    @OnClick(R.id.submitButton)
-    public void submitLocation() {
-        getPresenter().search(locationInput.getText().toString());
+    @Override
+    public boolean onQueryTextSubmit(String query) {
+        getPresenter().search(query);
+        return true;
     }
 
-    /**
-     * Handler for tapping the "go" button on the keyboard when focused on the location input
-     *
-     * @param actionId ID of action performed on the location input
-     * @return true iff {@code actionId} is something we trigger a submission on
-     */
-    @OnEditorAction(R.id.locationInput)
-    public boolean submitLocation(int actionId) {
-        if (actionId == EditorInfo.IME_ACTION_GO) {
-            submitLocation();
-            return true;
-        }
-        return false;
+    @Override
+    public boolean onQueryTextChange(String newText) {
+        return true;
     }
 
     /**

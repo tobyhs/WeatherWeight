@@ -7,7 +7,6 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
-import android.view.inputmethod.EditorInfo;
 import android.widget.TextView;
 
 import com.hannesdorfmann.mosby3.mvp.viewstate.lce.data.RetainingLceViewState;
@@ -35,12 +34,12 @@ import static org.robolectric.Shadows.shadowOf;
 
 @RunWith(RobolectricTestRunner.class)
 public class ForecastActivityTest {
-    private ForecastPresenter presenter;
     private ForecastActivity activity = Robolectric.setupActivity(ForecastActivity.class);
+    private ForecastPresenter presenter = activity.getPresenter();
 
-    @Before
-    public void setup() {
-        presenter = activity.getPresenter();
+    @Test
+    public void onCreate() {
+        assertThat(activity.locationSearch.isSubmitButtonEnabled(), is(true));
     }
 
     @Test
@@ -121,34 +120,20 @@ public class ForecastActivityTest {
     public void setLocationInputText() {
         String location = "Saved City, SC";
         activity.setLocationInputText(location);
-        assertThat(activity.locationInput.getText().toString(), is(location));
-    }
-
-    @Test
-    public void submitLocationWithSubmitButton() {
-        String location = "San Francisco, CA";
-        activity.locationInput.setText(location);
-
-        activity.findViewById(R.id.submitButton).performClick();
-        verify(presenter).search(location);
-    }
-
-    @Test
-    public void submitLocationWithImeActionGo() {
-        String location = "New York, NY";
-        activity.locationInput.setText(location);
-
-        activity.locationInput.onEditorAction(EditorInfo.IME_ACTION_GO);
-        verify(presenter).search(location);
-    }
-
-    @Test
-    public void submitLocationWithIrrelevantActionId() {
-        String location = "blah";
-        activity.locationInput.setText(location);
-
-        assertThat(activity.submitLocation(EditorInfo.IME_ACTION_PREVIOUS), is(false));
+        assertThat(activity.locationSearch.getQuery().toString(), is(location));
         verify(presenter, never()).search(anyString());
+    }
+
+    @Test
+    public void onQueryTextSubmit() {
+        String location = "San Francisco, CA";
+        activity.locationSearch.setQuery(location, true);
+        verify(presenter).search(location);
+    }
+
+    @Test
+    public void onQueryTextChange() {
+        assertThat(activity.onQueryTextChange("i"), is(true));
     }
 
     @Test

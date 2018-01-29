@@ -11,35 +11,17 @@
     android:orientation="vertical"
     tools:context="io.github.tobyhs.weatherweight.forecast.ForecastActivity">
 
-    <TextView
-        android:id="@+id/locationLabel"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:labelFor="@+id/locationInput"
-        android:text="@string/locationLabel" />
-
-    <EditText
-        android:id="@id/locationInput"
+    <SearchView
+        android:id="@+id/locationSearch"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_below="@id/locationLabel"
-        android:layout_toStartOf="@+id/submitButton"
-        android:inputType="text"
-        android:imeOptions="actionGo" />
-
-    <ImageButton
-        android:id="@id/submitButton"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignBottom="@id/locationInput"
-        android:layout_alignParentEnd="true"
-        android:src="@android:drawable/ic_menu_search"
-        android:contentDescription="@string/submit" />
+        android:iconifiedByDefault="false"
+        android:queryHint="@string/locationSearchHint" />
 
     <FrameLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_below="@id/locationInput"
+        android:layout_below="@id/locationSearch"
         android:layout_above="@+id/poweredByYahooImage">
 
         <ProgressBar
