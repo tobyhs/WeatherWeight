@@ -1,5 +1,7 @@
 package io.github.tobyhs.weatherweight.forecast;
 
+import android.support.annotation.NonNull;
+
 import javax.inject.Inject;
 
 import com.github.tobyhs.rxsecretary.SchedulerProvider;
@@ -45,26 +47,35 @@ public class ForecastPresenter extends MvpBasePresenter<ForecastContract.View> {
                 .observeOn(schedulerProvider.ui())
                 .subscribe(new DisposableMaybeObserver<Channel>() {
                                @Override
-                               public void onSuccess(Channel channel) {
+                               public void onSuccess(final Channel channel) {
                                    setChannel(channel);
-                                   if (isViewAttached()) {
-                                       String location = channel.getLocation().toString();
-                                       getView().setLocationInputText(location);
-                                   }
+                                   ifViewAttached(new ViewAction<ForecastContract.View>() {
+                                       @Override
+                                       public void run(@NonNull ForecastContract.View view) {
+                                           String location = channel.getLocation().toString();
+                                           view.setLocationInputText(location);
+                                       }
+                                   });
                                }
 
                                @Override
-                               public void onError(Throwable e) {
-                                   if (isViewAttached()) {
-                                       getView().showError(e, false);
-                                   }
+                               public void onError(final Throwable e) {
+                                   ifViewAttached(new ViewAction<ForecastContract.View>() {
+                                       @Override
+                                       public void run(@NonNull ForecastContract.View view) {
+                                           view.showError(e, false);
+                                       }
+                                   });
                                }
 
                                @Override
                                public void onComplete() {
-                                   if (isViewAttached()) {
-                                       getView().showContent();
-                                   }
+                                   ifViewAttached(new ViewAction<ForecastContract.View>() {
+                                       @Override
+                                       public void run(@NonNull ForecastContract.View view) {
+                                           view.showContent();
+                                       }
+                                   });
                                }
                            });
     }
@@ -76,7 +87,12 @@ public class ForecastPresenter extends MvpBasePresenter<ForecastContract.View> {
      */
     public void search(String location) {
         channel = null;
-        getView().showLoading(false);
+        ifViewAttached(new ViewAction<ForecastContract.View>() {
+            @Override
+            public void run(@NonNull ForecastContract.View view) {
+                view.showLoading(false);
+            }
+        });
 
         weatherRepository.getForecast(location)
                 .subscribeOn(schedulerProvider.io())
@@ -89,10 +105,13 @@ public class ForecastPresenter extends MvpBasePresenter<ForecastContract.View> {
                     }
 
                     @Override
-                    public void onError(Throwable e) {
-                        if (isViewAttached()) {
-                            getView().showError(e, false);
-                        }
+                    public void onError(final Throwable e) {
+                        ifViewAttached(new ViewAction<ForecastContract.View>() {
+                            @Override
+                            public void run(@NonNull ForecastContract.View view) {
+                                view.showError(e, false);
+                            }
+                        });
                     }
                 });
     }
@@ -120,11 +139,14 @@ public class ForecastPresenter extends MvpBasePresenter<ForecastContract.View> {
      *
      * @param channel object with forecast data to set and display
      */
-    private void setChannel(Channel channel) {
+    private void setChannel(final Channel channel) {
         this.channel = channel;
-        if (isViewAttached()) {
-            getView().setData(channel);
-            getView().showContent();
-        }
+        ifViewAttached(new ViewAction<ForecastContract.View>() {
+            @Override
+            public void run(@NonNull ForecastContract.View view) {
+                view.setData(channel);
+                view.showContent();
+            }
+        });
     }
 }
