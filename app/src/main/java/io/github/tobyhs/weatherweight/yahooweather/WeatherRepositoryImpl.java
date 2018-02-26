@@ -2,7 +2,6 @@ package io.github.tobyhs.weatherweight.yahooweather;
 
 import io.github.tobyhs.weatherweight.yahooweather.model.Results;
 import io.reactivex.Single;
-import io.reactivex.functions.Function;
 import retrofit2.Response;
 
 import io.github.tobyhs.weatherweight.yahooweather.model.Channel;
@@ -30,15 +29,12 @@ public class WeatherRepositoryImpl implements WeatherRepository {
         // TODO escape location
         String yql = String.format(GET_FORECAST_FORMAT_STR, location);
         Single<Response<WeatherResponse>> single = weatherService.getByYql(yql);
-        return single.map(new Function<Response<WeatherResponse>, Channel>() {
-            @Override
-            public Channel apply(Response<WeatherResponse> response) throws Exception {
-                Results results = response.body().getQuery().getResults();
-                if (results == null) {
-                    throw new LocationNotFoundError(location);
-                }
-                return results.getChannel();
+        return single.map(response -> {
+            Results results = response.body().getQuery().getResults();
+            if (results == null) {
+                throw new LocationNotFoundError(location);
             }
+            return results.getChannel();
         });
     }
 }

@@ -7,8 +7,6 @@ import com.github.tobyhs.rxsecretary.TrampolineSchedulerProvider;
 import io.reactivex.Completable;
 import io.reactivex.Maybe;
 import io.reactivex.Single;
-import io.reactivex.disposables.Disposable;
-import io.reactivex.functions.Consumer;
 import org.junit.Before;
 import org.junit.Test;
 import org.mockito.Mock;
@@ -52,7 +50,7 @@ public class ForecastPresenterTest extends BaseTestCase {
     @Test
     public void loadLastForecastOnError() {
         Throwable error = new Exception("testing");
-        when(lastForecastStore.get()).thenReturn(Maybe.<Channel>error(error));
+        when(lastForecastStore.get()).thenReturn(Maybe.error(error));
 
         presenter.loadLastForecast();
         verify(view).showError(error, false);
@@ -60,7 +58,7 @@ public class ForecastPresenterTest extends BaseTestCase {
 
     @Test
     public void loadLastForecastOnComplete() {
-        when(lastForecastStore.get()).thenReturn(Maybe.<Channel>empty());
+        when(lastForecastStore.get()).thenReturn(Maybe.empty());
 
         presenter.loadLastForecast();
         verify(view).showContent();
@@ -73,12 +71,8 @@ public class ForecastPresenterTest extends BaseTestCase {
         when(weatherRepository.getForecast(location)).thenReturn(Single.just(channel));
 
         final AtomicBoolean completableSubscribed = new AtomicBoolean(false);
-        Completable saveCompletable = Completable.complete().doOnSubscribe(new Consumer<Disposable>() {
-            @Override
-            public void accept(Disposable disposable) throws Exception {
-                completableSubscribed.set(true);
-            }
-        });
+        Completable saveCompletable = Completable.complete()
+                .doOnSubscribe(disposable -> completableSubscribed.set(true));
         when(lastForecastStore.save(channel)).thenReturn(saveCompletable);
 
         presenter.search(location);
