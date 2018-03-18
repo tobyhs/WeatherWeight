@@ -119,7 +119,9 @@ public class ForecastActivityTest {
     public void setLocationInputText() {
         String location = "Saved City, SC";
         activity.setLocationInputText(location);
+
         assertThat(activity.locationSearch.getQuery().toString(), is(location));
+        assertThat(activity.locationSearch.hasFocus(), is(false));
         verify(presenter, never()).search(anyString());
     }
 

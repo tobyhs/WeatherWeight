@@ -101,6 +101,9 @@ public class ForecastActivity
     @Override
     public void setLocationInputText(String location) {
         locationSearch.setQuery(location, false);
+        // I don't want locationSearch to have focus after loading the last forecast because it
+        // will bring up the keyboard, so I'll force focus on another view
+        forecastRecyclerView.requestFocus();
     }
 
     @Override
