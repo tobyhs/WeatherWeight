@@ -70,12 +70,14 @@ public class ForecastActivityTest {
 
     @Test
     public void setData() {
+        activity.forecastSwipeContainer.setRefreshing(true);
         Channel channel = WeatherResponseFactory.createChannel();
         activity.setData(channel);
 
         String location = channel.getLocation().toString();
         assertThat(activity.locationFoundView.getText().toString(), is(location));
         assertThat(activity.pubDateView.getText().toString(), is(channel.getItem().getPubDate()));
+        assertThat(activity.forecastSwipeContainer.isRefreshing(), is(false));
 
         activity.forecastRecyclerView.measure(0, 0);
         activity.forecastRecyclerView.layout(0, 0, 100, 10000);
@@ -135,6 +137,14 @@ public class ForecastActivityTest {
     @Test
     public void onQueryTextChange() {
         assertThat(activity.onQueryTextChange("i"), is(true));
+    }
+
+    @Test
+    public void onRefresh() {
+        String location = "Current";
+        activity.locationSearch.setQuery(location, false);
+        activity.onRefresh();
+        verify(presenter).search(location);
     }
 
     @Test

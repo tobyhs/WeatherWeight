@@ -4,6 +4,7 @@ import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
+import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.widget.LinearLayout;
@@ -30,7 +31,7 @@ import io.github.tobyhs.weatherweight.yahooweather.model.Channel;
  */
 public class ForecastActivity
         extends MvpLceViewStateActivity<LinearLayout, Channel, ForecastContract.View, ForecastPresenter>
-        implements ForecastContract.View, SearchView.OnQueryTextListener {
+        implements ForecastContract.View, SearchView.OnQueryTextListener, SwipeRefreshLayout.OnRefreshListener {
     @Inject
     protected Lazy<ForecastPresenter> lazyPresenter;
 
@@ -39,6 +40,7 @@ public class ForecastActivity
     @BindView(R.id.locationSearch) SearchView locationSearch;
     @BindView(R.id.locationFound) TextView locationFoundView;
     @BindView(R.id.pubDate) TextView pubDateView;
+    @BindView(R.id.forecastSwipeContainer) SwipeRefreshLayout forecastSwipeContainer;
     @BindView(R.id.forecastRecyclerView) RecyclerView forecastRecyclerView;
 
     @Override
@@ -55,6 +57,8 @@ public class ForecastActivity
         forecastCardAdapter = new ForecastCardAdapter();
         forecastRecyclerView.setLayoutManager(new LinearLayoutManager(this));
         forecastRecyclerView.setAdapter(forecastCardAdapter);
+
+        forecastSwipeContainer.setOnRefreshListener(this);
 
         if (savedInstanceState == null) {
             getPresenter().loadLastForecast();
@@ -84,6 +88,7 @@ public class ForecastActivity
 
         locationFoundView.setText(channel.getLocation().toString());
         pubDateView.setText(channel.getItem().getPubDate());
+        forecastSwipeContainer.setRefreshing(false);
         forecastCardAdapter.set(channel.getItem().getForecast());
     }
 
@@ -115,6 +120,11 @@ public class ForecastActivity
     @Override
     public boolean onQueryTextChange(String newText) {
         return true;
+    }
+
+    @Override
+    public void onRefresh() {
+        getPresenter().search(locationSearch.getQuery().toString());
     }
 
     /**
