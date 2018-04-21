@@ -15,6 +15,3 @@
 
 # For dagger-android
 -dontwarn com.google.errorprone.annotations.*
-
-# Gson models
--keep class io.github.tobyhs.weatherweight.yahooweather.model.** { *; }
