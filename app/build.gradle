@@ -23,6 +23,11 @@ android {
         local {
             initWith buildTypes.release
             signingConfig signingConfigs.debug
+            versionNameSuffix '-local'
+        }
+
+        debug {
+            versionNameSuffix '-debug'
         }
     }
 
