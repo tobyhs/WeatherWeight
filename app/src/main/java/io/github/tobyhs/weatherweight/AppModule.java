@@ -7,6 +7,7 @@ import javax.inject.Named;
 import javax.inject.Singleton;
 
 import com.github.tobyhs.rxsecretary.SchedulerProvider;
+import com.github.tobyhs.rxsecretary.android.AndroidSchedulerProvider;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
@@ -19,7 +20,6 @@ import retrofit2.converter.gson.GsonConverterFactory;
 
 import io.github.tobyhs.weatherweight.storage.LastForecastStore;
 import io.github.tobyhs.weatherweight.storage.SharedPrefLastForecastStore;
-import io.github.tobyhs.weatherweight.util.AppSchedulerProvider;
 import io.github.tobyhs.weatherweight.util.GVTypeAdapterFactory;
 import io.github.tobyhs.weatherweight.yahooweather.WeatherRepository;
 import io.github.tobyhs.weatherweight.yahooweather.WeatherRepositoryImpl;
@@ -63,7 +63,7 @@ public class AppModule {
     @Provides
     @Singleton
     SchedulerProvider provideSchedulerProvider() {
-        return new AppSchedulerProvider();
+        return new AndroidSchedulerProvider();
     }
 
     /**

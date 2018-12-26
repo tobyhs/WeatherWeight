@@ -2,6 +2,7 @@ package io.github.tobyhs.weatherweight;
 
 import android.content.SharedPreferences;
 
+import com.github.tobyhs.rxsecretary.android.AndroidSchedulerProvider;
 import com.google.gson.Gson;
 
 import org.junit.Before;
@@ -16,7 +17,6 @@ import retrofit2.converter.gson.GsonConverterFactory;
 
 import io.github.tobyhs.weatherweight.storage.LastForecastStore;
 import io.github.tobyhs.weatherweight.storage.SharedPrefLastForecastStore;
-import io.github.tobyhs.weatherweight.util.AppSchedulerProvider;
 import io.github.tobyhs.weatherweight.yahooweather.WeatherRepository;
 import io.github.tobyhs.weatherweight.yahooweather.WeatherRepositoryImpl;
 import io.github.tobyhs.weatherweight.yahooweather.WeatherService;
@@ -52,7 +52,7 @@ public class AppModuleTest {
 
     @Test
     public void provideSchedulerProvider() {
-        assertThat(module.provideSchedulerProvider(), isA((Class) AppSchedulerProvider.class));
+        assertThat(module.provideSchedulerProvider(), isA((Class) AndroidSchedulerProvider.class));
     }
 
     @Test
