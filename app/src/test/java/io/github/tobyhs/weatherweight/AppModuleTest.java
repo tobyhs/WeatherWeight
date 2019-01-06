@@ -2,6 +2,8 @@ package io.github.tobyhs.weatherweight;
 
 import android.content.SharedPreferences;
 
+import androidx.test.core.app.ApplicationProvider;
+
 import com.github.tobyhs.rxsecretary.android.AndroidSchedulerProvider;
 import com.google.gson.Gson;
 
@@ -9,8 +11,8 @@ import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.robolectric.RobolectricTestRunner;
-import org.robolectric.RuntimeEnvironment;
 import org.robolectric.annotation.Config;
+
 import retrofit2.Retrofit;
 import retrofit2.adapter.rxjava2.RxJava2CallAdapterFactory;
 import retrofit2.converter.gson.GsonConverterFactory;
@@ -36,7 +38,7 @@ public class AppModuleTest {
 
     @Before
     public void setup() {
-        app = (App) RuntimeEnvironment.application;
+        app = ApplicationProvider.getApplicationContext();
         module = new AppModule(app);
     }
 

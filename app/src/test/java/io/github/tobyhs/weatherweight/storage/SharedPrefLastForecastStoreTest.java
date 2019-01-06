@@ -3,6 +3,8 @@ package io.github.tobyhs.weatherweight.storage;
 import android.content.SharedPreferences;
 import android.preference.PreferenceManager;
 
+import androidx.test.core.app.ApplicationProvider;
+
 import java.io.IOException;
 
 import com.google.gson.Gson;
@@ -11,7 +13,6 @@ import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.robolectric.RobolectricTestRunner;
-import org.robolectric.RuntimeEnvironment;
 
 import io.github.tobyhs.weatherweight.AppModule;
 import io.github.tobyhs.weatherweight.test.WeatherResponseFactory;
@@ -33,7 +34,7 @@ public class SharedPrefLastForecastStoreTest {
     @Before
     public void setup() {
         sharedPreferences = PreferenceManager
-                .getDefaultSharedPreferences(RuntimeEnvironment.application);
+                .getDefaultSharedPreferences(ApplicationProvider.getApplicationContext());
         store = new SharedPrefLastForecastStore(sharedPreferences, gson);
     }
 
@@ -43,7 +44,7 @@ public class SharedPrefLastForecastStoreTest {
     }
 
     @Test
-    public void getWithEntry() throws Exception {
+    public void getWithEntry() {
         Channel channel = WeatherResponseFactory.createChannel();
         SharedPreferences.Editor editor = sharedPreferences.edit();
         editor.putString("lastForecast", gson.toJson(channel));
@@ -54,7 +55,7 @@ public class SharedPrefLastForecastStoreTest {
     }
 
     @Test
-    public void saveWithCommitSuccess() throws Exception {
+    public void saveWithCommitSuccess() {
         Channel channel = WeatherResponseFactory.createChannel();
 
         assertThat(store.save(channel).blockingGet(), is(nullValue()));

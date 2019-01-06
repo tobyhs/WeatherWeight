@@ -1,10 +1,11 @@
 package io.github.tobyhs.weatherweight;
 
+import androidx.test.core.app.ApplicationProvider;
+
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.robolectric.RobolectricTestRunner;
-import org.robolectric.RuntimeEnvironment;
 import org.robolectric.annotation.Config;
 
 import static org.hamcrest.CoreMatchers.is;
@@ -18,7 +19,7 @@ public class AppTest {
 
     @Before
     public void setup() {
-        app = (App) RuntimeEnvironment.application;
+        app = ApplicationProvider.getApplicationContext();
     }
 
     @Test
