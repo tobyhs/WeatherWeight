@@ -1,5 +1,8 @@
 apply plugin: 'com.android.application'
 
+def secretProps = new Properties()
+rootProject.file("secret.properties").withInputStream { secretProps.load(it) }
+
 android {
     compileSdkVersion 28
     buildToolsVersion '28.0.3'
@@ -11,6 +14,8 @@ android {
         versionCode 1
         versionName "1.0"
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
+
+        buildConfigField 'String', 'ACCUWEATHER_API_KEY', "\"${secretProps['accuweatherApiKey']}\""
     }
 
     buildTypes {
