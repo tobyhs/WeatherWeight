@@ -12,6 +12,8 @@ import com.github.tobyhs.rxsecretary.android.AndroidSchedulerProvider;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 
+import org.aaronhe.threetengson.ThreeTenGsonAdapter;
+
 import dagger.Module;
 import dagger.Provides;
 import retrofit2.Retrofit;
@@ -72,9 +74,9 @@ public class AppModule {
     @Provides
     @Singleton
     public static Gson provideGson() {
-        return new GsonBuilder()
-                .registerTypeAdapterFactory(GVTypeAdapterFactory.create())
-                .create();
+        GsonBuilder gsonBuilder = new GsonBuilder()
+                .registerTypeAdapterFactory(GVTypeAdapterFactory.create());
+        return ThreeTenGsonAdapter.registerAll(gsonBuilder).create();
     }
 
     /**

@@ -97,6 +97,9 @@ dependencies {
     implementation "com.squareup.retrofit2:converter-gson:$retrofitVersion"
 
     implementation 'com.jakewharton.threetenabp:threetenabp:1.1.1'
+    implementation('org.aaronhe:threetenbp-gson-adapter:1.0.2') {
+        transitive = false
+    }
 
     testImplementation 'junit:junit:4.12'
     testImplementation 'org.mockito:mockito-core:2.11.0'
