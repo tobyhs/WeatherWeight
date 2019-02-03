@@ -17,12 +17,11 @@ import org.robolectric.RobolectricTestRunner;
 import org.robolectric.android.controller.ActivityController;
 
 import io.github.tobyhs.weatherweight.R;
-import io.github.tobyhs.weatherweight.test.WeatherResponseFactory;
-import io.github.tobyhs.weatherweight.yahooweather.model.Channel;
-import io.github.tobyhs.weatherweight.yahooweather.model.SingleForecast;
+import io.github.tobyhs.weatherweight.data.model.DailyForecast;
+import io.github.tobyhs.weatherweight.data.model.ForecastResultSet;
+import io.github.tobyhs.weatherweight.test.ForecastResultSetFactory;
 
 import static org.hamcrest.CoreMatchers.is;
-import static org.hamcrest.CoreMatchers.isA;
 import static org.hamcrest.CoreMatchers.notNullValue;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.mockito.ArgumentMatchers.anyString;
@@ -62,42 +61,40 @@ public class ForecastActivityTest {
 
     @Test
     public void getData() {
-        Channel channel = WeatherResponseFactory.createChannel();
-        when(presenter.getChannel()).thenReturn(channel);
+        ForecastResultSet forecastResultSet = ForecastResultSetFactory.create();
+        when(presenter.getForecastResultSet()).thenReturn(forecastResultSet);
 
-        assertThat(activity.getData(), is(channel));
+        assertThat(activity.getData(), is(forecastResultSet));
     }
 
     @Test
     public void setData() {
         activity.forecastSwipeContainer.setRefreshing(true);
-        Channel channel = WeatherResponseFactory.createChannel();
-        activity.setData(channel);
+        ForecastResultSet forecastResultSet = ForecastResultSetFactory.create();
+        activity.setData(forecastResultSet);
 
-        String location = channel.getLocation().toString();
-        assertThat(activity.locationFoundView.getText().toString(), is(location));
-        assertThat(activity.pubDateView.getText().toString(), is(channel.getItem().getPubDate()));
+        assertThat(activity.locationFoundView.getText().toString(), is("Oakland, CA, US"));
+        assertThat(activity.pubDateView.getText().toString(), is("Fri, 1 Feb 2019 12:00:00 GMT"));
         assertThat(activity.forecastSwipeContainer.isRefreshing(), is(false));
 
         activity.forecastRecyclerView.measure(0, 0);
-        activity.forecastRecyclerView.layout(0, 0, 100, 10000);
+        activity.forecastRecyclerView.layout(0, 0, 00, 10000);
         RecyclerView.LayoutManager layoutManager = activity.forecastRecyclerView.getLayoutManager();
 
-        List<SingleForecast> forecasts = channel.getItem().getForecast();
+        List<DailyForecast> forecasts = forecastResultSet.getForecasts();
         assertThat(layoutManager.getItemCount(), is(forecasts.size()));
 
         View view = layoutManager.findViewByPosition(0);
-        SingleForecast singleForecast = forecasts.get(0);
         TextView dayView = view.findViewById(R.id.day);
-        assertThat(dayView.getText().toString(), is(singleForecast.getDay()));
+        assertThat(dayView.getText().toString(), is("Fri"));
         TextView dateView = view.findViewById(R.id.date);
-        assertThat(dateView.getText().toString(), is(singleForecast.getDate()));
+        assertThat(dateView.getText().toString(), is("Feb 1"));
         TextView lowView = view.findViewById(R.id.temperatureLow);
-        assertThat(lowView.getText().toString(), is(singleForecast.getLow()));
+        assertThat(lowView.getText().toString(), is("60"));
         TextView highView = view.findViewById(R.id.temperatureHigh);
-        assertThat(highView.getText().toString(), is(singleForecast.getHigh()));
+        assertThat(highView.getText().toString(), is("65"));
         TextView descriptionView = view.findViewById(R.id.description);
-        assertThat(descriptionView.getText().toString(), is(singleForecast.getText()));
+        assertThat(descriptionView.getText().toString(), is("Cloudy"));
     }
 
     @Test
@@ -114,7 +111,7 @@ public class ForecastActivityTest {
 
     @Test
     public void createViewState() {
-        assertThat(activity.createViewState(), isA((Class) RetainingLceViewState.class));
+        assertThat(activity.createViewState() instanceof RetainingLceViewState, is(true));
     }
 
     @Test
@@ -149,13 +146,9 @@ public class ForecastActivityTest {
 
     @Test
     public void openAttributionUrl() {
-        String attributionUrl = "https://www.yahoo.com/?from_weather_api";
-        when(presenter.getAttributionUrl()).thenReturn(attributionUrl);
-
-        activity.findViewById(R.id.poweredByYahooImage).performClick();
-
+        activity.findViewById(R.id.accuweather_logo).performClick();
         Intent actual = shadowOf(activity).getNextStartedActivity();
-        Intent expected = new Intent(Intent.ACTION_VIEW, Uri.parse(attributionUrl));
+        Intent expected = new Intent(Intent.ACTION_VIEW, Uri.parse("https://www.accuweather.com"));
         assertThat(actual.filterEquals(expected), is(true));
     }
 }

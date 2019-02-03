@@ -15,8 +15,8 @@ import org.junit.runner.RunWith;
 import org.robolectric.RobolectricTestRunner;
 
 import io.github.tobyhs.weatherweight.AppModule;
-import io.github.tobyhs.weatherweight.test.WeatherResponseFactory;
-import io.github.tobyhs.weatherweight.yahooweather.model.Channel;
+import io.github.tobyhs.weatherweight.data.model.ForecastResultSet;
+import io.github.tobyhs.weatherweight.test.ForecastResultSetFactory;
 
 import static org.hamcrest.CoreMatchers.instanceOf;
 import static org.hamcrest.CoreMatchers.is;
@@ -45,36 +45,36 @@ public class SharedPrefLastForecastStoreTest {
 
     @Test
     public void getWithEntry() {
-        Channel channel = WeatherResponseFactory.createChannel();
+        ForecastResultSet forecastResultSet = ForecastResultSetFactory.create();
         SharedPreferences.Editor editor = sharedPreferences.edit();
-        editor.putString("lastForecast", gson.toJson(channel));
+        editor.putString("lastForecast", gson.toJson(forecastResultSet));
         editor.apply();
 
-        Channel storedChannel = store.get().blockingGet();
-        assertThat(storedChannel, is(channel));
+        ForecastResultSet storedForecast = store.get().blockingGet();
+        assertThat(storedForecast, is(forecastResultSet));
     }
 
     @Test
     public void saveWithCommitSuccess() {
-        Channel channel = WeatherResponseFactory.createChannel();
+        ForecastResultSet forecastResultSet = ForecastResultSetFactory.create();
 
-        assertThat(store.save(channel).blockingGet(), is(nullValue()));
+        assertThat(store.save(forecastResultSet).blockingGet(), is(nullValue()));
 
         String json = sharedPreferences.getString("lastForecast", null);
-        Channel storedChannel = gson.fromJson(json, Channel.class);
-        assertThat(storedChannel, is(channel));
+        ForecastResultSet storedForecast = gson.fromJson(json, ForecastResultSet.class);
+        assertThat(storedForecast, is(forecastResultSet));
     }
 
     @Test
     public void saveWithCommitFailure() {
-        Channel channel = WeatherResponseFactory.createChannel();
+        ForecastResultSet forecastResultSet = ForecastResultSetFactory.create();
         SharedPreferences sharedPreferences = mock(SharedPreferences.class);
         SharedPreferences.Editor editor = mock(SharedPreferences.Editor.class);
         when(sharedPreferences.edit()).thenReturn(editor);
         when(editor.commit()).thenReturn(false);
         store = new SharedPrefLastForecastStore(sharedPreferences, gson);
 
-        Throwable error = store.save(channel).blockingGet();
+        Throwable error = store.save(forecastResultSet).blockingGet();
         assertThat(error, is(instanceOf(IOException.class)));
     }
 }

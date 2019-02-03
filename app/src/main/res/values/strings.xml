@@ -1,5 +1,6 @@
 <resources>
     <string name="app_name">Weather Weight</string>
     <string name="locationSearchHint">Enter Location</string>
-    <string name="poweredByYahoo">Powered by Yahoo</string>
+    <string name="powered_by">Powered By</string>
+    <string name="powered_by_accuweather">Powered by AccuWeather</string>
 </resources>

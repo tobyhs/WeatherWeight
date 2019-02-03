@@ -9,7 +9,7 @@ import com.google.gson.Gson;
 import io.reactivex.Completable;
 import io.reactivex.Maybe;
 
-import io.github.tobyhs.weatherweight.yahooweather.model.Channel;
+import io.github.tobyhs.weatherweight.data.model.ForecastResultSet;
 
 /**
  * An implementation of {@link LastForecastStore} that uses Android's
@@ -31,20 +31,20 @@ public class SharedPrefLastForecastStore implements LastForecastStore {
     }
 
     @Override
-    public Maybe<Channel> get() {
+    public Maybe<ForecastResultSet> get() {
         return Maybe.fromCallable(() -> {
             String json = sharedPreferences.getString(KEY, null);
             if (json == null) {
                 return null;
             }
-            return gson.fromJson(json, Channel.class);
+            return gson.fromJson(json, ForecastResultSet.class);
         });
     }
 
     @Override
-    public Completable save(final Channel channel) {
+    public Completable save(final ForecastResultSet forecastResultSet) {
         return Completable.fromAction(() -> {
-            String json = gson.toJson(channel);
+            String json = gson.toJson(forecastResultSet);
             SharedPreferences.Editor editor = sharedPreferences.edit();
             editor.putString(KEY, json);
             if (!editor.commit()) {

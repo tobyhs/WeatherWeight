@@ -12,20 +12,26 @@ import com.github.tobyhs.rxsecretary.android.AndroidSchedulerProvider;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 
-import org.aaronhe.threetengson.ThreeTenGsonAdapter;
-
 import dagger.Module;
 import dagger.Provides;
+
+import okhttp3.OkHttpClient;
+
+import org.aaronhe.threetengson.ThreeTenGsonAdapter;
+
+import org.threeten.bp.Clock;
+
 import retrofit2.Retrofit;
 import retrofit2.adapter.rxjava2.RxJava2CallAdapterFactory;
 import retrofit2.converter.gson.GsonConverterFactory;
 
+import io.github.tobyhs.weatherweight.api.accuweather.AccuWeatherApiKeyInterceptor;
+import io.github.tobyhs.weatherweight.api.accuweather.AccuWeatherService;
+import io.github.tobyhs.weatherweight.data.AccuWeatherRepository;
+import io.github.tobyhs.weatherweight.data.WeatherRepository;
 import io.github.tobyhs.weatherweight.storage.LastForecastStore;
 import io.github.tobyhs.weatherweight.storage.SharedPrefLastForecastStore;
 import io.github.tobyhs.weatherweight.util.GVTypeAdapterFactory;
-import io.github.tobyhs.weatherweight.yahooweather.WeatherRepository;
-import io.github.tobyhs.weatherweight.yahooweather.WeatherRepositoryImpl;
-import io.github.tobyhs.weatherweight.yahooweather.WeatherService;
 
 /**
  * Dagger module to provide common dependencies
@@ -81,36 +87,40 @@ public class AppModule {
 
     /**
      * @param gson Gson instance for parsing JSON response bodies
-     * @return a Retrofit instance for Yahoo's public API
+     * @return a Retrofit instance for AccuWeather's APIs
      */
-    @Provides @Named("yahooRetrofit")
+    @Provides @Named("accuWeatherRetrofit")
     @Singleton
-    Retrofit provideYahooRetrofit(Gson gson) {
+    Retrofit provideAccuWeatherRetrofit(Gson gson) {
+        OkHttpClient okHttpClient = new OkHttpClient.Builder()
+                .addInterceptor(new AccuWeatherApiKeyInterceptor(BuildConfig.ACCUWEATHER_API_KEY))
+                .build();
         return new Retrofit.Builder()
-                .baseUrl("https://query.yahooapis.com/")
+                .baseUrl("https://dataservice.accuweather.com/")
+                .client(okHttpClient)
                 .addCallAdapterFactory(RxJava2CallAdapterFactory.create())
                 .addConverterFactory(GsonConverterFactory.create(gson))
                 .build();
     }
 
     /**
-     * @param retrofit a Retrofit instance for Yahoo's public API
-     * @return Retrofit service object for querying weather info from Yahoo's API
+     * @param retrofit a Retrofit instance for AccuWeather's APIs
+     * @return Retrofit service object for querying weather info from AccuWeather's APIs
      */
     @Provides
     @Singleton
-    WeatherService provideWeatherService(@Named("yahooRetrofit") Retrofit retrofit) {
-        return retrofit.create(WeatherService.class);
+    AccuWeatherService provideAccuWeatherService(@Named("accuWeatherRetrofit") Retrofit retrofit) {
+        return retrofit.create(AccuWeatherService.class);
     }
 
     /**
-     * @param weatherService Retrofit service object for querying weather data from Yahoo's API
-     * @return repository object to fetch weather data from Yahoo's API
+     * @param service Retrofit service object for querying weather data from AccuWeather's APIs
+     * @return repository object to fetch weather data
      */
     @Provides
     @Singleton
-    WeatherRepository provideWeatherRepository(WeatherService weatherService) {
-        return new WeatherRepositoryImpl(weatherService);
+    WeatherRepository provideWeatherRepository(AccuWeatherService service) {
+        return new AccuWeatherRepository(service, Clock.systemDefaultZone());
     }
 
     /**

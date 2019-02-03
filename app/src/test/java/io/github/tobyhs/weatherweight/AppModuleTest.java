@@ -5,11 +5,13 @@ import android.content.SharedPreferences;
 import androidx.test.core.app.ApplicationProvider;
 
 import com.github.tobyhs.rxsecretary.android.AndroidSchedulerProvider;
+
 import com.google.gson.Gson;
 
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
+
 import org.robolectric.RobolectricTestRunner;
 import org.robolectric.annotation.Config;
 
@@ -17,11 +19,11 @@ import retrofit2.Retrofit;
 import retrofit2.adapter.rxjava2.RxJava2CallAdapterFactory;
 import retrofit2.converter.gson.GsonConverterFactory;
 
+import io.github.tobyhs.weatherweight.api.accuweather.AccuWeatherService;
+import io.github.tobyhs.weatherweight.data.AccuWeatherRepository;
+import io.github.tobyhs.weatherweight.data.WeatherRepository;
 import io.github.tobyhs.weatherweight.storage.LastForecastStore;
 import io.github.tobyhs.weatherweight.storage.SharedPrefLastForecastStore;
-import io.github.tobyhs.weatherweight.yahooweather.WeatherRepository;
-import io.github.tobyhs.weatherweight.yahooweather.WeatherRepositoryImpl;
-import io.github.tobyhs.weatherweight.yahooweather.WeatherService;
 
 import static org.hamcrest.CoreMatchers.hasItem;
 import static org.hamcrest.CoreMatchers.is;
@@ -54,7 +56,7 @@ public class AppModuleTest {
 
     @Test
     public void provideSchedulerProvider() {
-        assertThat(module.provideSchedulerProvider(), isA((Class) AndroidSchedulerProvider.class));
+        assertThat(module.provideSchedulerProvider() instanceof AndroidSchedulerProvider, is(true));
     }
 
     @Test
@@ -63,24 +65,24 @@ public class AppModuleTest {
     }
 
     @Test
-    public void provideYahooRetrofit() {
-        Retrofit retrofit = module.provideYahooRetrofit(AppModule.provideGson());
-        assertThat(retrofit.baseUrl().toString(), is("https://query.yahooapis.com/"));
+    public void provideAccuWeatherRetrofit() {
+        Retrofit retrofit = module.provideAccuWeatherRetrofit(AppModule.provideGson());
+        assertThat(retrofit.baseUrl().toString(), is("https://dataservice.accuweather.com/"));
         assertThat(retrofit.callAdapterFactories(), hasItem(isA(RxJava2CallAdapterFactory.class)));
         assertThat(retrofit.converterFactories(), hasItem(isA(GsonConverterFactory.class)));
     }
 
     @Test
-    public void provideWeatherService() {
+    public void provideAccuWeatherService() {
         Retrofit retrofit = new Retrofit.Builder().baseUrl("http://localhost/").build();
-        assertThat(module.provideWeatherService(retrofit), isA(WeatherService.class));
+        assertThat(module.provideAccuWeatherService(retrofit), is(notNullValue()));
     }
 
     @Test
     public void provideWeatherRepository() {
-        WeatherService weatherService = mock(WeatherService.class);
-        WeatherRepository repo = module.provideWeatherRepository(weatherService);
-        assertThat(repo, isA((Class) WeatherRepositoryImpl.class));
+        AccuWeatherService service = mock(AccuWeatherService.class);
+        WeatherRepository repo = module.provideWeatherRepository(service);
+        assertThat(repo instanceof AccuWeatherRepository, is(true));
     }
 
     @Test
@@ -88,6 +90,6 @@ public class AppModuleTest {
         SharedPreferences sharedPreferences = mock(SharedPreferences.class);
         Gson gson = AppModule.provideGson();
         LastForecastStore store = module.provideLastForecastStore(sharedPreferences, gson);
-        assertThat(store, isA((Class) SharedPrefLastForecastStore.class));
+        assertThat(store instanceof SharedPrefLastForecastStore, is(true));
     }
 }

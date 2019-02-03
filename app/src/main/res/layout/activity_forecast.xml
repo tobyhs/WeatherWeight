@@ -22,7 +22,7 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_below="@id/locationSearch"
-        android:layout_above="@+id/poweredByYahooImage">
+        android:layout_above="@id/powered_by">
 
         <ProgressBar
             android:id="@+id/loadingView"
@@ -65,11 +65,18 @@
             android:layout_height="wrap_content" />
     </FrameLayout>
 
+    <TextView
+        android:id="@+id/powered_by"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_above="@id/accuweather_logo"
+        android:text="@string/powered_by"/>
+
     <ImageView
-        android:id="@id/poweredByYahooImage"
-        android:layout_width="wrap_content"
+        android:id="@+id/accuweather_logo"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"
-        android:src="@drawable/powered_by_yahoo"
-        android:contentDescription="@string/poweredByYahoo" />
+        android:src="@drawable/accuweather"
+        android:contentDescription="@string/powered_by_accuweather" />
 </RelativeLayout>

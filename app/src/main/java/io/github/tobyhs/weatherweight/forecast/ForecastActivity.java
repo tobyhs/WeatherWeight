@@ -11,6 +11,8 @@ import android.widget.LinearLayout;
 import android.widget.SearchView;
 import android.widget.TextView;
 
+import javax.inject.Inject;
+
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
@@ -18,20 +20,23 @@ import com.hannesdorfmann.mosby3.mvp.viewstate.lce.LceViewState;
 import com.hannesdorfmann.mosby3.mvp.viewstate.lce.MvpLceViewStateActivity;
 import com.hannesdorfmann.mosby3.mvp.viewstate.lce.data.RetainingLceViewState;
 
-import javax.inject.Inject;
+import org.threeten.bp.ZonedDateTime;
+import org.threeten.bp.format.DateTimeFormatter;
 
 import dagger.Lazy;
 import dagger.android.AndroidInjection;
 
 import io.github.tobyhs.weatherweight.R;
-import io.github.tobyhs.weatherweight.yahooweather.model.Channel;
+import io.github.tobyhs.weatherweight.data.model.ForecastResultSet;
 
 /**
  * Main activity to enter a location to retrieve a weather forecast
  */
 public class ForecastActivity
-        extends MvpLceViewStateActivity<LinearLayout, Channel, ForecastContract.View, ForecastPresenter>
+        extends MvpLceViewStateActivity<LinearLayout, ForecastResultSet, ForecastContract.View, ForecastPresenter>
         implements ForecastContract.View, SearchView.OnQueryTextListener, SwipeRefreshLayout.OnRefreshListener {
+    private static Uri ACCUWEATHER_URI = Uri.parse("https://www.accuweather.com");
+
     @Inject
     protected Lazy<ForecastPresenter> lazyPresenter;
 
@@ -76,20 +81,21 @@ public class ForecastActivity
     }
 
     @Override
-    public Channel getData() {
-        return getPresenter().getChannel();
+    public ForecastResultSet getData() {
+        return getPresenter().getForecastResultSet();
     }
 
     @Override
-    public void setData(Channel channel) {
-        if (channel == null) {
+    public void setData(ForecastResultSet forecastResultSet) {
+        if (forecastResultSet == null) {
             return;
         }
 
-        locationFoundView.setText(channel.getLocation().toString());
-        pubDateView.setText(channel.getItem().getPubDate());
+        locationFoundView.setText(forecastResultSet.getLocation());
+        ZonedDateTime pubDate = forecastResultSet.getPublicationTime();
+        pubDateView.setText(pubDate.format(DateTimeFormatter.RFC_1123_DATE_TIME));
         forecastSwipeContainer.setRefreshing(false);
-        forecastCardAdapter.set(channel.getItem().getForecast());
+        forecastCardAdapter.set(forecastResultSet.getForecasts());
     }
 
     @Override
@@ -99,7 +105,7 @@ public class ForecastActivity
 
     @Override
     @NonNull
-    public LceViewState<Channel, ForecastContract.View> createViewState() {
+    public LceViewState<ForecastResultSet, ForecastContract.View> createViewState() {
         return new RetainingLceViewState<>();
     }
 
@@ -130,9 +136,8 @@ public class ForecastActivity
     /**
      * Opens the attribution URL
      */
-    @OnClick(R.id.poweredByYahooImage)
+    @OnClick(R.id.accuweather_logo)
     public void openAttributionUrl() {
-        Uri uri = Uri.parse(getPresenter().getAttributionUrl());
-        startActivity(new Intent(Intent.ACTION_VIEW, uri));
+        startActivity(new Intent(Intent.ACTION_VIEW, ACCUWEATHER_URI));
     }
 }

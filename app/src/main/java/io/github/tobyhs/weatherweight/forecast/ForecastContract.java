@@ -2,7 +2,7 @@ package io.github.tobyhs.weatherweight.forecast;
 
 import com.hannesdorfmann.mosby3.mvp.lce.MvpLceView;
 
-import io.github.tobyhs.weatherweight.yahooweather.model.Channel;
+import io.github.tobyhs.weatherweight.data.model.ForecastResultSet;
 
 /**
  * MVP interfaces for the forecast activity
@@ -11,7 +11,7 @@ public interface ForecastContract {
     /**
      * View interface for displaying a forecast
      */
-    interface View extends MvpLceView<Channel> {
+    interface View extends MvpLceView<ForecastResultSet> {
         /**
          * Sets the location input's text to the given string.
          *

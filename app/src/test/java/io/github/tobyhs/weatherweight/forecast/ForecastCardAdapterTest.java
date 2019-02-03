@@ -6,7 +6,8 @@ import android.widget.TextView;
 import org.junit.Test;
 
 import io.github.tobyhs.weatherweight.R;
-import io.github.tobyhs.weatherweight.yahooweather.model.SingleForecast;
+import io.github.tobyhs.weatherweight.data.model.DailyForecast;
+import io.github.tobyhs.weatherweight.test.ForecastResultSetFactory;
 
 import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.MatcherAssert.assertThat;
@@ -27,27 +28,15 @@ public class ForecastCardAdapterTest {
         View view = mockView();
         ForecastCardAdapter.ViewHolder viewHolder;
         viewHolder = (ForecastCardAdapter.ViewHolder) adapter.getViewHolder(view, 0);
-
-        String date = "26 Feb 2017";
-        String day = "Sun";
-        String low = "70";
-        String high = "79";
-        String description = "Rainy";
-        SingleForecast forecast = SingleForecast.builder()
-                .setDate(date)
-                .setDay(day)
-                .setLow(low)
-                .setHigh(high)
-                .setText(description)
-                .build();
+        DailyForecast forecast = ForecastResultSetFactory.createForecasts().get(0);
 
         viewHolder.bind(forecast);
 
-        verify(viewHolder.day).setText(day);
-        verify(viewHolder.date).setText(date);
-        verify(viewHolder.temperatureLow).setText(low);
-        verify(viewHolder.temperatureHigh).setText(high);
-        verify(viewHolder.description).setText(description);
+        verify(viewHolder.day).setText("Fri");
+        verify(viewHolder.date).setText("Feb 1");
+        verify(viewHolder.temperatureLow).setText("60");
+        verify(viewHolder.temperatureHigh).setText("65");
+        verify(viewHolder.description).setText("Cloudy");
     }
 
     private static View mockView() {

@@ -4,6 +4,8 @@ import java.util.concurrent.atomic.AtomicBoolean;
 
 import com.github.tobyhs.rxsecretary.SchedulerProvider;
 import com.github.tobyhs.rxsecretary.TrampolineSchedulerProvider;
+
+import io.github.tobyhs.weatherweight.data.LocationNotFoundError;
 import io.reactivex.Completable;
 import io.reactivex.Maybe;
 import io.reactivex.Single;
@@ -11,12 +13,11 @@ import org.junit.Before;
 import org.junit.Test;
 import org.mockito.Mock;
 
+import io.github.tobyhs.weatherweight.data.model.ForecastResultSet;
+import io.github.tobyhs.weatherweight.data.WeatherRepository;
 import io.github.tobyhs.weatherweight.storage.LastForecastStore;
 import io.github.tobyhs.weatherweight.test.BaseTestCase;
-import io.github.tobyhs.weatherweight.test.WeatherResponseFactory;
-import io.github.tobyhs.weatherweight.yahooweather.LocationNotFoundError;
-import io.github.tobyhs.weatherweight.yahooweather.WeatherRepository;
-import io.github.tobyhs.weatherweight.yahooweather.model.Channel;
+import io.github.tobyhs.weatherweight.test.ForecastResultSetFactory;
 
 import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.CoreMatchers.nullValue;
@@ -39,12 +40,12 @@ public class ForecastPresenterTest extends BaseTestCase {
 
     @Test
     public void loadLastForecastOnSuccess() {
-        Channel channel = WeatherResponseFactory.createChannel();
-        when(lastForecastStore.get()).thenReturn(Maybe.just(channel));
+        ForecastResultSet forecastResultSet = ForecastResultSetFactory.create();
+        when(lastForecastStore.get()).thenReturn(Maybe.just(forecastResultSet));
 
         presenter.loadLastForecast();
-        checkChannelSet(channel);
-        verify(view).setLocationInputText(channel.getLocation().toString());
+        checkForecastResultSet(forecastResultSet);
+        verify(view).setLocationInputText(forecastResultSet.getLocation());
     }
 
     @Test
@@ -66,50 +67,44 @@ public class ForecastPresenterTest extends BaseTestCase {
 
     @Test
     public void searchOnSuccess() {
-        String location = "San Francisco, CA";
-        Channel channel = WeatherResponseFactory.createChannel();
-        when(weatherRepository.getForecast(location)).thenReturn(Single.just(channel));
+        String location = "Oakland, CA";
+        ForecastResultSet forecastResultSet = ForecastResultSetFactory.create();
+        when(weatherRepository.getForecast(location)).thenReturn(Single.just(forecastResultSet));
 
         final AtomicBoolean completableSubscribed = new AtomicBoolean(false);
         Completable saveCompletable = Completable.complete()
                 .doOnSubscribe(disposable -> completableSubscribed.set(true));
-        when(lastForecastStore.save(channel)).thenReturn(saveCompletable);
+        when(lastForecastStore.save(forecastResultSet)).thenReturn(saveCompletable);
 
         presenter.search(location);
 
         verify(view).showLoading(false);
-        checkChannelSet(channel);
+        checkForecastResultSet(forecastResultSet);
         assertThat(completableSubscribed.get(), is(true));
-        assertThat(presenter.getAttributionUrl(), is(channel.getLink()));
     }
 
     @Test
     public void searchOnError() {
         String location = "Parts Unknown";
         LocationNotFoundError locationError = new LocationNotFoundError(location);
-        Single<Channel> single = Single.error(locationError);
+        Single<ForecastResultSet> single = Single.error(locationError);
         when(weatherRepository.getForecast(location)).thenReturn(single);
 
         presenter.search(location);
 
         verify(view).showLoading(false);
-        assertThat(presenter.getChannel(), is(nullValue()));
+        assertThat(presenter.getForecastResultSet(), is(nullValue()));
         verify(view).showError(locationError, false);
     }
 
-    @Test
-    public void getAttributionUrl() {
-        assertThat(presenter.getAttributionUrl(), is(WeatherRepository.ATTRIBUTION_URL));
-    }
-
     /**
-     * Checks that the given channel was set on the presenter
+     * Checks that the given forecast result set was set on the presenter
      *
-     * @param channel {@link Channel} to check against
+     * @param forecastResultSet {@link ForecastResultSet} to check against
      */
-    private void checkChannelSet(Channel channel) {
-        assertThat(presenter.getChannel(), is(channel));
-        verify(view).setData(channel);
+    private void checkForecastResultSet(ForecastResultSet forecastResultSet) {
+        assertThat(presenter.getForecastResultSet(), is(forecastResultSet));
+        verify(view).setData(forecastResultSet);
         verify(view).showContent();
     }
 }

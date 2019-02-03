@@ -1,10 +1,7 @@
 # Weather Weight
 
-Note: This app no longer works because Yahoo retired their YQL APIs. I might
-try a different weather API later.
-
-Weather Weight is a lightweight weather app for Android. It uses Yahoo's
-weather API.
+Weather Weight is a lightweight weather app for Android. It uses [AccuWeather's
+APIs](https://developer.accuweather.com).
 
 Reasons for developing:
 * Popular weather apps I tried were on the heavy side with respect to features

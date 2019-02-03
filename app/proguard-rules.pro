@@ -17,4 +17,5 @@
 -dontwarn com.google.errorprone.annotations.*
 
 # Gson models
--keep class io.github.tobyhs.weatherweight.yahooweather.model.** { *; }
+-keep class io.github.tobyhs.weatherweight.api.accuweather.** { *; }
+-keep class io.github.tobyhs.weatherweight.data.model.** { *; }
