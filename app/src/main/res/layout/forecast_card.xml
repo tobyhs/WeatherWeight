@@ -21,7 +21,7 @@
             android:id="@+id/date"
             android:layout_width="@dimen/forecast_card_date_width"
             android:layout_height="wrap_content"
-            tools:text="22 Feb 2017" />
+            tools:text="Feb 22" />
 
         <TextView
             android:id="@+id/temperatureLow"
