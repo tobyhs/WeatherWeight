@@ -3,6 +3,8 @@
     <dimen name="activity_horizontal_margin">16dp</dimen>
     <dimen name="activity_vertical_margin">16dp</dimen>
 
+    <dimen name="accuweather_logo_width">192dp</dimen>
+
     <dimen name="forecast_card_margin">2dp</dimen>
     <dimen name="forecast_card_padding">2dp</dimen>
     <dimen name="forecast_card_day_width">36dp</dimen>
