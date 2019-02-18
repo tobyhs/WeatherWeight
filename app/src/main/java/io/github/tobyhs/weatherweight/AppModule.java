@@ -3,6 +3,8 @@ package io.github.tobyhs.weatherweight;
 import android.content.SharedPreferences;
 import android.preference.PreferenceManager;
 
+import java.io.File;
+
 import javax.inject.Named;
 import javax.inject.Singleton;
 
@@ -15,6 +17,7 @@ import com.google.gson.GsonBuilder;
 import dagger.Module;
 import dagger.Provides;
 
+import okhttp3.Cache;
 import okhttp3.OkHttpClient;
 
 import org.aaronhe.threetengson.ThreeTenGsonAdapter;
@@ -86,15 +89,24 @@ public class AppModule {
     }
 
     /**
+     * @return an OkHttp client for AccuWeather's APIs
+     */
+    @Provides @Named("accuWeatherOkHttp")
+    @Singleton
+    OkHttpClient provideAccuWeatherOkHttp() {
+        return new OkHttpClient.Builder()
+                .addInterceptor(new AccuWeatherApiKeyInterceptor(BuildConfig.ACCUWEATHER_API_KEY))
+                .cache(new Cache(new File(app.getCacheDir(), "AccuWeather"), 96_000))
+                .build();
+    }
+
+    /**
      * @param gson Gson instance for parsing JSON response bodies
      * @return a Retrofit instance for AccuWeather's APIs
      */
     @Provides @Named("accuWeatherRetrofit")
     @Singleton
-    Retrofit provideAccuWeatherRetrofit(Gson gson) {
-        OkHttpClient okHttpClient = new OkHttpClient.Builder()
-                .addInterceptor(new AccuWeatherApiKeyInterceptor(BuildConfig.ACCUWEATHER_API_KEY))
-                .build();
+    Retrofit provideAccuWeatherRetrofit(Gson gson, @Named("accuWeatherOkHttp") OkHttpClient okHttpClient) {
         return new Retrofit.Builder()
                 .baseUrl("https://dataservice.accuweather.com/")
                 .client(okHttpClient)

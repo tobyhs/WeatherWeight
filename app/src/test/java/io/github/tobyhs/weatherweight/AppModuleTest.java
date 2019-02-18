@@ -8,6 +8,8 @@ import com.github.tobyhs.rxsecretary.android.AndroidSchedulerProvider;
 
 import com.google.gson.Gson;
 
+import okhttp3.OkHttpClient;
+
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -19,6 +21,7 @@ import retrofit2.Retrofit;
 import retrofit2.adapter.rxjava2.RxJava2CallAdapterFactory;
 import retrofit2.converter.gson.GsonConverterFactory;
 
+import io.github.tobyhs.weatherweight.api.accuweather.AccuWeatherApiKeyInterceptor;
 import io.github.tobyhs.weatherweight.api.accuweather.AccuWeatherService;
 import io.github.tobyhs.weatherweight.data.AccuWeatherRepository;
 import io.github.tobyhs.weatherweight.data.WeatherRepository;
@@ -65,9 +68,18 @@ public class AppModuleTest {
     }
 
     @Test
+    public void provideAccuWeatherOkHttp() {
+        OkHttpClient client = module.provideAccuWeatherOkHttp();
+        assertThat(client.interceptors(), hasItem(isA(AccuWeatherApiKeyInterceptor.class)));
+        assertThat(client.cache(), is(notNullValue()));
+    }
+
+    @Test
     public void provideAccuWeatherRetrofit() {
-        Retrofit retrofit = module.provideAccuWeatherRetrofit(AppModule.provideGson());
+        OkHttpClient client = mock(OkHttpClient.class);
+        Retrofit retrofit = module.provideAccuWeatherRetrofit(AppModule.provideGson(), client);
         assertThat(retrofit.baseUrl().toString(), is("https://dataservice.accuweather.com/"));
+        assertThat(retrofit.callFactory(), is(client));
         assertThat(retrofit.callAdapterFactories(), hasItem(isA(RxJava2CallAdapterFactory.class)));
         assertThat(retrofit.converterFactories(), hasItem(isA(GsonConverterFactory.class)));
     }
