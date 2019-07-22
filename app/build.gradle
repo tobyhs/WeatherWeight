@@ -13,7 +13,7 @@ android {
         targetSdkVersion 28
         versionCode 1
         versionName "1.0"
-        testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
+        testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
 
         buildConfigField 'String', 'ACCUWEATHER_API_KEY', "\"${secretProps['accuweatherApiKey']}\""
     }
@@ -51,14 +51,13 @@ android {
 dependencies {
     implementation fileTree(dir: 'libs', include: ['*.jar'])
 
-    final supportLibVersion = '28.0.0'
-    implementation "com.android.support:appcompat-v7:$supportLibVersion"
-    implementation "com.android.support:cardview-v7:$supportLibVersion"
-    implementation "com.android.support:recyclerview-v7:$supportLibVersion"
-    implementation "com.android.support:support-media-compat:$supportLibVersion"
-    implementation "com.android.support:support-v4:$supportLibVersion"
+    implementation 'androidx.annotation:annotation:1.1.0'
+    implementation 'androidx.appcompat:appcompat:1.0.2'
+    implementation 'androidx.cardview:cardview:1.0.0'
+    implementation 'androidx.recyclerview:recyclerview:1.0.0'
+    implementation 'androidx.swiperefreshlayout:swiperefreshlayout:1.0.0'
 
-    final butterKnifeVersion = '9.0.0'
+    final butterKnifeVersion = '10.1.0'
     annotationProcessor "com.jakewharton:butterknife-compiler:$butterKnifeVersion"
     implementation "com.jakewharton:butterknife:$butterKnifeVersion"
 
