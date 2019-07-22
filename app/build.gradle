@@ -64,7 +64,7 @@ dependencies {
 
     implementation 'com.prokkypew:clearrecycleradapter:1.1.0'
 
-    final daggerVersion = '2.18'
+    final daggerVersion = '2.23.2'
     [
             "com.google.dagger:dagger-compiler:$daggerVersion",
             "com.google.dagger:dagger-android-processor:$daggerVersion",
