@@ -58,7 +58,7 @@ dependencies {
     implementation "com.android.support:support-media-compat:$supportLibVersion"
     implementation "com.android.support:support-v4:$supportLibVersion"
 
-    final butterKnifeVersion = '8.8.1'
+    final butterKnifeVersion = '9.0.0'
     annotationProcessor "com.jakewharton:butterknife-compiler:$butterKnifeVersion"
     implementation "com.jakewharton:butterknife:$butterKnifeVersion"
 
