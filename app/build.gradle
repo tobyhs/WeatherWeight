@@ -84,7 +84,7 @@ dependencies {
     annotationProcessor "me.tatarka.gsonvalue:gsonvalue-processor:$gsonValueVersion"
     implementation "me.tatarka.gsonvalue:gsonvalue:$gsonValueVersion"
 
-    final mosbyVersion = '3.1.0'
+    final mosbyVersion = '3.1.1'
     implementation "com.hannesdorfmann.mosby3:mvp:$mosbyVersion"
     implementation "com.hannesdorfmann.mosby3:viewstate:$mosbyVersion"
     implementation "com.hannesdorfmann.mosby3:mvp-lce:$mosbyVersion"
