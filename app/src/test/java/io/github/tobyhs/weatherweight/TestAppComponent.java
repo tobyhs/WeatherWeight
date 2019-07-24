@@ -19,6 +19,6 @@ import io.github.tobyhs.weatherweight.forecast.TestForecastModule;
         }
 )
 public interface TestAppComponent extends AndroidInjector<App> {
-    @Component.Builder
-    abstract class Builder extends AndroidInjector.Builder<App> {}
+    @Component.Factory
+    interface Factory extends AndroidInjector.Factory<App> {}
 }

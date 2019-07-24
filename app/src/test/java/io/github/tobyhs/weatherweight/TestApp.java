@@ -8,6 +8,6 @@ import dagger.android.AndroidInjector;
 public class TestApp extends App {
     @Override
     protected AndroidInjector<App> applicationInjector() {
-        return DaggerTestAppComponent.builder().create(this);
+        return DaggerTestAppComponent.factory().create(this);
     }
 }
