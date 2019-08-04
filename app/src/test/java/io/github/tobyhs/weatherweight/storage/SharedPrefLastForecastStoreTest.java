@@ -15,8 +15,8 @@ import org.junit.runner.RunWith;
 import org.robolectric.RobolectricTestRunner;
 
 import io.github.tobyhs.weatherweight.AppModule;
-import io.github.tobyhs.weatherweight.data.model.ForecastResultSet;
-import io.github.tobyhs.weatherweight.test.ForecastResultSetFactory;
+import io.github.tobyhs.weatherweight.data.model.ForecastSearch;
+import io.github.tobyhs.weatherweight.test.ForecastSearchFactory;
 
 import static org.hamcrest.CoreMatchers.instanceOf;
 import static org.hamcrest.CoreMatchers.is;
@@ -45,36 +45,35 @@ public class SharedPrefLastForecastStoreTest {
 
     @Test
     public void getWithEntry() {
-        ForecastResultSet forecastResultSet = ForecastResultSetFactory.create();
+        ForecastSearch forecastSearch = ForecastSearchFactory.create();
         SharedPreferences.Editor editor = sharedPreferences.edit();
-        editor.putString("lastForecast", gson.toJson(forecastResultSet));
+        editor.putString("lastForecast", gson.toJson(forecastSearch));
         editor.apply();
 
-        ForecastResultSet storedForecast = store.get().blockingGet();
-        assertThat(storedForecast, is(forecastResultSet));
+        ForecastSearch storedSearch = store.get().blockingGet();
+        assertThat(storedSearch, is(forecastSearch));
     }
 
     @Test
     public void saveWithCommitSuccess() {
-        ForecastResultSet forecastResultSet = ForecastResultSetFactory.create();
-
-        assertThat(store.save(forecastResultSet).blockingGet(), is(nullValue()));
+        ForecastSearch forecastSearch = ForecastSearchFactory.create();
+        assertThat(store.save(forecastSearch).blockingGet(), is(nullValue()));
 
         String json = sharedPreferences.getString("lastForecast", null);
-        ForecastResultSet storedForecast = gson.fromJson(json, ForecastResultSet.class);
-        assertThat(storedForecast, is(forecastResultSet));
+        ForecastSearch storedSearch = gson.fromJson(json, ForecastSearch.class);
+        assertThat(storedSearch, is(forecastSearch));
     }
 
     @Test
     public void saveWithCommitFailure() {
-        ForecastResultSet forecastResultSet = ForecastResultSetFactory.create();
+        ForecastSearch forecastSearch = ForecastSearchFactory.create();
         SharedPreferences sharedPreferences = mock(SharedPreferences.class);
         SharedPreferences.Editor editor = mock(SharedPreferences.Editor.class);
         when(sharedPreferences.edit()).thenReturn(editor);
         when(editor.commit()).thenReturn(false);
         store = new SharedPrefLastForecastStore(sharedPreferences, gson);
 
-        Throwable error = store.save(forecastResultSet).blockingGet();
+        Throwable error = store.save(forecastSearch).blockingGet();
         assertThat(error, is(instanceOf(IOException.class)));
     }
 }

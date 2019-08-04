@@ -5,19 +5,22 @@ import java.util.concurrent.atomic.AtomicBoolean;
 import com.github.tobyhs.rxsecretary.SchedulerProvider;
 import com.github.tobyhs.rxsecretary.TrampolineSchedulerProvider;
 
-import io.github.tobyhs.weatherweight.data.LocationNotFoundError;
 import io.reactivex.Completable;
 import io.reactivex.Maybe;
 import io.reactivex.Single;
+
 import org.junit.Before;
 import org.junit.Test;
 import org.mockito.Mock;
 
+import io.github.tobyhs.weatherweight.data.LocationNotFoundError;
+import io.github.tobyhs.weatherweight.data.model.ForecastSearch;
 import io.github.tobyhs.weatherweight.data.model.ForecastResultSet;
 import io.github.tobyhs.weatherweight.data.WeatherRepository;
 import io.github.tobyhs.weatherweight.storage.LastForecastStore;
 import io.github.tobyhs.weatherweight.test.BaseTestCase;
 import io.github.tobyhs.weatherweight.test.ForecastResultSetFactory;
+import io.github.tobyhs.weatherweight.test.ForecastSearchFactory;
 
 import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.CoreMatchers.nullValue;
@@ -40,12 +43,12 @@ public class ForecastPresenterTest extends BaseTestCase {
 
     @Test
     public void loadLastForecastOnSuccess() {
-        ForecastResultSet forecastResultSet = ForecastResultSetFactory.create();
-        when(lastForecastStore.get()).thenReturn(Maybe.just(forecastResultSet));
+        ForecastSearch forecastSearch = ForecastSearchFactory.create();
+        when(lastForecastStore.get()).thenReturn(Maybe.just(forecastSearch));
 
         presenter.loadLastForecast();
-        checkForecastResultSet(forecastResultSet);
-        verify(view).setLocationInputText(forecastResultSet.getLocation());
+        checkForecastResultSet(forecastSearch.getForecastResultSet());
+        verify(view).setLocationInputText(forecastSearch.getInput());
     }
 
     @Test
@@ -74,7 +77,11 @@ public class ForecastPresenterTest extends BaseTestCase {
         final AtomicBoolean completableSubscribed = new AtomicBoolean(false);
         Completable saveCompletable = Completable.complete()
                 .doOnSubscribe(disposable -> completableSubscribed.set(true));
-        when(lastForecastStore.save(forecastResultSet)).thenReturn(saveCompletable);
+        ForecastSearch forecastSearch = ForecastSearch.builder()
+                .setInput(location)
+                .setForecastResultSet(forecastResultSet)
+                .build();
+        when(lastForecastStore.save(forecastSearch)).thenReturn(saveCompletable);
 
         presenter.search(location);
 

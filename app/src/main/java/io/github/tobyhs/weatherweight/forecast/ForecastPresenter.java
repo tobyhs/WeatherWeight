@@ -8,6 +8,7 @@ import com.hannesdorfmann.mosby3.mvp.lce.MvpLceView;
 
 import io.github.tobyhs.weatherweight.data.WeatherRepository;
 import io.github.tobyhs.weatherweight.data.model.ForecastResultSet;
+import io.github.tobyhs.weatherweight.data.model.ForecastSearch;
 import io.github.tobyhs.weatherweight.storage.LastForecastStore;
 
 /**
@@ -36,16 +37,16 @@ public class ForecastPresenter extends MvpBasePresenter<ForecastContract.View> {
     }
 
     /**
-     * Loads the last ({@link ForecastResultSet}) that was retrieved when the activity first starts.
+     * Loads the last {@link ForecastSearch} that was saved when the activity first starts.
      */
     public void loadLastForecast() {
         lastForecastStore.get()
                 .subscribeOn(schedulerProvider.io())
                 .observeOn(schedulerProvider.ui())
-                .subscribe(forecastResultSet -> {
-                    setForecastResultSet(forecastResultSet);
+                .subscribe(forecastSearch -> {
+                    setForecastResultSet(forecastSearch.getForecastResultSet());
                     ifViewAttached(view -> {
-                        view.setLocationInputText(forecastResultSet.getLocation());
+                        view.setLocationInputText(forecastSearch.getInput());
                     });
                 },
                         error -> ifViewAttached(view -> view.showError(error, false)),
@@ -67,7 +68,11 @@ public class ForecastPresenter extends MvpBasePresenter<ForecastContract.View> {
                 .observeOn(schedulerProvider.ui())
                 .subscribe(forecastResultSet -> {
                     setForecastResultSet(forecastResultSet);
-                    lastForecastStore.save(forecastResultSet).subscribeOn(schedulerProvider.io()).subscribe();
+                    ForecastSearch forecastSearch = ForecastSearch.builder()
+                            .setInput(location)
+                            .setForecastResultSet(forecastResultSet)
+                            .build();
+                    lastForecastStore.save(forecastSearch).subscribeOn(schedulerProvider.io()).subscribe();
                 }, error -> ifViewAttached(view -> view.showError(error, false)));
     }
 
