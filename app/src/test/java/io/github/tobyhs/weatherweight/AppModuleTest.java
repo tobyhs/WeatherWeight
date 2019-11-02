@@ -10,6 +10,7 @@ import com.google.gson.Gson;
 
 import okhttp3.OkHttpClient;
 
+import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -38,13 +39,26 @@ import static org.mockito.Mockito.mock;
 @RunWith(RobolectricTestRunner.class)
 @Config(application = App.class)
 public class AppModuleTest {
+    private static final String TRUST_STORE_PROPERTY = "javax.net.ssl.trustStore";
+    private String originalTrustStore;
+
     private App app;
     private AppModule module;
 
     @Before
     public void setup() {
+        originalTrustStore = System.getProperty(TRUST_STORE_PROPERTY);
+        System.setProperty(TRUST_STORE_PROPERTY, "NONE");
+
         app = ApplicationProvider.getApplicationContext();
         module = new AppModule(app);
+    }
+
+    @After
+    public void teardown() {
+        if (originalTrustStore != null) {
+            System.setProperty(TRUST_STORE_PROPERTY, originalTrustStore);
+        }
     }
 
     @Test
