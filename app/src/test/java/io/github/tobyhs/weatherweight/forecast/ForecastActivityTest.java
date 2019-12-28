@@ -4,19 +4,19 @@ import java.util.List;
 
 import android.content.Intent;
 import android.net.Uri;
-import android.os.Bundle;
 import android.view.View;
 import android.widget.TextView;
 
 import androidx.recyclerview.widget.RecyclerView;
+import androidx.test.core.app.ActivityScenario;
+import androidx.test.ext.junit.rules.ActivityScenarioRule;
+import androidx.test.ext.junit.runners.AndroidJUnit4;
 
 import com.hannesdorfmann.mosby3.mvp.viewstate.lce.data.RetainingLceViewState;
 
+import org.junit.Rule;
 import org.junit.Test;
 import org.junit.runner.RunWith;
-import org.robolectric.Robolectric;
-import org.robolectric.RobolectricTestRunner;
-import org.robolectric.android.controller.ActivityController;
 
 import io.github.tobyhs.weatherweight.R;
 import io.github.tobyhs.weatherweight.data.model.DailyForecast;
@@ -26,133 +26,174 @@ import io.github.tobyhs.weatherweight.test.ForecastResultSetFactory;
 import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.CoreMatchers.notNullValue;
 import static org.hamcrest.MatcherAssert.assertThat;
+
 import static org.mockito.ArgumentMatchers.anyString;
+import static org.mockito.Mockito.clearInvocations;
 import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
+
 import static org.robolectric.Shadows.shadowOf;
 
-@RunWith(RobolectricTestRunner.class)
+@RunWith(AndroidJUnit4.class)
 public class ForecastActivityTest {
-    private ForecastActivity activity = Robolectric.setupActivity(ForecastActivity.class);
-    private ForecastPresenter presenter = activity.getPresenter();
+    @Rule
+    public ActivityScenarioRule<ForecastActivity> activityScenarioRule = new ActivityScenarioRule<>(ForecastActivity.class);
 
     @Test
     public void onCreate() {
-        assertThat(activity.locationSearch.isSubmitButtonEnabled(), is(true));
+        activityScenarioRule.getScenario().onActivity(activity ->
+                assertThat(activity.locationSearch.isSubmitButtonEnabled(), is(true))
+        );
     }
 
     @Test
     public void onCreateWithNullSavedInstanceState() {
-        verify(presenter).loadLastForecast();
+        activityScenarioRule.getScenario().onActivity(activity ->
+                verify(activity.getPresenter()).loadLastForecast()
+        );
     }
 
     @Test
     public void onCreateWithPresentSavedInstanceState() {
-        ActivityController<ForecastActivity> controller = Robolectric.buildActivity(ForecastActivity.class);
-        controller.create(new Bundle());
+        ActivityScenario<ForecastActivity> scenario = activityScenarioRule.getScenario();
+        scenario.onActivity(activity ->
+                // Clearing so we can check loadLastForecast isn't called on the 2nd onCreate
+                clearInvocations(activity.getPresenter())
+        );
 
-        presenter = controller.get().getPresenter();
-        verify(presenter, never()).loadLastForecast();
+        scenario.recreate();
+        scenario.onActivity(activity ->
+                verify(activity.getPresenter(), never()).loadLastForecast()
+        );
     }
 
     @Test
     public void createPresenter() {
-        assertThat(activity.createPresenter(), is(notNullValue()));
+        activityScenarioRule.getScenario().onActivity(activity ->
+                assertThat(activity.createPresenter(), is(notNullValue()))
+        );
     }
 
     @Test
     public void getData() {
-        ForecastResultSet forecastResultSet = ForecastResultSetFactory.create();
-        when(presenter.getForecastResultSet()).thenReturn(forecastResultSet);
+        activityScenarioRule.getScenario().onActivity(activity -> {
+            ForecastResultSet forecastResultSet = ForecastResultSetFactory.create();
+            when(activity.getPresenter().getForecastResultSet()).thenReturn(forecastResultSet);
 
-        assertThat(activity.getData(), is(forecastResultSet));
+            assertThat(activity.getData(), is(forecastResultSet));
+        });
     }
 
     @Test
     public void setData() {
-        activity.forecastSwipeContainer.setRefreshing(true);
-        ForecastResultSet forecastResultSet = ForecastResultSetFactory.create();
-        activity.setData(forecastResultSet);
+        activityScenarioRule.getScenario().onActivity(activity -> {
+            activity.forecastSwipeContainer.setRefreshing(true);
+            ForecastResultSet forecastResultSet = ForecastResultSetFactory.create();
+            activity.setData(forecastResultSet);
 
-        assertThat(activity.locationFoundView.getText().toString(), is("Oakland, CA, US"));
-        assertThat(activity.pubDateView.getText().toString(), is("Fri, 1 Feb 2019 12:00:00 GMT"));
-        assertThat(activity.forecastSwipeContainer.isRefreshing(), is(false));
+            assertThat(activity.locationFoundView.getText().toString(), is("Oakland, CA, US"));
+            assertThat(
+                    activity.pubDateView.getText().toString(),
+                    is("Fri, 1 Feb 2019 12:00:00 GMT")
+            );
+            assertThat(activity.forecastSwipeContainer.isRefreshing(), is(false));
 
-        activity.forecastRecyclerView.measure(0, 0);
-        activity.forecastRecyclerView.layout(0, 0, 0, 10000);
-        RecyclerView.LayoutManager layoutManager = activity.forecastRecyclerView.getLayoutManager();
-        assert layoutManager != null;
+            RecyclerView recyclerView = activity.forecastRecyclerView;
+            recyclerView.measure(0, 0);
+            recyclerView.layout(0, 0, 0, 10000);
+            RecyclerView.LayoutManager layoutManager = recyclerView.getLayoutManager();
+            assert layoutManager != null;
 
-        List<DailyForecast> forecasts = forecastResultSet.getForecasts();
-        assertThat(layoutManager.getItemCount(), is(forecasts.size()));
+            List<DailyForecast> forecasts = forecastResultSet.getForecasts();
+            assertThat(layoutManager.getItemCount(), is(forecasts.size()));
 
-        View view = layoutManager.findViewByPosition(0);
-        assert view != null;
-        TextView dayView = view.findViewById(R.id.day);
-        assertThat(dayView.getText().toString(), is("Fri"));
-        TextView dateView = view.findViewById(R.id.date);
-        assertThat(dateView.getText().toString(), is("Feb 1"));
-        TextView lowView = view.findViewById(R.id.temperatureLow);
-        assertThat(lowView.getText().toString(), is("60"));
-        TextView highView = view.findViewById(R.id.temperatureHigh);
-        assertThat(highView.getText().toString(), is("65"));
-        TextView descriptionView = view.findViewById(R.id.description);
-        assertThat(descriptionView.getText().toString(), is("Cloudy"));
+            View view = layoutManager.findViewByPosition(0);
+            assert view != null;
+            TextView dayView = view.findViewById(R.id.day);
+            assertThat(dayView.getText().toString(), is("Fri"));
+            TextView dateView = view.findViewById(R.id.date);
+            assertThat(dateView.getText().toString(), is("Feb 1"));
+            TextView lowView = view.findViewById(R.id.temperatureLow);
+            assertThat(lowView.getText().toString(), is("60"));
+            TextView highView = view.findViewById(R.id.temperatureHigh);
+            assertThat(highView.getText().toString(), is("65"));
+            TextView descriptionView = view.findViewById(R.id.description);
+            assertThat(descriptionView.getText().toString(), is("Cloudy"));
+        });
     }
 
     @Test
     public void setDataWithNull() {
-        // To check that a NullPointerException isn't thrown
-        activity.setData(null);
+        activityScenarioRule.getScenario().onActivity(activity -> {
+            // To check that a NullPointerException isn't thrown
+            activity.setData(null);
+        });
     }
 
     @Test
     public void getErrorMessage() {
-        Throwable throwable = new Throwable("test error");
-        assertThat(activity.getErrorMessage(throwable, false), is(throwable.toString()));
+        activityScenarioRule.getScenario().onActivity(activity -> {
+            Throwable throwable = new Throwable("test error");
+            assertThat(activity.getErrorMessage(throwable, false), is(throwable.toString()));
+        });
     }
 
     @Test
     public void createViewState() {
-        assertThat(activity.createViewState() instanceof RetainingLceViewState, is(true));
+        activityScenarioRule.getScenario().onActivity(activity ->
+                assertThat(activity.createViewState() instanceof RetainingLceViewState, is(true))
+        );
     }
 
     @Test
     public void setLocationInputText() {
-        String location = "Saved City, SC";
-        activity.setLocationInputText(location);
+        activityScenarioRule.getScenario().onActivity(activity -> {
+            String location = "Saved City, SC";
+            activity.setLocationInputText(location);
 
-        assertThat(activity.locationSearch.getQuery().toString(), is(location));
-        assertThat(activity.locationSearch.hasFocus(), is(false));
-        verify(presenter, never()).search(anyString());
+            assertThat(activity.locationSearch.getQuery().toString(), is(location));
+            assertThat(activity.locationSearch.hasFocus(), is(false));
+            verify(activity.getPresenter(), never()).search(anyString());
+        });
     }
 
     @Test
     public void onQueryTextSubmit() {
-        String location = "San Francisco, CA";
-        activity.locationSearch.setQuery(location, true);
-        verify(presenter).search(location);
+        activityScenarioRule.getScenario().onActivity(activity -> {
+            String location = "San Francisco, CA";
+            activity.locationSearch.setQuery(location, true);
+            verify(activity.getPresenter()).search(location);
+        });
     }
 
     @Test
     public void onQueryTextChange() {
-        assertThat(activity.onQueryTextChange("i"), is(true));
+        activityScenarioRule.getScenario().onActivity(activity ->
+                assertThat(activity.onQueryTextChange("i"), is(true))
+        );
     }
 
     @Test
     public void onRefresh() {
-        String location = "Current";
-        activity.locationSearch.setQuery(location, false);
-        activity.onRefresh();
-        verify(presenter).search(location);
+        activityScenarioRule.getScenario().onActivity(activity -> {
+            String location = "Current";
+            activity.locationSearch.setQuery(location, false);
+            activity.onRefresh();
+            verify(activity.getPresenter()).search(location);
+        });
     }
 
     @Test
     public void openAttributionUrl() {
-        activity.findViewById(R.id.accuweather_logo).performClick();
-        Intent actual = shadowOf(activity).getNextStartedActivity();
-        Intent expected = new Intent(Intent.ACTION_VIEW, Uri.parse("https://www.accuweather.com"));
-        assertThat(actual.filterEquals(expected), is(true));
+        activityScenarioRule.getScenario().onActivity(activity -> {
+            activity.findViewById(R.id.accuweather_logo).performClick();
+            Intent actual = shadowOf(activity).getNextStartedActivity();
+            Intent expected = new Intent(
+                    Intent.ACTION_VIEW,
+                    Uri.parse("https://www.accuweather.com")
+            );
+            assertThat(actual.filterEquals(expected), is(true));
+        });
     }
 }
