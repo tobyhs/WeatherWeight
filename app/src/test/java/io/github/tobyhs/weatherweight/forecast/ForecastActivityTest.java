@@ -80,13 +80,15 @@ public class ForecastActivityTest {
         assertThat(activity.forecastSwipeContainer.isRefreshing(), is(false));
 
         activity.forecastRecyclerView.measure(0, 0);
-        activity.forecastRecyclerView.layout(0, 0, 00, 10000);
+        activity.forecastRecyclerView.layout(0, 0, 0, 10000);
         RecyclerView.LayoutManager layoutManager = activity.forecastRecyclerView.getLayoutManager();
+        assert layoutManager != null;
 
         List<DailyForecast> forecasts = forecastResultSet.getForecasts();
         assertThat(layoutManager.getItemCount(), is(forecasts.size()));
 
         View view = layoutManager.findViewByPosition(0);
+        assert view != null;
         TextView dayView = view.findViewById(R.id.day);
         assertThat(dayView.getText().toString(), is("Fri"));
         TextView dateView = view.findViewById(R.id.date);
