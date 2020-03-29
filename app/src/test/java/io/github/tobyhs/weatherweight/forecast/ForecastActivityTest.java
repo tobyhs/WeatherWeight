@@ -21,6 +21,7 @@ import org.junit.runner.RunWith;
 import io.github.tobyhs.weatherweight.R;
 import io.github.tobyhs.weatherweight.data.model.DailyForecast;
 import io.github.tobyhs.weatherweight.data.model.ForecastResultSet;
+import io.github.tobyhs.weatherweight.databinding.ActivityForecastBinding;
 import io.github.tobyhs.weatherweight.test.ForecastResultSetFactory;
 
 import static org.hamcrest.CoreMatchers.is;
@@ -43,7 +44,7 @@ public class ForecastActivityTest {
     @Test
     public void onCreate() {
         activityScenarioRule.getScenario().onActivity(activity ->
-                assertThat(activity.locationSearch.isSubmitButtonEnabled(), is(true))
+                assertThat(activity.binding.locationSearch.isSubmitButtonEnabled(), is(true))
         );
     }
 
@@ -88,18 +89,19 @@ public class ForecastActivityTest {
     @Test
     public void setData() {
         activityScenarioRule.getScenario().onActivity(activity -> {
-            activity.forecastSwipeContainer.setRefreshing(true);
+            ActivityForecastBinding binding = activity.binding;
+            binding.forecastSwipeContainer.setRefreshing(true);
             ForecastResultSet forecastResultSet = ForecastResultSetFactory.create();
             activity.setData(forecastResultSet);
 
-            assertThat(activity.locationFoundView.getText().toString(), is("Oakland, CA, US"));
+            assertThat(binding.locationFound.getText().toString(), is("Oakland, CA, US"));
             assertThat(
-                    activity.pubDateView.getText().toString(),
+                    binding.pubDate.getText().toString(),
                     is("Fri, 1 Feb 2019 12:00:00 GMT")
             );
-            assertThat(activity.forecastSwipeContainer.isRefreshing(), is(false));
+            assertThat(binding.forecastSwipeContainer.isRefreshing(), is(false));
 
-            RecyclerView recyclerView = activity.forecastRecyclerView;
+            RecyclerView recyclerView = binding.forecastRecyclerView;
             recyclerView.measure(0, 0);
             recyclerView.layout(0, 0, 0, 10000);
             RecyclerView.LayoutManager layoutManager = recyclerView.getLayoutManager();
@@ -152,8 +154,8 @@ public class ForecastActivityTest {
             String location = "Saved City, SC";
             activity.setLocationInputText(location);
 
-            assertThat(activity.locationSearch.getQuery().toString(), is(location));
-            assertThat(activity.locationSearch.hasFocus(), is(false));
+            assertThat(activity.binding.locationSearch.getQuery().toString(), is(location));
+            assertThat(activity.binding.locationSearch.hasFocus(), is(false));
             verify(activity.getPresenter(), never()).search(anyString());
         });
     }
@@ -162,7 +164,7 @@ public class ForecastActivityTest {
     public void onQueryTextSubmit() {
         activityScenarioRule.getScenario().onActivity(activity -> {
             String location = "San Francisco, CA";
-            activity.locationSearch.setQuery(location, true);
+            activity.binding.locationSearch.setQuery(location, true);
             verify(activity.getPresenter()).search(location);
         });
     }
@@ -178,7 +180,7 @@ public class ForecastActivityTest {
     public void onRefresh() {
         activityScenarioRule.getScenario().onActivity(activity -> {
             String location = "Current";
-            activity.locationSearch.setQuery(location, false);
+            activity.binding.locationSearch.setQuery(location, false);
             activity.onRefresh();
             verify(activity.getPresenter()).search(location);
         });
@@ -187,7 +189,7 @@ public class ForecastActivityTest {
     @Test
     public void openAttributionUrl() {
         activityScenarioRule.getScenario().onActivity(activity -> {
-            activity.findViewById(R.id.accuweather_logo).performClick();
+            activity.binding.accuweatherLogo.performClick();
             Intent actual = shadowOf(activity).getNextStartedActivity();
             Intent expected = new Intent(
                     Intent.ACTION_VIEW,

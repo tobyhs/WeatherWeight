@@ -5,18 +5,13 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.widget.LinearLayout;
 import android.widget.SearchView;
-import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 import androidx.recyclerview.widget.LinearLayoutManager;
-import androidx.recyclerview.widget.RecyclerView;
 
 import javax.inject.Inject;
 
-import butterknife.BindView;
-import butterknife.ButterKnife;
-import butterknife.OnClick;
 import com.hannesdorfmann.mosby3.mvp.viewstate.lce.LceViewState;
 import com.hannesdorfmann.mosby3.mvp.viewstate.lce.MvpLceViewStateActivity;
 import com.hannesdorfmann.mosby3.mvp.viewstate.lce.data.RetainingLceViewState;
@@ -27,8 +22,8 @@ import org.threeten.bp.format.DateTimeFormatter;
 import dagger.Lazy;
 import dagger.android.AndroidInjection;
 
-import io.github.tobyhs.weatherweight.R;
 import io.github.tobyhs.weatherweight.data.model.ForecastResultSet;
+import io.github.tobyhs.weatherweight.databinding.ActivityForecastBinding;
 
 /**
  * Main activity to enter a location to retrieve a weather forecast
@@ -41,30 +36,16 @@ public class ForecastActivity
     @Inject
     protected Lazy<ForecastPresenter> lazyPresenter;
 
+    ActivityForecastBinding binding;
     private ForecastCardAdapter forecastCardAdapter;
-
-    @BindView(R.id.locationSearch) SearchView locationSearch;
-    @BindView(R.id.locationFound) TextView locationFoundView;
-    @BindView(R.id.pubDate) TextView pubDateView;
-    @BindView(R.id.forecastSwipeContainer) SwipeRefreshLayout forecastSwipeContainer;
-    @BindView(R.id.forecastRecyclerView) RecyclerView forecastRecyclerView;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         AndroidInjection.inject(this);
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_forecast);
-
-        ButterKnife.bind(this);
-
-        locationSearch.setOnQueryTextListener(this);
-        locationSearch.setSubmitButtonEnabled(true);
-
-        forecastCardAdapter = new ForecastCardAdapter();
-        forecastRecyclerView.setLayoutManager(new LinearLayoutManager(this));
-        forecastRecyclerView.setAdapter(forecastCardAdapter);
-
-        forecastSwipeContainer.setOnRefreshListener(this);
+        binding = ActivityForecastBinding.inflate(getLayoutInflater());
+        setContentView(binding.getRoot());
+        initializeViews();
 
         if (savedInstanceState == null) {
             getPresenter().loadLastForecast();
@@ -92,10 +73,10 @@ public class ForecastActivity
             return;
         }
 
-        locationFoundView.setText(forecastResultSet.getLocation());
+        binding.locationFound.setText(forecastResultSet.getLocation());
         ZonedDateTime pubDate = forecastResultSet.getPublicationTime();
-        pubDateView.setText(pubDate.format(DateTimeFormatter.RFC_1123_DATE_TIME));
-        forecastSwipeContainer.setRefreshing(false);
+        binding.pubDate.setText(pubDate.format(DateTimeFormatter.RFC_1123_DATE_TIME));
+        binding.forecastSwipeContainer.setRefreshing(false);
         forecastCardAdapter.set(forecastResultSet.getForecasts());
     }
 
@@ -112,10 +93,10 @@ public class ForecastActivity
 
     @Override
     public void setLocationInputText(String location) {
-        locationSearch.setQuery(location, false);
+        binding.locationSearch.setQuery(location, false);
         // I don't want locationSearch to have focus after loading the last forecast because it
         // will bring up the keyboard, so I'll force focus on another view
-        forecastRecyclerView.requestFocus();
+        binding.forecastRecyclerView.requestFocus();
     }
 
     @Override
@@ -131,14 +112,24 @@ public class ForecastActivity
 
     @Override
     public void onRefresh() {
-        getPresenter().search(locationSearch.getQuery().toString());
+        getPresenter().search(binding.locationSearch.getQuery().toString());
     }
 
     /**
-     * Opens the attribution URL
+     * Sets up views in the activity layout
      */
-    @OnClick(R.id.accuweather_logo)
-    public void openAttributionUrl() {
-        startActivity(new Intent(Intent.ACTION_VIEW, ACCUWEATHER_URI));
+    private void initializeViews() {
+        binding.locationSearch.setOnQueryTextListener(this);
+        binding.locationSearch.setSubmitButtonEnabled(true);
+
+        forecastCardAdapter = new ForecastCardAdapter();
+        binding.forecastRecyclerView.setLayoutManager(new LinearLayoutManager(this));
+        binding.forecastRecyclerView.setAdapter(forecastCardAdapter);
+
+        binding.forecastSwipeContainer.setOnRefreshListener(this);
+
+        binding.accuweatherLogo.setOnClickListener(view ->
+            startActivity(new Intent(Intent.ACTION_VIEW, ACCUWEATHER_URI))
+        );
     }
 }

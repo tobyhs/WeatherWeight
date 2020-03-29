@@ -22,7 +22,7 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_below="@id/locationSearch"
-        android:layout_above="@id/powered_by">
+        android:layout_above="@id/poweredBy">
 
         <ProgressBar
             android:id="@+id/loadingView"
@@ -66,14 +66,14 @@
     </FrameLayout>
 
     <TextView
-        android:id="@+id/powered_by"
+        android:id="@+id/poweredBy"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_above="@id/accuweather_logo"
+        android:layout_above="@id/accuweatherLogo"
         android:text="@string/powered_by"/>
 
     <ImageView
-        android:id="@+id/accuweather_logo"
+        android:id="@+id/accuweatherLogo"
         android:layout_width="@dimen/accuweather_logo_width"
         android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"
