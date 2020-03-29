@@ -95,7 +95,7 @@ dependencies {
     implementation 'com.github.tobyhs:rxsecretary:0.1.0'
     implementation 'com.github.tobyhs:rxsecretary-android:0.1.0'
 
-    final retrofitVersion = '2.2.0'
+    final retrofitVersion = '2.8.1'
     implementation "com.squareup.retrofit2:retrofit:$retrofitVersion"
     implementation "com.squareup.retrofit2:adapter-rxjava2:$retrofitVersion"
     implementation "com.squareup.retrofit2:converter-gson:$retrofitVersion"
