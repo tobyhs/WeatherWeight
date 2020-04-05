@@ -3,17 +3,16 @@ package io.github.tobyhs.weatherweight.forecast;
 import java.util.Locale;
 
 import android.view.View;
-import android.widget.TextView;
 
-import butterknife.BindView;
-import butterknife.ButterKnife;
 import com.prokkypew.clearrecycleradapter.ClearRecyclerAdapter;
 import com.prokkypew.clearrecycleradapter.ClearRecyclerViewHolder;
+
 import org.threeten.bp.format.DateTimeFormatter;
 import org.threeten.bp.format.TextStyle;
 
 import io.github.tobyhs.weatherweight.R;
 import io.github.tobyhs.weatherweight.data.model.DailyForecast;
+import io.github.tobyhs.weatherweight.databinding.ForecastCardBinding;
 
 /**
  * Recycler view adapter for the forecast card
@@ -27,7 +26,7 @@ public class ForecastCardAdapter extends ClearRecyclerAdapter<DailyForecast> {
     }
 
     @Override
-    protected ClearRecyclerViewHolder<DailyForecast> getViewHolder(View view, int viewType) {
+    protected ViewHolder getViewHolder(View view, int viewType) {
         return new ViewHolder(view);
     }
 
@@ -35,24 +34,27 @@ public class ForecastCardAdapter extends ClearRecyclerAdapter<DailyForecast> {
      * View holder for {@link ForecastCardAdapter}
      */
     static class ViewHolder extends ClearRecyclerViewHolder<DailyForecast> {
-        @BindView(R.id.day) TextView day;
-        @BindView(R.id.date) TextView date;
-        @BindView(R.id.temperatureLow) TextView temperatureLow;
-        @BindView(R.id.temperatureHigh) TextView temperatureHigh;
-        @BindView(R.id.description) TextView description;
+        ForecastCardBinding binding;
 
+        /**
+         * @param view the forecast card view to bind to
+         */
         ViewHolder(View view) {
             super(view);
-            ButterKnife.bind(this, view);
+            binding = ForecastCardBinding.bind(view);
         }
 
         @Override
         public void bind(DailyForecast forecast) {
-            day.setText(forecast.getDate().getDayOfWeek().getDisplayName(TextStyle.SHORT, Locale.getDefault()));
-            date.setText(forecast.getDate().format(DATE_FORMATTER));
-            temperatureLow.setText(Integer.toString(forecast.getLow()));
-            temperatureHigh.setText(Integer.toString(forecast.getHigh()));
-            description.setText(forecast.getText());
+            String dayText = forecast.getDate().getDayOfWeek().getDisplayName(
+                    TextStyle.SHORT, Locale.getDefault()
+            );
+            binding.day.setText(dayText);
+            binding.date.setText(forecast.getDate().format(DATE_FORMATTER));
+            Locale locale = Locale.getDefault();
+            binding.temperatureLow.setText(String.format(locale, "%d", forecast.getLow()));
+            binding.temperatureHigh.setText(String.format(locale, "%d", forecast.getHigh()));
+            binding.description.setText(forecast.getText());
         }
     }
 }

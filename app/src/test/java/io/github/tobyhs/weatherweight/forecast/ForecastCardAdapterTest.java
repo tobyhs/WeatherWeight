@@ -1,9 +1,15 @@
 package io.github.tobyhs.weatherweight.forecast;
 
+import android.app.Application;
+import android.view.LayoutInflater;
 import android.view.View;
-import android.widget.TextView;
+
+import androidx.test.core.app.ApplicationProvider;
 
 import org.junit.Test;
+import org.junit.runner.RunWith;
+
+import org.robolectric.RobolectricTestRunner;
 
 import io.github.tobyhs.weatherweight.R;
 import io.github.tobyhs.weatherweight.data.model.DailyForecast;
@@ -11,10 +17,8 @@ import io.github.tobyhs.weatherweight.test.ForecastResultSetFactory;
 
 import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.MatcherAssert.assertThat;
-import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.when;
 
+@RunWith(RobolectricTestRunner.class)
 public class ForecastCardAdapterTest {
     private ForecastCardAdapter adapter = new ForecastCardAdapter();
 
@@ -25,32 +29,17 @@ public class ForecastCardAdapterTest {
 
     @Test
     public void viewHolderBind() {
-        View view = mockView();
-        ForecastCardAdapter.ViewHolder viewHolder;
-        viewHolder = (ForecastCardAdapter.ViewHolder) adapter.getViewHolder(view, 0);
+        Application app = ApplicationProvider.getApplicationContext();
+        View view = LayoutInflater.from(app).inflate(R.layout.forecast_card, null);
+        ForecastCardAdapter.ViewHolder viewHolder = adapter.getViewHolder(view, 0);
         DailyForecast forecast = ForecastResultSetFactory.createForecasts().get(0);
 
         viewHolder.bind(forecast);
 
-        verify(viewHolder.day).setText("Fri");
-        verify(viewHolder.date).setText("Feb 1");
-        verify(viewHolder.temperatureLow).setText("60");
-        verify(viewHolder.temperatureHigh).setText("65");
-        verify(viewHolder.description).setText("Cloudy");
-    }
-
-    private static View mockView() {
-        View view = mock(View.class);
-        int[] viewIds = {
-                R.id.day,
-                R.id.date,
-                R.id.temperatureLow,
-                R.id.temperatureHigh,
-                R.id.description,
-        };
-        for (int viewId : viewIds) {
-            when(view.findViewById(viewId)).thenReturn(mock(TextView.class));
-        }
-        return view;
+        assertThat(viewHolder.binding.day.getText(), is("Fri"));
+        assertThat(viewHolder.binding.date.getText(), is("Feb 1"));
+        assertThat(viewHolder.binding.temperatureLow.getText(), is("60"));
+        assertThat(viewHolder.binding.temperatureHigh.getText(), is("65"));
+        assertThat(viewHolder.binding.description.getText(), is("Cloudy"));
     }
 }
