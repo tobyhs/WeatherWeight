@@ -61,10 +61,6 @@ dependencies {
     implementation 'androidx.recyclerview:recyclerview:1.1.0'
     implementation 'androidx.swiperefreshlayout:swiperefreshlayout:1.0.0'
 
-    final butterKnifeVersion = '10.2.1'
-    annotationProcessor "com.jakewharton:butterknife-compiler:$butterKnifeVersion"
-    implementation "com.jakewharton:butterknife:$butterKnifeVersion"
-
     implementation 'com.prokkypew:clearrecycleradapter:1.1.0'
 
     final daggerVersion = '2.25.4'
