@@ -30,6 +30,7 @@ import io.github.tobyhs.weatherweight.storage.LastForecastStore;
 import io.github.tobyhs.weatherweight.storage.SharedPrefLastForecastStore;
 
 import static org.hamcrest.CoreMatchers.hasItem;
+import static org.hamcrest.CoreMatchers.instanceOf;
 import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.CoreMatchers.isA;
 import static org.hamcrest.CoreMatchers.notNullValue;
@@ -73,7 +74,7 @@ public class AppModuleTest {
 
     @Test
     public void provideSchedulerProvider() {
-        assertThat(module.provideSchedulerProvider() instanceof AndroidSchedulerProvider, is(true));
+        assertThat(module.provideSchedulerProvider(), is(instanceOf(AndroidSchedulerProvider.class)));
     }
 
     @Test
@@ -108,7 +109,7 @@ public class AppModuleTest {
     public void provideWeatherRepository() {
         AccuWeatherService service = mock(AccuWeatherService.class);
         WeatherRepository repo = module.provideWeatherRepository(service);
-        assertThat(repo instanceof AccuWeatherRepository, is(true));
+        assertThat(repo, is(instanceOf(AccuWeatherRepository.class)));
     }
 
     @Test
@@ -116,6 +117,6 @@ public class AppModuleTest {
         SharedPreferences sharedPreferences = mock(SharedPreferences.class);
         Gson gson = AppModule.provideGson();
         LastForecastStore store = module.provideLastForecastStore(sharedPreferences, gson);
-        assertThat(store instanceof SharedPrefLastForecastStore, is(true));
+        assertThat(store, is(instanceOf(SharedPrefLastForecastStore.class)));
     }
 }

@@ -24,6 +24,7 @@ import io.github.tobyhs.weatherweight.data.model.ForecastResultSet;
 import io.github.tobyhs.weatherweight.databinding.ActivityForecastBinding;
 import io.github.tobyhs.weatherweight.test.ForecastResultSetFactory;
 
+import static org.hamcrest.CoreMatchers.instanceOf;
 import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.CoreMatchers.notNullValue;
 import static org.hamcrest.MatcherAssert.assertThat;
@@ -144,7 +145,7 @@ public class ForecastActivityTest {
     @Test
     public void createViewState() {
         activityScenarioRule.getScenario().onActivity(activity ->
-                assertThat(activity.createViewState() instanceof RetainingLceViewState, is(true))
+                assertThat(activity.createViewState(), is(instanceOf(RetainingLceViewState.class)))
         );
     }
 
