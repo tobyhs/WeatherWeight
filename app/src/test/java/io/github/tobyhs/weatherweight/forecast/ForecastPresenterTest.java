@@ -5,12 +5,13 @@ import java.util.concurrent.atomic.AtomicBoolean;
 import com.github.tobyhs.rxsecretary.SchedulerProvider;
 import com.github.tobyhs.rxsecretary.TrampolineSchedulerProvider;
 
-import io.reactivex.Completable;
-import io.reactivex.Maybe;
-import io.reactivex.Single;
+import io.reactivex.rxjava3.core.Completable;
+import io.reactivex.rxjava3.core.Maybe;
+import io.reactivex.rxjava3.core.Single;
 
 import org.junit.Before;
 import org.junit.Test;
+
 import org.mockito.Mock;
 
 import io.github.tobyhs.weatherweight.data.LocationNotFoundError;
@@ -25,6 +26,7 @@ import io.github.tobyhs.weatherweight.test.ForecastSearchFactory;
 import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.CoreMatchers.nullValue;
 import static org.hamcrest.MatcherAssert.assertThat;
+
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 

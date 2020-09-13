@@ -12,6 +12,7 @@ import com.google.gson.Gson;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
+
 import org.robolectric.RobolectricTestRunner;
 
 import io.github.tobyhs.weatherweight.AppModule;
@@ -22,6 +23,9 @@ import static org.hamcrest.CoreMatchers.instanceOf;
 import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.CoreMatchers.nullValue;
 import static org.hamcrest.MatcherAssert.assertThat;
+
+import static org.junit.Assert.assertThrows;
+
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
@@ -57,7 +61,7 @@ public class SharedPrefLastForecastStoreTest {
     @Test
     public void saveWithCommitSuccess() {
         ForecastSearch forecastSearch = ForecastSearchFactory.create();
-        assertThat(store.save(forecastSearch).blockingGet(), is(nullValue()));
+        store.save(forecastSearch).blockingAwait();
 
         String json = sharedPreferences.getString("lastForecast", null);
         ForecastSearch storedSearch = gson.fromJson(json, ForecastSearch.class);
@@ -73,7 +77,12 @@ public class SharedPrefLastForecastStoreTest {
         when(editor.commit()).thenReturn(false);
         store = new SharedPrefLastForecastStore(sharedPreferences, gson);
 
-        Throwable error = store.save(forecastSearch).blockingGet();
-        assertThat(error, is(instanceOf(IOException.class)));
+        RuntimeException runtimeException = assertThrows(
+                RuntimeException.class,
+                () -> store.save(forecastSearch).blockingAwait()
+        );
+        Throwable exception = runtimeException.getCause();
+        assertThat(exception, is(instanceOf(IOException.class)));
+        assertThat(exception.getMessage(), is("Failed to write to SharedPreferences: lastForecast"));
     }
 }

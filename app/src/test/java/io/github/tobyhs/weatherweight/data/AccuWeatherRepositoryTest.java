@@ -4,13 +4,16 @@ import java.util.Collections;
 import java.util.LinkedList;
 import java.util.List;
 
-import io.reactivex.Single;
-import io.reactivex.observers.TestObserver;
+import io.reactivex.rxjava3.core.Single;
+import io.reactivex.rxjava3.observers.TestObserver;
+
 import org.junit.Before;
 import org.junit.Test;
+
 import org.threeten.bp.Clock;
 import org.threeten.bp.ZonedDateTime;
 import org.threeten.bp.temporal.ChronoUnit;
+
 import retrofit2.Response;
 
 import io.github.tobyhs.weatherweight.api.accuweather.AccuWeatherService;
@@ -26,6 +29,7 @@ import io.github.tobyhs.weatherweight.data.model.ForecastResultSet;
 
 import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.MatcherAssert.assertThat;
+
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
@@ -46,7 +50,7 @@ public class AccuWeatherRepositoryTest {
         Single<Response<List<City>>> citiesSingle = Single.just(citiesResponse);
         when(accuWeatherService.searchCities("Nowhere, USA", 0)).thenReturn(citiesSingle);
 
-        TestObserver observer = repository.getForecast("Nowhere, USA").test();
+        TestObserver<ForecastResultSet> observer = repository.getForecast("Nowhere, USA").test();
         observer.assertError(LocationNotFoundError.class);
     }
 

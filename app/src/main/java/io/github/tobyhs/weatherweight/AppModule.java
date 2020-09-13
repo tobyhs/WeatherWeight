@@ -25,7 +25,7 @@ import org.aaronhe.threetengson.ThreeTenGsonAdapter;
 import org.threeten.bp.Clock;
 
 import retrofit2.Retrofit;
-import retrofit2.adapter.rxjava2.RxJava2CallAdapterFactory;
+import retrofit2.adapter.rxjava3.RxJava3CallAdapterFactory;
 import retrofit2.converter.gson.GsonConverterFactory;
 
 import io.github.tobyhs.weatherweight.api.accuweather.AccuWeatherApiKeyInterceptor;
@@ -110,7 +110,7 @@ public class AppModule {
         return new Retrofit.Builder()
                 .baseUrl("https://dataservice.accuweather.com/")
                 .client(okHttpClient)
-                .addCallAdapterFactory(RxJava2CallAdapterFactory.create())
+                .addCallAdapterFactory(RxJava3CallAdapterFactory.create())
                 .addConverterFactory(GsonConverterFactory.create(gson))
                 .build();
     }

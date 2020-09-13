@@ -6,8 +6,8 @@ import java.io.IOException;
 
 import com.google.gson.Gson;
 
-import io.reactivex.Completable;
-import io.reactivex.Maybe;
+import io.reactivex.rxjava3.core.Completable;
+import io.reactivex.rxjava3.core.Maybe;
 
 import io.github.tobyhs.weatherweight.data.model.ForecastSearch;
 

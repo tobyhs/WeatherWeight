@@ -3,7 +3,8 @@ package io.github.tobyhs.weatherweight.data;
 import java.util.ArrayList;
 import java.util.List;
 
-import io.reactivex.Single;
+import io.reactivex.rxjava3.core.Single;
+
 import org.threeten.bp.Clock;
 import org.threeten.bp.ZonedDateTime;
 

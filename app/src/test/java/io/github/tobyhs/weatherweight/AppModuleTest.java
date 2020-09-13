@@ -19,7 +19,7 @@ import org.robolectric.RobolectricTestRunner;
 import org.robolectric.annotation.Config;
 
 import retrofit2.Retrofit;
-import retrofit2.adapter.rxjava2.RxJava2CallAdapterFactory;
+import retrofit2.adapter.rxjava3.RxJava3CallAdapterFactory;
 import retrofit2.converter.gson.GsonConverterFactory;
 
 import io.github.tobyhs.weatherweight.api.accuweather.AccuWeatherApiKeyInterceptor;
@@ -95,7 +95,7 @@ public class AppModuleTest {
         Retrofit retrofit = module.provideAccuWeatherRetrofit(AppModule.provideGson(), client);
         assertThat(retrofit.baseUrl().toString(), is("https://dataservice.accuweather.com/"));
         assertThat(retrofit.callFactory(), is(client));
-        assertThat(retrofit.callAdapterFactories(), hasItem(isA(RxJava2CallAdapterFactory.class)));
+        assertThat(retrofit.callAdapterFactories(), hasItem(isA(RxJava3CallAdapterFactory.class)));
         assertThat(retrofit.converterFactories(), hasItem(isA(GsonConverterFactory.class)));
     }
 

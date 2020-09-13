@@ -1,6 +1,6 @@
 package io.github.tobyhs.weatherweight.data;
 
-import io.reactivex.Single;
+import io.reactivex.rxjava3.core.Single;
 
 import io.github.tobyhs.weatherweight.data.model.ForecastResultSet;
 
