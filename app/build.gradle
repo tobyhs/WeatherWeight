@@ -4,13 +4,13 @@ def secretProps = new Properties()
 rootProject.file("secret.properties").withInputStream { secretProps.load(it) }
 
 android {
-    compileSdkVersion 29
-    buildToolsVersion '29.0.3'
+    compileSdkVersion 30
+    buildToolsVersion '30.0.3'
 
     defaultConfig {
         applicationId "io.github.tobyhs.weatherweight"
         minSdkVersion 26
-        targetSdkVersion 29
+        targetSdkVersion 30
         versionCode 1
         versionName "1.0"
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
@@ -109,5 +109,5 @@ dependencies {
     testImplementation 'androidx.test.ext:junit:1.1.2'
     testImplementation 'junit:junit:4.13'
     testImplementation 'org.mockito:mockito-core:3.5.10'
-    testImplementation 'org.robolectric:robolectric:4.3.1'
+    testImplementation 'org.robolectric:robolectric:4.5.1'
 }
