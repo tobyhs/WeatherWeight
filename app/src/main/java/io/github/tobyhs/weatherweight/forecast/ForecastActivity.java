@@ -31,7 +31,7 @@ import io.github.tobyhs.weatherweight.databinding.ActivityForecastBinding;
 public class ForecastActivity
         extends MvpLceViewStateActivity<LinearLayout, ForecastResultSet, ForecastContract.View, ForecastPresenter>
         implements ForecastContract.View, SearchView.OnQueryTextListener, SwipeRefreshLayout.OnRefreshListener {
-    private static Uri ACCUWEATHER_URI = Uri.parse("https://www.accuweather.com");
+    private static final Uri ACCUWEATHER_URI = Uri.parse("https://www.accuweather.com");
 
     @Inject
     protected Lazy<ForecastPresenter> lazyPresenter;

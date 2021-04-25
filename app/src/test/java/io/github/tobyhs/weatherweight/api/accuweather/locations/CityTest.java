@@ -18,7 +18,6 @@ public class CityTest {
     public void parseJson() throws Exception {
         try (
                 InputStream stream = getClass().getResourceAsStream("/accuweather/city.json");
-                @SuppressWarnings("ConstantConditions")
                 Reader reader = new InputStreamReader(stream)
         ) {
             Gson gson = AppModule.provideGson();

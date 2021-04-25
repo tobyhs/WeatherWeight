@@ -20,7 +20,7 @@ import static org.hamcrest.MatcherAssert.assertThat;
 
 @RunWith(RobolectricTestRunner.class)
 public class ForecastCardAdapterTest {
-    private ForecastCardAdapter adapter = new ForecastCardAdapter();
+    private final ForecastCardAdapter adapter = new ForecastCardAdapter();
 
     @Test
     public void getItemLayoutId() {

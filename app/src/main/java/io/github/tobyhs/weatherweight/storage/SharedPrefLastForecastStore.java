@@ -16,10 +16,10 @@ import io.github.tobyhs.weatherweight.data.model.ForecastSearch;
  * {@link android.content.SharedPreferences}
  */
 public class SharedPrefLastForecastStore implements LastForecastStore {
-    private static String KEY = "lastForecast";
+    private static final String KEY = "lastForecast";
 
-    private SharedPreferences sharedPreferences;
-    private Gson gson;
+    private final SharedPreferences sharedPreferences;
+    private final Gson gson;
 
     /**
      * @param sharedPreferences the {@link SharedPreferences} to use

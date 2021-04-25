@@ -45,9 +45,7 @@ public class ForecastPresenter extends MvpBasePresenter<ForecastContract.View> {
                 .observeOn(schedulerProvider.ui())
                 .subscribe(forecastSearch -> {
                     setForecastResultSet(forecastSearch.getForecastResultSet());
-                    ifViewAttached(view -> {
-                        view.setLocationInputText(forecastSearch.getInput());
-                    });
+                    ifViewAttached(view -> view.setLocationInputText(forecastSearch.getInput()));
                 },
                         error -> ifViewAttached(view -> view.showError(error, false)),
                         () -> ifViewAttached(MvpLceView::showContent)

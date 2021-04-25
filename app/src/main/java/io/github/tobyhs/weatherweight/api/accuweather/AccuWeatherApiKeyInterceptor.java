@@ -1,5 +1,7 @@
 package io.github.tobyhs.weatherweight.api.accuweather;
 
+import androidx.annotation.NonNull;
+
 import java.io.IOException;
 
 import okhttp3.HttpUrl;
@@ -21,6 +23,7 @@ public class AccuWeatherApiKeyInterceptor implements Interceptor {
     }
 
     @Override
+    @NonNull
     public Response intercept(Interceptor.Chain chain) throws IOException {
         Request originalRequest = chain.request();
         HttpUrl url = originalRequest.url().newBuilder().addQueryParameter("apikey", apiKey).build();

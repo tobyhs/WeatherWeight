@@ -35,7 +35,7 @@ import static org.mockito.Mockito.when;
 
 public class AccuWeatherRepositoryTest {
     private AccuWeatherService accuWeatherService;
-    private Clock clock = Clock.systemUTC();
+    private final Clock clock = Clock.systemUTC();
     private AccuWeatherRepository repository;
 
     @Before

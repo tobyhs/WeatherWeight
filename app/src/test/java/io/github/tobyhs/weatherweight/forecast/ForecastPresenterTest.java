@@ -31,7 +31,7 @@ import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 public class ForecastPresenterTest extends BaseTestCase {
-    private SchedulerProvider schedulerProvider = new TrampolineSchedulerProvider();
+    private final SchedulerProvider schedulerProvider = new TrampolineSchedulerProvider();
     @Mock private WeatherRepository weatherRepository;
     @Mock private LastForecastStore lastForecastStore;
     @Mock private ForecastContract.View view;

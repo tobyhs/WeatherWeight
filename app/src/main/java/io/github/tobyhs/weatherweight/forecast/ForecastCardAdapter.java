@@ -18,7 +18,7 @@ import io.github.tobyhs.weatherweight.databinding.ForecastCardBinding;
  * Recycler view adapter for the forecast card
  */
 public class ForecastCardAdapter extends ClearRecyclerAdapter<DailyForecast> {
-    private static DateTimeFormatter DATE_FORMATTER = DateTimeFormatter.ofPattern("MMM d");
+    private static final DateTimeFormatter DATE_FORMATTER = DateTimeFormatter.ofPattern("MMM d");
 
     @Override
     protected int getItemLayoutId(int viewType) {

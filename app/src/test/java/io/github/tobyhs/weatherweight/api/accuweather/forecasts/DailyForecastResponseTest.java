@@ -19,7 +19,6 @@ public class DailyForecastResponseTest {
     public void parseJson() throws Exception {
         try (
                 InputStream stream = getClass().getResourceAsStream("/accuweather/dailyForecastResponse.json");
-                @SuppressWarnings("ConstantConditions")
                 Reader reader = new InputStreamReader(stream)
         ) {
             Gson gson = AppModule.provideGson();

@@ -33,7 +33,7 @@ import static org.mockito.Mockito.when;
 public class SharedPrefLastForecastStoreTest {
     private SharedPreferences sharedPreferences;
     private SharedPrefLastForecastStore store;
-    private Gson gson = AppModule.provideGson();
+    private final Gson gson = AppModule.provideGson();
 
     @Before
     public void setup() {
