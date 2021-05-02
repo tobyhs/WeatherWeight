@@ -1,10 +1,15 @@
 package io.github.tobyhs.weatherweight.forecast;
 
+import androidx.annotation.VisibleForTesting;
+
 import javax.inject.Inject;
 
 import com.github.tobyhs.rxsecretary.SchedulerProvider;
+
 import com.hannesdorfmann.mosby3.mvp.MvpBasePresenter;
 import com.hannesdorfmann.mosby3.mvp.lce.MvpLceView;
+
+import io.reactivex.rxjava3.disposables.Disposable;
 
 import io.github.tobyhs.weatherweight.data.WeatherRepository;
 import io.github.tobyhs.weatherweight.data.model.ForecastResultSet;
@@ -15,10 +20,13 @@ import io.github.tobyhs.weatherweight.storage.LastForecastStore;
  * Presenter for the forecast activity
  */
 public class ForecastPresenter extends MvpBasePresenter<ForecastContract.View> {
-    private ForecastResultSet forecastResultSet;
     private final SchedulerProvider schedulerProvider;
     private final WeatherRepository weatherRepository;
     private final LastForecastStore lastForecastStore;
+
+    @VisibleForTesting Disposable loadLastForecastDisposable;
+    @VisibleForTesting Disposable getForecastDisposable;
+    private ForecastResultSet forecastResultSet;
 
     /**
      * @param schedulerProvider RX scheduler provider
@@ -40,7 +48,7 @@ public class ForecastPresenter extends MvpBasePresenter<ForecastContract.View> {
      * Loads the last {@link ForecastSearch} that was saved when the activity first starts.
      */
     public void loadLastForecast() {
-        lastForecastStore.get()
+        loadLastForecastDisposable = lastForecastStore.get()
                 .subscribeOn(schedulerProvider.io())
                 .observeOn(schedulerProvider.ui())
                 .subscribe(forecastSearch -> {
@@ -58,10 +66,13 @@ public class ForecastPresenter extends MvpBasePresenter<ForecastContract.View> {
      * @param location location to obtain forecast for
      */
     public void search(String location) {
+        if (getForecastDisposable != null) {
+            getForecastDisposable.dispose();
+        }
         this.forecastResultSet = null;
         ifViewAttached(view -> view.showLoading(false));
 
-        weatherRepository.getForecast(location)
+        getForecastDisposable = weatherRepository.getForecast(location)
                 .subscribeOn(schedulerProvider.io())
                 .observeOn(schedulerProvider.ui())
                 .subscribe(forecastResultSet -> {
@@ -79,6 +90,17 @@ public class ForecastPresenter extends MvpBasePresenter<ForecastContract.View> {
      */
     public ForecastResultSet getForecastResultSet() {
         return forecastResultSet;
+    }
+
+    @Override
+    public void destroy() {
+        if (loadLastForecastDisposable != null) {
+            loadLastForecastDisposable.dispose();
+        }
+        if (getForecastDisposable != null) {
+            getForecastDisposable.dispose();
+        }
+        super.destroy();
     }
 
     /**

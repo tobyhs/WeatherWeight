@@ -8,6 +8,7 @@ import com.github.tobyhs.rxsecretary.TrampolineSchedulerProvider;
 import io.reactivex.rxjava3.core.Completable;
 import io.reactivex.rxjava3.core.Maybe;
 import io.reactivex.rxjava3.core.Single;
+import io.reactivex.rxjava3.disposables.Disposable;
 
 import org.junit.Before;
 import org.junit.Test;
@@ -24,9 +25,11 @@ import io.github.tobyhs.weatherweight.test.ForecastResultSetFactory;
 import io.github.tobyhs.weatherweight.test.ForecastSearchFactory;
 
 import static org.hamcrest.CoreMatchers.is;
+import static org.hamcrest.CoreMatchers.not;
 import static org.hamcrest.CoreMatchers.nullValue;
 import static org.hamcrest.MatcherAssert.assertThat;
 
+import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
@@ -93,6 +96,18 @@ public class ForecastPresenterTest extends BaseTestCase {
     }
 
     @Test
+    public void searchWithExistingGetForecastDisposable() {
+        Disposable getForecastDisposable = mock(Disposable.class);
+        presenter.getForecastDisposable = getForecastDisposable;
+        String location = "Berkeley, CA";
+        stubSearch(location);
+        presenter.search(location);
+
+        verify(getForecastDisposable).dispose();
+        assertThat(presenter.getForecastDisposable, is(not(getForecastDisposable)));
+    }
+
+    @Test
     public void searchOnError() {
         String location = "Parts Unknown";
         LocationNotFoundError locationError = new LocationNotFoundError(location);
@@ -106,6 +121,24 @@ public class ForecastPresenterTest extends BaseTestCase {
         verify(view).showError(locationError, false);
     }
 
+    @Test
+    public void destroyWhenDisposablesAreNull() {
+        // Just to check there are no NPEs
+        presenter.destroy();
+    }
+
+    @Test
+    public void destroyWhenDisposablesAreNonNull() {
+        Disposable loadLastForecastDisposable = mock(Disposable.class);
+        Disposable getForecastDisposable = mock(Disposable.class);
+        presenter.loadLastForecastDisposable = loadLastForecastDisposable;
+        presenter.getForecastDisposable = getForecastDisposable;
+        presenter.destroy();
+
+        verify(loadLastForecastDisposable).dispose();
+        verify(getForecastDisposable).dispose();
+    }
+
     /**
      * Checks that the given forecast result set was set on the presenter
      *
@@ -115,5 +148,22 @@ public class ForecastPresenterTest extends BaseTestCase {
         assertThat(presenter.getForecastResultSet(), is(forecastResultSet));
         verify(view).setData(forecastResultSet);
         verify(view).showContent();
+    }
+
+    /**
+     * Stubs the dependencies in {@link ForecastPresenter#search(String)}
+     *
+     * @param location location to stub a forecast for
+     */
+    private void stubSearch(String location) {
+        ForecastResultSet forecastResultSet = ForecastResultSetFactory.create();
+        when(weatherRepository.getForecast(location)).thenReturn(Single.just(forecastResultSet));
+
+        Completable saveCompletable = Completable.complete();
+        ForecastSearch forecastSearch = ForecastSearch.builder()
+                .setInput(location)
+                .setForecastResultSet(forecastResultSet)
+                .build();
+        when(lastForecastStore.save(forecastSearch)).thenReturn(saveCompletable);
     }
 }
