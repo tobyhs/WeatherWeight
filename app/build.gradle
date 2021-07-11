@@ -1,5 +1,6 @@
 apply plugin: 'com.android.application'
 apply plugin: 'kotlin-android'
+apply plugin: 'kotlin-kapt'
 
 def secretProps = new Properties()
 rootProject.file("secret.properties").withInputStream { secretProps.load(it) }
@@ -70,20 +71,20 @@ dependencies {
             "com.google.dagger:dagger-compiler:$daggerVersion",
             "com.google.dagger:dagger-android-processor:$daggerVersion",
     ].each {
-        annotationProcessor it
-        testAnnotationProcessor it
+        kapt it
+        kaptTest it
     }
     implementation "com.google.dagger:dagger:$daggerVersion"
     implementation "com.google.dagger:dagger-android:$daggerVersion"
 
     final autoValue = 'com.google.auto.value:auto-value:1.5.2'
     compileOnly autoValue
-    annotationProcessor autoValue
+    kapt autoValue
 
     implementation 'com.google.code.gson:gson:2.8.6'
 
     final gsonValueVersion = '0.9'
-    annotationProcessor "me.tatarka.gsonvalue:gsonvalue-processor:$gsonValueVersion"
+    kapt "me.tatarka.gsonvalue:gsonvalue-processor:$gsonValueVersion"
     implementation "me.tatarka.gsonvalue:gsonvalue:$gsonValueVersion"
 
     final mosbyVersion = '3.1.1'
