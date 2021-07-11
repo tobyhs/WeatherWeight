@@ -1,4 +1,5 @@
 apply plugin: 'com.android.application'
+apply plugin: 'kotlin-android'
 
 def secretProps = new Properties()
 rootProject.file("secret.properties").withInputStream { secretProps.load(it) }
@@ -55,6 +56,7 @@ android {
 dependencies {
     implementation fileTree(dir: 'libs', include: ['*.jar'])
 
+    implementation "org.jetbrains.kotlin:kotlin-stdlib:$kotlin_version"
     implementation 'androidx.annotation:annotation:1.2.0'
     implementation 'androidx.appcompat:appcompat:1.3.0'
     implementation 'androidx.cardview:cardview:1.0.0'
