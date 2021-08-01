@@ -103,6 +103,10 @@ dependencies {
     implementation "com.squareup.retrofit2:adapter-rxjava3:$retrofitVersion"
     implementation "com.squareup.retrofit2:converter-gson:$retrofitVersion"
 
+    final fastAdapterVersion = '5.4.1'
+    implementation "com.mikepenz:fastadapter:$fastAdapterVersion"
+    implementation "com.mikepenz:fastadapter-extensions-binding:$fastAdapterVersion"
+
     implementation 'com.jakewharton.threetenabp:threetenabp:1.1.1'
     implementation('org.aaronhe:threetenbp-gson-adapter:1.0.2') {
         transitive = false
