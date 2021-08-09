@@ -53,7 +53,7 @@ class ForecastActivity :
     override fun loadData(pullToRefresh: Boolean) {
     }
 
-    override fun getData(): ForecastResultSet {
+    override fun getData(): ForecastResultSet? {
         return getPresenter().forecastResultSet
     }
 

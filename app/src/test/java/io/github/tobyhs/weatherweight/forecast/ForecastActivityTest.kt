@@ -116,7 +116,7 @@ class ForecastActivityTest {
     fun setDataWithNull() {
         activityScenarioRule.scenario.onActivity { activity ->
             // To check that a NullPointerException isn't thrown
-            activity.setData(null)
+            activity.data = null
         }
     }
 
