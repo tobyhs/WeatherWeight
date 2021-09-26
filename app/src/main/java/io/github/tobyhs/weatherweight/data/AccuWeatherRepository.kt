@@ -1,0 +1,77 @@
+package io.github.tobyhs.weatherweight.data
+
+import io.github.tobyhs.weatherweight.api.accuweather.AccuWeatherService
+import io.github.tobyhs.weatherweight.api.accuweather.locations.City
+import io.github.tobyhs.weatherweight.data.model.DailyForecast
+import io.github.tobyhs.weatherweight.data.model.ForecastResultSet
+
+import io.reactivex.rxjava3.core.Single
+
+import org.threeten.bp.Clock
+import org.threeten.bp.ZonedDateTime
+
+/**
+ * Implementation of [WeatherRepository] that uses AccuWeather's APIs
+ */
+class AccuWeatherRepository
+/**
+ * @param accuWeatherService service to get data from AccuWeather's APIs
+ * @param clock clock used to get the current instant
+ */(private val accuWeatherService: AccuWeatherService, private val clock: Clock) :
+    WeatherRepository {
+    override fun getForecast(location: String): Single<ForecastResultSet> {
+        val resultBuilder = ForecastResultSet.builder()
+        // An explicit offset of 0 limits the results to 25 instead of 100
+        return accuWeatherService.searchCities(location, 0).flatMap { citiesResponse ->
+            val city: City = try {
+                citiesResponse.body()!![0]
+            } catch (e: IndexOutOfBoundsException) {
+                throw LocationNotFoundError(location)
+            }
+            resultBuilder.setLocation(formatCity(city))
+            accuWeatherService.get5DayForecast(city.key)
+        }.map { response ->
+            resultBuilder.setPublicationTime(ZonedDateTime.now(clock))
+                .setForecasts(convertDailyForecastResponse(response.body()!!.dailyForecasts))
+                .build()
+        }
+    }
+
+    /**
+     * Derives a location string from a city from AccuWeather's API
+     *
+     * @param city a city from AccuWeather's Locations API
+     * @return a location string with the city name, state/province, and country
+     */
+    private fun formatCity(city: City): String {
+        return "${city.localizedName}, ${city.administrativeArea.id}, ${city.country.id}"
+    }
+
+    /**
+     * Converts daily forecasts from AccuWeather's Forecasts API
+     *
+     * @param dailyForecasts daily forecasts from AccuWeather's Forecasts API
+     * @return converted daily forecasts
+     */
+    private fun convertDailyForecastResponse(
+        dailyForecasts: List<io.github.tobyhs.weatherweight.api.accuweather.forecasts.DailyForecast>
+    ): List<DailyForecast> {
+        val result = ArrayList<DailyForecast>(dailyForecasts.size)
+        for (forecast in dailyForecasts) {
+            var text = forecast.day.iconPhrase
+            val nightPhrase = forecast.night.iconPhrase
+            if (text != nightPhrase) {
+                text += " / $nightPhrase"
+            }
+            result.add(
+                DailyForecast.builder()
+                    .setDate(forecast.date.toLocalDate())
+                    .setLow(forecast.temperature.minimum.value.toInt())
+                    .setHigh(forecast.temperature.maximum.value.toInt())
+                    .setText(text)
+                    .build()
+            )
+        }
+        return result
+    }
+}
