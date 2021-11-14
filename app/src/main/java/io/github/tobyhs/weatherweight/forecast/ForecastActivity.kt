@@ -12,6 +12,9 @@ import com.hannesdorfmann.mosby3.mvp.viewstate.lce.LceViewState
 import com.hannesdorfmann.mosby3.mvp.viewstate.lce.MvpLceViewStateActivity
 import com.hannesdorfmann.mosby3.mvp.viewstate.lce.data.RetainingLceViewState
 
+import com.mikepenz.fastadapter.FastAdapter
+import com.mikepenz.fastadapter.adapters.ItemAdapter
+
 import dagger.Lazy
 import dagger.android.AndroidInjection
 
@@ -32,7 +35,7 @@ class ForecastActivity :
     lateinit var lazyPresenter: Lazy<ForecastPresenter>
 
     lateinit var binding: ActivityForecastBinding
-    private lateinit var forecastCardAdapter: ForecastCardAdapter
+    private lateinit var forecastItemAdapter: ItemAdapter<ForecastCardItem>
 
     override fun onCreate(savedInstanceState: Bundle?) {
         AndroidInjection.inject(this)
@@ -66,7 +69,9 @@ class ForecastActivity :
         val pubDate = forecastResultSet.publicationTime
         binding.pubDate.text = pubDate.format(DateTimeFormatter.RFC_1123_DATE_TIME)
         binding.forecastSwipeContainer.isRefreshing = false
-        forecastCardAdapter.set(forecastResultSet.forecasts)
+        forecastItemAdapter.set(forecastResultSet.forecasts.map { dailyForecast ->
+            ForecastCardItem(dailyForecast)
+        })
     }
 
     public override fun getErrorMessage(e: Throwable, pullToRefresh: Boolean): String {
@@ -104,9 +109,9 @@ class ForecastActivity :
         binding.locationSearch.setOnQueryTextListener(this)
         binding.locationSearch.isSubmitButtonEnabled = true
 
-        forecastCardAdapter = ForecastCardAdapter()
+        forecastItemAdapter = ItemAdapter()
         binding.forecastRecyclerView.layoutManager = LinearLayoutManager(this)
-        binding.forecastRecyclerView.adapter = forecastCardAdapter
+        binding.forecastRecyclerView.adapter = FastAdapter.with(forecastItemAdapter)
 
         binding.forecastSwipeContainer.setOnRefreshListener(this)
         binding.accuweatherLogo.setOnClickListener {
