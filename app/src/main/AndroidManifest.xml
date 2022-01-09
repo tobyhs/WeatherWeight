@@ -16,6 +16,7 @@
 
         <activity
             android:name=".forecast.ForecastActivity"
+            android:exported="true"
             android:windowSoftInputMode="stateUnchanged">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
