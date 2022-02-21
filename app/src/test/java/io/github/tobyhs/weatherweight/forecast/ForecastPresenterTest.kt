@@ -79,10 +79,10 @@ class ForecastPresenterTest : BaseTestCase() {
         val completableSubscribed = AtomicBoolean(false)
         val saveCompletable = Completable.complete()
             .doOnSubscribe { completableSubscribed.set(true) }
-        val forecastSearch = ForecastSearch.builder()
-            .setInput(location)
-            .setForecastResultSet(forecastResultSet)
-            .build()
+        val forecastSearch = ForecastSearch(
+            input = location,
+            forecastResultSet = forecastResultSet,
+        )
         Mockito.`when`(lastForecastStore.save(forecastSearch)).thenReturn(saveCompletable)
 
         presenter.search(location)
@@ -156,10 +156,10 @@ class ForecastPresenterTest : BaseTestCase() {
             .thenReturn(Single.just(forecastResultSet))
 
         val saveCompletable = Completable.complete()
-        val forecastSearch = ForecastSearch.builder()
-            .setInput(location)
-            .setForecastResultSet(forecastResultSet)
-            .build()
+        val forecastSearch = ForecastSearch(
+            input = location,
+            forecastResultSet = forecastResultSet,
+        )
         Mockito.`when`(lastForecastStore.save(forecastSearch)).thenReturn(saveCompletable)
     }
 }

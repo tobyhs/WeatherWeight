@@ -73,10 +73,10 @@ class ForecastPresenter
             .subscribe(
                 { forecastResultSet ->
                     setForecastResultSet(forecastResultSet)
-                    val forecastSearch = ForecastSearch.builder()
-                        .setInput(location)
-                        .setForecastResultSet(forecastResultSet)
-                        .build()
+                    val forecastSearch = ForecastSearch(
+                        input = location,
+                        forecastResultSet = forecastResultSet,
+                    )
                     lastForecastStore.save(forecastSearch)
                         .subscribeOn(schedulerProvider.io())
                         .subscribe()

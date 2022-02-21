@@ -9,8 +9,8 @@ object ForecastSearchFactory {
     /**
      * @return a valid [ForecastSearch] for tests
      */
-    fun create(): ForecastSearch = ForecastSearch.builder()
-        .setInput("Oakland, CA")
-        .setForecastResultSet(ForecastResultSetFactory.create())
-        .build()
+    fun create(): ForecastSearch = ForecastSearch(
+        input = "Oakland, CA",
+        forecastResultSet = ForecastResultSetFactory.create(),
+    )
 }

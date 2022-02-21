@@ -14,20 +14,18 @@ object ForecastResultSetFactory {
      * @return a valid [ForecastResultSet] for testing
      */
     @JvmStatic
-    fun create(): ForecastResultSet = ForecastResultSet.builder()
-        .setLocation("Oakland, CA, US")
-        .setPublicationTime(ZonedDateTime.parse("2019-02-01T12:00:00Z"))
-        .setForecasts(createForecasts())
-        .build()
+    fun create(): ForecastResultSet = ForecastResultSet(
+        location = "Oakland, CA, US",
+        publicationTime = ZonedDateTime.parse("2019-02-01T12:00:00Z"),
+        forecasts = createForecasts()
+    )
 
     /**
      * @return a list of daily forecasts for testing
      */
     @JvmStatic
     fun createForecasts(): List<DailyForecast> = listOf(
-        DailyForecast.builder().setDate(LocalDate.parse("2019-02-01"))
-            .setLow(60).setHigh(65).setText("Cloudy").build(),
-        DailyForecast.builder().setDate(LocalDate.parse("2019-02-02"))
-            .setLow(58).setHigh(64).setText("Showers").build()
+        DailyForecast(date = LocalDate.parse("2019-02-01"), low = 60, high = 65, text = "Cloudy"),
+        DailyForecast(date = LocalDate.parse("2019-02-02"), low = 58, high = 64, text = "Showers"),
     )
 }

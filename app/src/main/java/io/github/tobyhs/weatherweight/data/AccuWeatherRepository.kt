@@ -20,7 +20,7 @@ class AccuWeatherRepository
  */(private val accuWeatherService: AccuWeatherService, private val clock: Clock) :
     WeatherRepository {
     override fun getForecast(location: String): Single<ForecastResultSet> {
-        val resultBuilder = ForecastResultSet.builder()
+        var formattedLocation = ""
         // An explicit offset of 0 limits the results to 25 instead of 100
         return accuWeatherService.searchCities(location, 0).flatMap { citiesResponse ->
             val city: City = try {
@@ -28,12 +28,14 @@ class AccuWeatherRepository
             } catch (e: IndexOutOfBoundsException) {
                 throw LocationNotFoundError(location)
             }
-            resultBuilder.setLocation(formatCity(city))
+            formattedLocation = formatCity(city)
             accuWeatherService.get5DayForecast(city.key)
         }.map { response ->
-            resultBuilder.setPublicationTime(ZonedDateTime.now(clock))
-                .setForecasts(convertDailyForecastResponse(response.body()!!.dailyForecasts))
-                .build()
+            ForecastResultSet(
+                location = formattedLocation,
+                publicationTime = ZonedDateTime.now(clock),
+                forecasts = convertDailyForecastResponse(response.body()!!.dailyForecasts),
+            )
         }
     }
 
@@ -64,12 +66,12 @@ class AccuWeatherRepository
                 text += " / $nightPhrase"
             }
             result.add(
-                DailyForecast.builder()
-                    .setDate(forecast.date.toLocalDate())
-                    .setLow(forecast.temperature.minimum.value.toInt())
-                    .setHigh(forecast.temperature.maximum.value.toInt())
-                    .setText(text)
-                    .build()
+                DailyForecast(
+                    date = forecast.date.toLocalDate(),
+                    low = forecast.temperature.minimum.value.toInt(),
+                    high = forecast.temperature.maximum.value.toInt(),
+                    text = text,
+                )
             )
         }
         return result
