@@ -1,5 +1,6 @@
 package io.github.tobyhs.weatherweight
 
+import android.annotation.SuppressLint
 import android.content.SharedPreferences
 import android.preference.PreferenceManager
 import androidx.test.core.app.ApplicationProvider
@@ -12,6 +13,8 @@ import io.github.tobyhs.weatherweight.api.accuweather.forecasts.DailyForecast
 import io.github.tobyhs.weatherweight.api.accuweather.forecasts.ValueTypeAdapter_DailyForecast
 import io.github.tobyhs.weatherweight.data.AccuWeatherRepository
 import io.github.tobyhs.weatherweight.storage.SharedPrefLastForecastStore
+
+import java.time.ZonedDateTime
 
 import okhttp3.OkHttpClient
 
@@ -37,6 +40,7 @@ import org.threeten.bp.Instant
 import retrofit2.Retrofit
 import retrofit2.adapter.rxjava3.RxJava3CallAdapterFactory
 import retrofit2.converter.gson.GsonConverterFactory
+import retrofit2.converter.moshi.MoshiConverterFactory
 
 @RunWith(RobolectricTestRunner::class)
 @Config(application = App::class)
@@ -91,7 +95,11 @@ class AppModuleTest {
     @Test
     fun provideAccuWeatherRetrofit() {
         val client = mock(OkHttpClient::class.java)
-        val retrofit = module.provideAccuWeatherRetrofit(AppModule.provideGson(), client)
+        val retrofit = module.provideAccuWeatherRetrofit(
+            client,
+            AppModule.provideGson(),
+            AppModule.provideMoshi(),
+        )
         assertThat(retrofit.baseUrl().toString(), equalTo("https://dataservice.accuweather.com/"))
         assertThat(retrofit.callFactory(), equalTo(client))
         assertThat(
@@ -99,6 +107,7 @@ class AppModuleTest {
             hasItem(isA(RxJava3CallAdapterFactory::class.java))
         )
         assertThat(retrofit.converterFactories(), hasItem(isA(GsonConverterFactory::class.java)))
+        assertThat(retrofit.converterFactories(), hasItem(isA(MoshiConverterFactory::class.java)))
     }
 
     @Test
@@ -132,6 +141,14 @@ class AppModuleTest {
         )
         // Check that ThreeTenGsonAdapter is registered
         gson.fromJson("\"1970-01-01T00:00:00Z\"", Instant::class.java)
+    }
+
+    @Test
+    @SuppressLint("CheckResult")
+    fun provideMoshi() {
+        val moshi = AppModule.provideMoshi()
+        // Check that the following doesn't throw an IllegalArgumentException
+        moshi.adapter(ZonedDateTime::class.java)
     }
 
     companion object {

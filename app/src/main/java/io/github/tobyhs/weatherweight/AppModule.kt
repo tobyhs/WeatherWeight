@@ -9,6 +9,8 @@ import com.github.tobyhs.rxsecretary.android.AndroidSchedulerProvider
 import com.google.gson.Gson
 import com.google.gson.GsonBuilder
 
+import com.squareup.moshi.Moshi
+
 import dagger.Module
 import dagger.Provides
 
@@ -19,6 +21,7 @@ import io.github.tobyhs.weatherweight.data.WeatherRepository
 import io.github.tobyhs.weatherweight.storage.LastForecastStore
 import io.github.tobyhs.weatherweight.storage.SharedPrefLastForecastStore
 import io.github.tobyhs.weatherweight.util.GVTypeAdapterFactory
+import io.github.tobyhs.weatherweight.util.ZonedDateTimeAdapter
 
 import java.io.File
 import javax.inject.Named
@@ -34,6 +37,7 @@ import org.threeten.bp.Clock
 import retrofit2.Retrofit
 import retrofit2.adapter.rxjava3.RxJava3CallAdapterFactory
 import retrofit2.converter.gson.GsonConverterFactory
+import retrofit2.converter.moshi.MoshiConverterFactory
 
 /**
  * Dagger module to provide common dependencies
@@ -48,9 +52,7 @@ class AppModule
      */
     @Provides
     @Singleton
-    fun provideApp(): App {
-        return app
-    }
+    fun provideApp(): App = app
 
     /**
      * @return [SharedPreferences] instance for the application
@@ -66,9 +68,7 @@ class AppModule
      */
     @Provides
     @Singleton
-    fun provideSchedulerProvider(): SchedulerProvider {
-        return AndroidSchedulerProvider()
-    }
+    fun provideSchedulerProvider(): SchedulerProvider = AndroidSchedulerProvider()
 
     /**
      * @return an OkHttp client for AccuWeather's APIs
@@ -84,21 +84,25 @@ class AppModule
     }
 
     /**
+     * @param okHttpClient HTTP client for AccuWeather's APIs
      * @param gson Gson instance for parsing JSON response bodies
+     * @param moshi Moshi instance for parsing JSON responses
      * @return a Retrofit instance for AccuWeather's APIs
      */
     @Provides
     @Named("accuWeatherRetrofit")
     @Singleton
     fun provideAccuWeatherRetrofit(
+        @Named("accuWeatherOkHttp") okHttpClient: OkHttpClient,
         gson: Gson,
-        @Named("accuWeatherOkHttp") okHttpClient: OkHttpClient
+        moshi: Moshi,
     ): Retrofit {
         return Retrofit.Builder()
             .baseUrl("https://dataservice.accuweather.com/")
             .client(okHttpClient)
             .addCallAdapterFactory(RxJava3CallAdapterFactory.create())
             .addConverterFactory(GsonConverterFactory.create(gson))
+            .addConverterFactory(MoshiConverterFactory.create(moshi))
             .build()
     }
 
@@ -148,5 +152,14 @@ class AppModule
                 .registerTypeAdapterFactory(GVTypeAdapterFactory.create())
             return ThreeTenGsonAdapter.registerAll(gsonBuilder).create()
         }
+
+        /**
+         * @return a Moshi instance
+         */
+        @Provides
+        @Singleton
+        fun provideMoshi(): Moshi = Moshi.Builder()
+            .add(ZonedDateTimeAdapter())
+            .build()
     }
 }
