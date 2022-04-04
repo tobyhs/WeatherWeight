@@ -90,6 +90,10 @@ dependencies {
     implementation "com.hannesdorfmann.mosby3:viewstate:$mosbyVersion"
     implementation "com.hannesdorfmann.mosby3:mvp-lce:$mosbyVersion"
 
+    final moshiVersion = '1.13.0'
+    implementation "com.squareup.moshi:moshi:$moshiVersion"
+    kapt "com.squareup.moshi:moshi-kotlin-codegen:$moshiVersion"
+
     implementation 'io.reactivex.rxjava3:rxjava:3.0.6'
     implementation 'io.reactivex.rxjava3:rxandroid:3.0.0'
 
@@ -100,6 +104,7 @@ dependencies {
     implementation "com.squareup.retrofit2:retrofit:$retrofitVersion"
     implementation "com.squareup.retrofit2:adapter-rxjava3:$retrofitVersion"
     implementation "com.squareup.retrofit2:converter-gson:$retrofitVersion"
+    implementation "com.squareup.retrofit2:converter-moshi:$retrofitVersion"
 
     final fastAdapterVersion = '5.4.1'
     implementation "com.mikepenz:fastadapter:$fastAdapterVersion"
