@@ -16,6 +16,6 @@
 # For dagger-android
 -dontwarn com.google.errorprone.annotations.*
 
-# Gson models
+# JSON models
 -keep class io.github.tobyhs.weatherweight.api.accuweather.** { *; }
 -keep class io.github.tobyhs.weatherweight.data.model.** { *; }

@@ -34,11 +34,8 @@ import org.mockito.Mockito.mock
 import org.robolectric.RobolectricTestRunner
 import org.robolectric.annotation.Config
 
-import org.threeten.bp.Instant
-
 import retrofit2.Retrofit
 import retrofit2.adapter.rxjava3.RxJava3CallAdapterFactory
-import retrofit2.converter.gson.GsonConverterFactory
 import retrofit2.converter.moshi.MoshiConverterFactory
 
 @RunWith(RobolectricTestRunner::class)
@@ -96,7 +93,6 @@ class AppModuleTest {
         val client = mock(OkHttpClient::class.java)
         val retrofit = module.provideAccuWeatherRetrofit(
             client,
-            AppModule.provideGson(),
             AppModule.provideMoshi(),
         )
         assertThat(retrofit.baseUrl().toString(), equalTo("https://dataservice.accuweather.com/"))
@@ -105,7 +101,6 @@ class AppModuleTest {
             retrofit.callAdapterFactories(),
             hasItem(isA(RxJava3CallAdapterFactory::class.java))
         )
-        assertThat(retrofit.converterFactories(), hasItem(isA(GsonConverterFactory::class.java)))
         assertThat(retrofit.converterFactories(), hasItem(isA(MoshiConverterFactory::class.java)))
     }
 
@@ -128,13 +123,6 @@ class AppModuleTest {
         val moshi = AppModule.provideMoshi()
         val store = module.provideLastForecastStore(sharedPreferences, moshi)
         assertThat(store, instanceOf(SharedPrefLastForecastStore::class.java))
-    }
-
-    @Test
-    fun provideGson() {
-        val gson = AppModule.provideGson()
-        // Check that ThreeTenGsonAdapter is registered
-        gson.fromJson("\"1970-01-01T00:00:00Z\"", Instant::class.java)
     }
 
     @Test

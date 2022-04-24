@@ -6,9 +6,6 @@ import android.preference.PreferenceManager
 import com.github.tobyhs.rxsecretary.SchedulerProvider
 import com.github.tobyhs.rxsecretary.android.AndroidSchedulerProvider
 
-import com.google.gson.Gson
-import com.google.gson.GsonBuilder
-
 import com.squareup.moshi.Moshi
 
 import dagger.Module
@@ -22,7 +19,6 @@ import io.github.tobyhs.weatherweight.data.adapter.LocalDateAdapter
 import io.github.tobyhs.weatherweight.data.adapter.ZonedDateTimeAdapter
 import io.github.tobyhs.weatherweight.storage.LastForecastStore
 import io.github.tobyhs.weatherweight.storage.SharedPrefLastForecastStore
-import io.github.tobyhs.weatherweight.util.GVTypeAdapterFactory
 
 import java.io.File
 import java.time.Clock
@@ -32,11 +28,8 @@ import javax.inject.Singleton
 import okhttp3.Cache
 import okhttp3.OkHttpClient
 
-import org.aaronhe.threetengson.ThreeTenGsonAdapter
-
 import retrofit2.Retrofit
 import retrofit2.adapter.rxjava3.RxJava3CallAdapterFactory
-import retrofit2.converter.gson.GsonConverterFactory
 import retrofit2.converter.moshi.MoshiConverterFactory
 
 /**
@@ -85,7 +78,6 @@ class AppModule
 
     /**
      * @param okHttpClient HTTP client for AccuWeather's APIs
-     * @param gson Gson instance for parsing JSON response bodies
      * @param moshi Moshi instance for parsing JSON responses
      * @return a Retrofit instance for AccuWeather's APIs
      */
@@ -94,7 +86,6 @@ class AppModule
     @Singleton
     fun provideAccuWeatherRetrofit(
         @Named("accuWeatherOkHttp") okHttpClient: OkHttpClient,
-        gson: Gson,
         moshi: Moshi,
     ): Retrofit {
         return Retrofit.Builder()
@@ -102,7 +93,6 @@ class AppModule
             .client(okHttpClient)
             .addCallAdapterFactory(RxJava3CallAdapterFactory.create())
             .addConverterFactory(MoshiConverterFactory.create(moshi))
-            .addConverterFactory(GsonConverterFactory.create(gson))
             .build()
     }
 
@@ -141,18 +131,6 @@ class AppModule
     }
 
     companion object {
-        /**
-         * @return a Gson instance
-         */
-        @JvmStatic
-        @Provides
-        @Singleton
-        fun provideGson(): Gson {
-            val gsonBuilder = GsonBuilder()
-                .registerTypeAdapterFactory(GVTypeAdapterFactory.create())
-            return ThreeTenGsonAdapter.registerAll(gsonBuilder).create()
-        }
-
         /**
          * @return a Moshi instance
          */
