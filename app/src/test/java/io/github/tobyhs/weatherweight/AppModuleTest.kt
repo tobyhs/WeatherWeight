@@ -9,8 +9,6 @@ import com.github.tobyhs.rxsecretary.android.AndroidSchedulerProvider
 
 import io.github.tobyhs.weatherweight.api.accuweather.AccuWeatherApiKeyInterceptor
 import io.github.tobyhs.weatherweight.api.accuweather.AccuWeatherService
-import io.github.tobyhs.weatherweight.api.accuweather.forecasts.DailyForecast
-import io.github.tobyhs.weatherweight.api.accuweather.forecasts.ValueTypeAdapter_DailyForecast
 import io.github.tobyhs.weatherweight.data.AccuWeatherRepository
 import io.github.tobyhs.weatherweight.storage.SharedPrefLastForecastStore
 
@@ -127,19 +125,14 @@ class AppModuleTest {
     @Test
     fun provideLastForecastStore() {
         val sharedPreferences = mock(SharedPreferences::class.java)
-        val gson = AppModule.provideGson()
-        val store = module.provideLastForecastStore(sharedPreferences, gson)
+        val moshi = AppModule.provideMoshi()
+        val store = module.provideLastForecastStore(sharedPreferences, moshi)
         assertThat(store, instanceOf(SharedPrefLastForecastStore::class.java))
     }
 
     @Test
     fun provideGson() {
         val gson = AppModule.provideGson()
-        // Check that GVTypeAdapterFactory is registered
-        assertThat(
-            gson.getAdapter(DailyForecast::class.java),
-            instanceOf(ValueTypeAdapter_DailyForecast::class.java)
-        )
         // Check that ThreeTenGsonAdapter is registered
         gson.fromJson("\"1970-01-01T00:00:00Z\"", Instant::class.java)
     }

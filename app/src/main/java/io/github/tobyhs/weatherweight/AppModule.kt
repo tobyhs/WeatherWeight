@@ -25,6 +25,7 @@ import io.github.tobyhs.weatherweight.storage.SharedPrefLastForecastStore
 import io.github.tobyhs.weatherweight.util.GVTypeAdapterFactory
 
 import java.io.File
+import java.time.Clock
 import javax.inject.Named
 import javax.inject.Singleton
 
@@ -32,8 +33,6 @@ import okhttp3.Cache
 import okhttp3.OkHttpClient
 
 import org.aaronhe.threetengson.ThreeTenGsonAdapter
-
-import org.threeten.bp.Clock
 
 import retrofit2.Retrofit
 import retrofit2.adapter.rxjava3.RxJava3CallAdapterFactory
@@ -102,8 +101,8 @@ class AppModule
             .baseUrl("https://dataservice.accuweather.com/")
             .client(okHttpClient)
             .addCallAdapterFactory(RxJava3CallAdapterFactory.create())
-            .addConverterFactory(GsonConverterFactory.create(gson))
             .addConverterFactory(MoshiConverterFactory.create(moshi))
+            .addConverterFactory(GsonConverterFactory.create(gson))
             .build()
     }
 
@@ -129,16 +128,16 @@ class AppModule
 
     /**
      * @param sharedPreferences [SharedPreferences] instance for the application
-     * @param gson Gson instance to serialize data
+     * @param moshi Moshi instance to serialize data
      * @return store to save or get the last forecast
      */
     @Provides
     @Singleton
     fun provideLastForecastStore(
         sharedPreferences: SharedPreferences,
-        gson: Gson
+        moshi: Moshi
     ): LastForecastStore {
-        return SharedPrefLastForecastStore(sharedPreferences, gson)
+        return SharedPrefLastForecastStore(sharedPreferences, moshi)
     }
 
     companion object {

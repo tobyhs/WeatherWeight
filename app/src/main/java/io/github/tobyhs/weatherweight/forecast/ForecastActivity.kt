@@ -21,8 +21,7 @@ import dagger.android.AndroidInjection
 import io.github.tobyhs.weatherweight.data.model.ForecastResultSet
 import io.github.tobyhs.weatherweight.databinding.ActivityForecastBinding
 
-import org.threeten.bp.format.DateTimeFormatter
-
+import java.time.format.DateTimeFormatter
 import javax.inject.Inject
 
 /**

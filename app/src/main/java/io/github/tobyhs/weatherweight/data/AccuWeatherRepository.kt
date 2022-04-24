@@ -7,8 +7,8 @@ import io.github.tobyhs.weatherweight.data.model.ForecastResultSet
 
 import io.reactivex.rxjava3.core.Single
 
-import org.threeten.bp.Clock
-import org.threeten.bp.ZonedDateTime
+import java.time.Clock
+import java.time.ZonedDateTime
 
 /**
  * Implementation of [WeatherRepository] that uses AccuWeather's APIs

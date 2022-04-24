@@ -2,7 +2,7 @@ package io.github.tobyhs.weatherweight.storage
 
 import android.content.SharedPreferences
 
-import com.google.gson.Gson
+import com.squareup.moshi.Moshi
 
 import io.github.tobyhs.weatherweight.data.model.ForecastSearch
 
@@ -17,18 +17,20 @@ import java.io.IOException
 class SharedPrefLastForecastStore
 /**
  * @param sharedPreferences the [SharedPreferences] to use
- * @param gson Gson instance to serialize data
- */(private val sharedPreferences: SharedPreferences, private val gson: Gson) : LastForecastStore {
+ * @param moshi Moshi instance to serialize data
+ */(private val sharedPreferences: SharedPreferences, private val moshi: Moshi) : LastForecastStore {
     override fun get(): Maybe<ForecastSearch> {
         return Maybe.fromCallable {
             val json = sharedPreferences.getString(KEY, null) ?: return@fromCallable null
-            gson.fromJson(json, ForecastSearch::class.java)
+            val moshiAdapter = moshi.adapter(ForecastSearch::class.java)
+            moshiAdapter.fromJson(json)
         }
     }
 
     override fun save(forecastSearch: ForecastSearch): Completable {
         return Completable.fromAction {
-            val json = gson.toJson(forecastSearch)
+            val moshiAdapter = moshi.adapter(ForecastSearch::class.java)
+            val json = moshiAdapter.toJson(forecastSearch)
             val editor = sharedPreferences.edit()
             editor.putString(KEY, json)
             if (!editor.commit()) {

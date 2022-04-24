@@ -1,6 +1,8 @@
 package io.github.tobyhs.weatherweight.data.model
 
-import org.threeten.bp.ZonedDateTime
+import com.squareup.moshi.JsonClass
+
+import java.time.ZonedDateTime
 
 /**
  * A result set for weather forecasts
@@ -9,6 +11,7 @@ import org.threeten.bp.ZonedDateTime
  * @property publicationTime time of this forecast
  * @property forecasts daily forecasts for today and upcoming days
  */
+@JsonClass(generateAdapter = true)
 data class ForecastResultSet(
     val location: String,
     val publicationTime: ZonedDateTime,

@@ -3,8 +3,8 @@ package io.github.tobyhs.weatherweight.test
 import io.github.tobyhs.weatherweight.data.model.DailyForecast
 import io.github.tobyhs.weatherweight.data.model.ForecastResultSet
 
-import org.threeten.bp.LocalDate
-import org.threeten.bp.ZonedDateTime
+import java.time.LocalDate
+import java.time.ZonedDateTime
 
 /**
  * This creates [ForecastResultSet] objects for tests

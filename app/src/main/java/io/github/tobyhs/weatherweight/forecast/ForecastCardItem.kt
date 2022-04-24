@@ -7,11 +7,11 @@ import android.view.ViewGroup
 
 import com.mikepenz.fastadapter.binding.AbstractBindingItem
 
-import org.threeten.bp.format.DateTimeFormatter
-import org.threeten.bp.format.TextStyle
-
 import io.github.tobyhs.weatherweight.data.model.DailyForecast
 import io.github.tobyhs.weatherweight.databinding.ForecastCardBinding
+
+import java.time.format.DateTimeFormatter
+import java.time.format.TextStyle
 
 /**
  * FastAdapter item for a [DailyForecast]

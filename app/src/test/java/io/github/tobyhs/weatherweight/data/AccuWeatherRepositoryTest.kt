@@ -12,6 +12,10 @@ import io.github.tobyhs.weatherweight.api.accuweather.locations.Country
 
 import io.reactivex.rxjava3.core.Single
 
+import java.time.Clock
+import java.time.ZonedDateTime
+import java.time.temporal.ChronoUnit
+
 import org.hamcrest.CoreMatchers.equalTo
 import org.hamcrest.MatcherAssert.assertThat
 
@@ -20,10 +24,6 @@ import org.junit.Test
 
 import org.mockito.Mockito
 import org.mockito.Mockito.mock
-
-import org.threeten.bp.Clock
-import org.threeten.bp.ZonedDateTime
-import org.threeten.bp.temporal.ChronoUnit
 
 import retrofit2.Response
 
@@ -50,55 +50,45 @@ class AccuWeatherRepositoryTest {
 
     @Test
     fun getForecast() {
-        val cities: MutableList<City> = mutableListOf()
-        cities.add(
-            City.builder()
-                .setKey("123456")
-                .setLocalizedName("San Jose")
-                .setAdministrativeArea(AdministrativeArea.builder().setId("CA").build())
-                .setCountry(Country.builder().setId("US").build())
-                .build()
-        )
-        cities.add(
-            City.builder()
-                .setKey("432165")
-                .setLocalizedName("San Jose")
-                .setAdministrativeArea(AdministrativeArea.builder().setId("SJ").build())
-                .setCountry(Country.builder().setId("CR").build())
-                .build()
+        val cities: List<City> = listOf(
+            City(
+                key = "123456",
+                localizedName = "San Jose",
+                administrativeArea = AdministrativeArea(id = "CA"),
+                country = Country(id = "US"),
+            ),
+            City(
+                key = "432165",
+                localizedName = "San Jose",
+                administrativeArea = AdministrativeArea(id = "SJ"),
+                country = Country(id = "CR"),
+            ),
         )
         val citiesSingle = Single.just(Response.success<List<City>>(cities))
         Mockito.`when`(accuWeatherService.searchCities("San Jose", 0)).thenReturn(citiesSingle)
 
         val time = ZonedDateTime.parse("2018-01-29T12:00:00Z")
-        val dailyForecasts: MutableList<DailyForecast> = mutableListOf()
-        var temperatureRange = TemperatureRange.builder()
-            .setMinimum(Temperature.builder().setValue(50.0).build())
-            .setMaximum(Temperature.builder().setValue(60.0).build())
-            .build()
-        dailyForecasts.add(
-            DailyForecast.builder()
-                .setDate(time)
-                .setTemperature(temperatureRange)
-                .setDay(DayPeriod.builder().setIconPhrase("Sunny").build())
-                .setNight(DayPeriod.builder().setIconPhrase("Sunny").build())
-                .build()
+        val dailyForecasts: List<DailyForecast> = listOf(
+            DailyForecast(
+                date = time,
+                temperature = TemperatureRange(
+                    minimum = Temperature(value = 50.0),
+                    maximum = Temperature(value = 60.0),
+                ),
+                day = DayPeriod(iconPhrase = "Sunny"),
+                night = DayPeriod(iconPhrase = "Sunny"),
+            ),
+            DailyForecast(
+                date = time.plusDays(1),
+                temperature = TemperatureRange(
+                    minimum = Temperature(value = 52.0),
+                    maximum = Temperature(value = 62.0),
+                ),
+                day = DayPeriod(iconPhrase = "Cloudy"),
+                night = DayPeriod(iconPhrase = "Showers"),
+            ),
         )
-        temperatureRange = TemperatureRange.builder()
-            .setMinimum(Temperature.builder().setValue(52.0).build())
-            .setMaximum(Temperature.builder().setValue(62.0).build())
-            .build()
-        dailyForecasts.add(
-            DailyForecast.builder()
-                .setDate(time.plusDays(1))
-                .setTemperature(temperatureRange)
-                .setDay(DayPeriod.builder().setIconPhrase("Cloudy").build())
-                .setNight(DayPeriod.builder().setIconPhrase("Showers").build())
-                .build()
-        )
-        val response = DailyForecastResponse.builder()
-            .setDailyForecasts(dailyForecasts)
-            .build()
+        val response = DailyForecastResponse(dailyForecasts = dailyForecasts)
         Mockito.`when`(accuWeatherService.get5DayForecast("123456"))
             .thenReturn(Single.just(Response.success(response)))
         val result = repository.getForecast("San Jose").blockingGet()

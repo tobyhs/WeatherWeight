@@ -29,13 +29,14 @@ import org.robolectric.RobolectricTestRunner
 class SharedPrefLastForecastStoreTest {
     private lateinit var sharedPreferences: SharedPreferences
     private lateinit var store: SharedPrefLastForecastStore
-    private val gson = AppModule.provideGson()
+    private val moshi = AppModule.provideMoshi()
+    private val forecastSearchAdapter = moshi.adapter(ForecastSearch::class.java)
 
     @Before
     fun setup() {
         sharedPreferences = PreferenceManager
             .getDefaultSharedPreferences(ApplicationProvider.getApplicationContext())
-        store = SharedPrefLastForecastStore(sharedPreferences, gson)
+        store = SharedPrefLastForecastStore(sharedPreferences, moshi)
     }
 
     @Test
@@ -47,7 +48,7 @@ class SharedPrefLastForecastStoreTest {
     fun getWithEntry() {
         val forecastSearch = ForecastSearchFactory.create()
         val editor = sharedPreferences.edit()
-        editor.putString("lastForecast", gson.toJson(forecastSearch))
+        editor.putString("lastForecast", forecastSearchAdapter.toJson(forecastSearch))
         editor.apply()
 
         val storedSearch = store.get().blockingGet()
@@ -59,8 +60,8 @@ class SharedPrefLastForecastStoreTest {
         val forecastSearch = ForecastSearchFactory.create()
         store.save(forecastSearch).blockingAwait()
 
-        val json = sharedPreferences.getString("lastForecast", null)
-        val storedSearch = gson.fromJson(json, ForecastSearch::class.java)
+        val json = sharedPreferences.getString("lastForecast", null)!!
+        val storedSearch = forecastSearchAdapter.fromJson(json)
         assertThat(storedSearch, equalTo(forecastSearch))
     }
 
@@ -71,7 +72,7 @@ class SharedPrefLastForecastStoreTest {
         val editor = Mockito.mock(SharedPreferences.Editor::class.java)
         Mockito.`when`(sharedPreferences.edit()).thenReturn(editor)
         Mockito.`when`(editor.commit()).thenReturn(false)
-        store = SharedPrefLastForecastStore(sharedPreferences, gson)
+        store = SharedPrefLastForecastStore(sharedPreferences, moshi)
 
         val runtimeException = assertThrows(RuntimeException::class.java) {
             store.save(forecastSearch).blockingAwait()
