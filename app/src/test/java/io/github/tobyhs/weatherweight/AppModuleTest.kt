@@ -14,6 +14,7 @@ import io.github.tobyhs.weatherweight.api.accuweather.forecasts.ValueTypeAdapter
 import io.github.tobyhs.weatherweight.data.AccuWeatherRepository
 import io.github.tobyhs.weatherweight.storage.SharedPrefLastForecastStore
 
+import java.time.LocalDate
 import java.time.ZonedDateTime
 
 import okhttp3.OkHttpClient
@@ -147,7 +148,8 @@ class AppModuleTest {
     @SuppressLint("CheckResult")
     fun provideMoshi() {
         val moshi = AppModule.provideMoshi()
-        // Check that the following doesn't throw an IllegalArgumentException
+        // Check that the following don't throw an IllegalArgumentException
+        moshi.adapter(LocalDate::class.java)
         moshi.adapter(ZonedDateTime::class.java)
     }
 

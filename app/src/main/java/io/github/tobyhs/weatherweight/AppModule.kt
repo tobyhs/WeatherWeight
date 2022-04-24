@@ -18,6 +18,7 @@ import io.github.tobyhs.weatherweight.api.accuweather.AccuWeatherApiKeyIntercept
 import io.github.tobyhs.weatherweight.api.accuweather.AccuWeatherService
 import io.github.tobyhs.weatherweight.data.AccuWeatherRepository
 import io.github.tobyhs.weatherweight.data.WeatherRepository
+import io.github.tobyhs.weatherweight.data.adapter.LocalDateAdapter
 import io.github.tobyhs.weatherweight.data.adapter.ZonedDateTimeAdapter
 import io.github.tobyhs.weatherweight.storage.LastForecastStore
 import io.github.tobyhs.weatherweight.storage.SharedPrefLastForecastStore
@@ -159,6 +160,7 @@ class AppModule
         @Provides
         @Singleton
         fun provideMoshi(): Moshi = Moshi.Builder()
+            .add(LocalDateAdapter())
             .add(ZonedDateTimeAdapter())
             .build()
     }
