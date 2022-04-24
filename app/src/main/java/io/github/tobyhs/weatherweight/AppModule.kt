@@ -18,10 +18,10 @@ import io.github.tobyhs.weatherweight.api.accuweather.AccuWeatherApiKeyIntercept
 import io.github.tobyhs.weatherweight.api.accuweather.AccuWeatherService
 import io.github.tobyhs.weatherweight.data.AccuWeatherRepository
 import io.github.tobyhs.weatherweight.data.WeatherRepository
+import io.github.tobyhs.weatherweight.data.adapter.ZonedDateTimeAdapter
 import io.github.tobyhs.weatherweight.storage.LastForecastStore
 import io.github.tobyhs.weatherweight.storage.SharedPrefLastForecastStore
 import io.github.tobyhs.weatherweight.util.GVTypeAdapterFactory
-import io.github.tobyhs.weatherweight.util.ZonedDateTimeAdapter
 
 import java.io.File
 import javax.inject.Named

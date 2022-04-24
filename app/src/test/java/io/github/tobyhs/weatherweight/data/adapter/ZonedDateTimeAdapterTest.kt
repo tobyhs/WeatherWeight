@@ -1,4 +1,4 @@
-package io.github.tobyhs.weatherweight.util
+package io.github.tobyhs.weatherweight.data.adapter
 
 import java.time.ZoneOffset
 import java.time.ZonedDateTime
@@ -8,7 +8,7 @@ import org.hamcrest.MatcherAssert.assertThat
 
 import org.junit.Test
 
-class ZoneDateTimeAdapterTest {
+class ZonedDateTimeAdapterTest {
     private val adapter = ZonedDateTimeAdapter()
 
     @Test

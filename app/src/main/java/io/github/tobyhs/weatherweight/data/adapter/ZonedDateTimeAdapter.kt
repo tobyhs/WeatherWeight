@@ -1,4 +1,4 @@
-package io.github.tobyhs.weatherweight.util
+package io.github.tobyhs.weatherweight.data.adapter
 
 import com.squareup.moshi.FromJson
 import com.squareup.moshi.ToJson
