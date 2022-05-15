@@ -6,6 +6,7 @@ def secretProps = new Properties()
 rootProject.file("secret.properties").withInputStream { secretProps.load(it) }
 
 android {
+    namespace 'io.github.tobyhs.weatherweight'
     compileSdkVersion 31
     buildToolsVersion '31.0.0'
 
