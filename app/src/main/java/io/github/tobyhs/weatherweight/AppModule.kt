@@ -1,8 +1,5 @@
 package io.github.tobyhs.weatherweight
 
-import android.content.SharedPreferences
-import android.preference.PreferenceManager
-
 import com.github.tobyhs.rxsecretary.SchedulerProvider
 import com.github.tobyhs.rxsecretary.android.AndroidSchedulerProvider
 
@@ -17,8 +14,8 @@ import io.github.tobyhs.weatherweight.data.AccuWeatherRepository
 import io.github.tobyhs.weatherweight.data.WeatherRepository
 import io.github.tobyhs.weatherweight.data.adapter.LocalDateAdapter
 import io.github.tobyhs.weatherweight.data.adapter.ZonedDateTimeAdapter
+import io.github.tobyhs.weatherweight.storage.FileLastForecastStore
 import io.github.tobyhs.weatherweight.storage.LastForecastStore
-import io.github.tobyhs.weatherweight.storage.SharedPrefLastForecastStore
 
 import java.io.File
 import java.time.Clock
@@ -46,15 +43,6 @@ class AppModule
     @Provides
     @Singleton
     fun provideApp(): App = app
-
-    /**
-     * @return [SharedPreferences] instance for the application
-     */
-    @Provides
-    @Singleton
-    fun provideSharedPreferences(): SharedPreferences {
-        return PreferenceManager.getDefaultSharedPreferences(app)
-    }
 
     /**
      * @return RxJava scheduler provider
@@ -117,17 +105,13 @@ class AppModule
     }
 
     /**
-     * @param sharedPreferences [SharedPreferences] instance for the application
      * @param moshi Moshi instance to serialize data
      * @return store to save or get the last forecast
      */
     @Provides
     @Singleton
-    fun provideLastForecastStore(
-        sharedPreferences: SharedPreferences,
-        moshi: Moshi
-    ): LastForecastStore {
-        return SharedPrefLastForecastStore(sharedPreferences, moshi)
+    fun provideLastForecastStore(moshi: Moshi): LastForecastStore {
+        return FileLastForecastStore(app.cacheDir, moshi)
     }
 
     companion object {

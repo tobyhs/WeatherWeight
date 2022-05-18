@@ -1,8 +1,6 @@
 package io.github.tobyhs.weatherweight
 
 import android.annotation.SuppressLint
-import android.content.SharedPreferences
-import android.preference.PreferenceManager
 import androidx.test.core.app.ApplicationProvider
 
 import com.github.tobyhs.rxsecretary.android.AndroidSchedulerProvider
@@ -10,7 +8,7 @@ import com.github.tobyhs.rxsecretary.android.AndroidSchedulerProvider
 import io.github.tobyhs.weatherweight.api.accuweather.AccuWeatherApiKeyInterceptor
 import io.github.tobyhs.weatherweight.api.accuweather.AccuWeatherService
 import io.github.tobyhs.weatherweight.data.AccuWeatherRepository
-import io.github.tobyhs.weatherweight.storage.SharedPrefLastForecastStore
+import io.github.tobyhs.weatherweight.storage.FileLastForecastStore
 
 import java.time.LocalDate
 import java.time.ZonedDateTime
@@ -66,14 +64,6 @@ class AppModuleTest {
     }
 
     @Test
-    fun provideSharedPreferences() {
-        assertThat(
-            module.provideSharedPreferences(),
-            equalTo(PreferenceManager.getDefaultSharedPreferences(app))
-        )
-    }
-
-    @Test
     fun provideSchedulerProvider() {
         assertThat(
             module.provideSchedulerProvider(),
@@ -119,10 +109,13 @@ class AppModuleTest {
 
     @Test
     fun provideLastForecastStore() {
-        val sharedPreferences = mock(SharedPreferences::class.java)
         val moshi = AppModule.provideMoshi()
-        val store = module.provideLastForecastStore(sharedPreferences, moshi)
-        assertThat(store, instanceOf(SharedPrefLastForecastStore::class.java))
+        val store = module.provideLastForecastStore(moshi)
+        assertThat(store, instanceOf(FileLastForecastStore::class.java))
+
+        val fileLastForecastStore = store as FileLastForecastStore
+        assertThat(fileLastForecastStore.directory, equalTo(app.cacheDir))
+        assertThat(fileLastForecastStore.moshi, equalTo(moshi))
     }
 
     @Test
