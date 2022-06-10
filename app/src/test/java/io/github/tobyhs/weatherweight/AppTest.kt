@@ -24,6 +24,6 @@ class AppTest {
 
     @Test
     fun applicationInjector() {
-        assertThat(app.applicationInjector(), instanceOf(DaggerAppComponent::class.java))
+        assertThat(app.applicationInjector(), instanceOf(AppComponent::class.java))
     }
 }
