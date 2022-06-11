@@ -8,6 +8,9 @@ import androidx.test.ext.junit.runners.AndroidJUnit4
 
 import com.hannesdorfmann.mosby3.mvp.viewstate.lce.data.RetainingLceViewState
 
+import dagger.hilt.android.testing.HiltAndroidRule
+import dagger.hilt.android.testing.HiltAndroidTest
+
 import io.github.tobyhs.weatherweight.R
 import io.github.tobyhs.weatherweight.test.ForecastResultSetFactory
 
@@ -29,7 +32,11 @@ import org.mockito.Mockito.verify
 import org.robolectric.Shadows.shadowOf
 
 @RunWith(AndroidJUnit4::class)
+@HiltAndroidTest
 class ForecastActivityTest {
+    @get:Rule
+    val hiltRule = HiltAndroidRule(this)
+
     @get:Rule
     val activityScenarioRule = ActivityScenarioRule(ForecastActivity::class.java)
 

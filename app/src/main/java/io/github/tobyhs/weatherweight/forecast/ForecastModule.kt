@@ -1,13 +1,12 @@
 package io.github.tobyhs.weatherweight.forecast
 
 import dagger.Module
-import dagger.android.ContributesAndroidInjector
+import dagger.hilt.InstallIn
+import dagger.hilt.android.components.ActivityRetainedComponent
 
 /**
  * Dagger module for [ForecastActivity]
  */
 @Module
-abstract class ForecastModule {
-    @ContributesAndroidInjector
-    abstract fun contributeForecastActivityInjector(): ForecastActivity
-}
+@InstallIn(ActivityRetainedComponent::class)
+abstract class ForecastModule

@@ -1,5 +1,7 @@
 package io.github.tobyhs.weatherweight
 
+import android.content.Context
+
 import com.github.tobyhs.rxsecretary.SchedulerProvider
 import com.github.tobyhs.rxsecretary.android.AndroidSchedulerProvider
 
@@ -7,6 +9,9 @@ import com.squareup.moshi.Moshi
 
 import dagger.Module
 import dagger.Provides
+import dagger.hilt.InstallIn
+import dagger.hilt.android.qualifiers.ApplicationContext
+import dagger.hilt.components.SingletonComponent
 
 import io.github.tobyhs.weatherweight.api.accuweather.AccuWeatherApiKeyInterceptor
 import io.github.tobyhs.weatherweight.api.accuweather.AccuWeatherService
@@ -33,17 +38,8 @@ import retrofit2.converter.moshi.MoshiConverterFactory
  * Dagger module to provide common dependencies
  */
 @Module
-class AppModule
-/**
- * @param app application instance
- */(private val app: App) {
-    /**
-     * @return application instance
-     */
-    @Provides
-    @Singleton
-    fun provideApp(): App = app
-
+@InstallIn(SingletonComponent::class)
+class AppModule {
     /**
      * @return RxJava scheduler provider
      */
@@ -52,15 +48,16 @@ class AppModule
     fun provideSchedulerProvider(): SchedulerProvider = AndroidSchedulerProvider()
 
     /**
+     * @param context application context
      * @return an OkHttp client for AccuWeather's APIs
      */
     @Provides
     @Named("accuWeatherOkHttp")
     @Singleton
-    fun provideAccuWeatherOkHttp(): OkHttpClient {
+    fun provideAccuWeatherOkHttp(@ApplicationContext context: Context): OkHttpClient {
         return OkHttpClient.Builder()
             .addInterceptor(AccuWeatherApiKeyInterceptor(BuildConfig.ACCUWEATHER_API_KEY))
-            .cache(Cache(File(app.cacheDir, "AccuWeather"), 96000))
+            .cache(Cache(File(context.cacheDir, "AccuWeather"), 96000))
             .build()
     }
 
@@ -105,13 +102,14 @@ class AppModule
     }
 
     /**
+     * @param context application context
      * @param moshi Moshi instance to serialize data
      * @return store to save or get the last forecast
      */
     @Provides
     @Singleton
-    fun provideLastForecastStore(moshi: Moshi): LastForecastStore {
-        return FileLastForecastStore(app.cacheDir, moshi)
+    fun provideLastForecastStore(@ApplicationContext context: Context, moshi: Moshi): LastForecastStore {
+        return FileLastForecastStore(context.cacheDir, moshi)
     }
 
     companion object {

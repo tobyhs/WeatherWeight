@@ -41,14 +41,13 @@ import retrofit2.converter.moshi.MoshiConverterFactory
 class AppModuleTest {
     private var originalTrustStore: String? = null
     private lateinit var app: App
-    private lateinit var module: AppModule
+    private val module = AppModule()
 
     @Before
     fun setup() {
         originalTrustStore = System.getProperty(TRUST_STORE_PROPERTY)
         System.setProperty(TRUST_STORE_PROPERTY, "NONE")
         app = ApplicationProvider.getApplicationContext()
-        module = AppModule(app)
     }
 
     @After
@@ -56,11 +55,6 @@ class AppModuleTest {
         if (originalTrustStore != null) {
             System.setProperty(TRUST_STORE_PROPERTY, originalTrustStore)
         }
-    }
-
-    @Test
-    fun provideApp() {
-        assertThat(module.provideApp(), equalTo(app))
     }
 
     @Test
@@ -73,7 +67,7 @@ class AppModuleTest {
 
     @Test
     fun provideAccuWeatherOkHttp() {
-        val client = module.provideAccuWeatherOkHttp()
+        val client = module.provideAccuWeatherOkHttp(app)
         assertThat(client.interceptors(), hasItem(isA(AccuWeatherApiKeyInterceptor::class.java)))
         assertThat(client.cache(), notNullValue())
     }
@@ -110,7 +104,7 @@ class AppModuleTest {
     @Test
     fun provideLastForecastStore() {
         val moshi = AppModule.provideMoshi()
-        val store = module.provideLastForecastStore(moshi)
+        val store = module.provideLastForecastStore(app, moshi)
         assertThat(store, instanceOf(FileLastForecastStore::class.java))
 
         val fileLastForecastStore = store as FileLastForecastStore

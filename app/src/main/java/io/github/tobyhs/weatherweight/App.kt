@@ -1,13 +1,11 @@
 package io.github.tobyhs.weatherweight
 
-import dagger.android.AndroidInjector
-import dagger.android.DaggerApplication
+import android.app.Application
+
+import dagger.hilt.android.HiltAndroidApp
 
 /**
  * Application instance
  */
-open class App : DaggerApplication() {
-    public override fun applicationInjector(): AndroidInjector<App> {
-        return DaggerAppComponent.factory().create(AppModule(this))
-    }
-}
+@HiltAndroidApp
+open class App : Application()

@@ -16,7 +16,7 @@ import com.mikepenz.fastadapter.FastAdapter
 import com.mikepenz.fastadapter.adapters.ItemAdapter
 
 import dagger.Lazy
-import dagger.android.AndroidInjection
+import dagger.hilt.android.AndroidEntryPoint
 
 import io.github.tobyhs.weatherweight.data.model.ForecastResultSet
 import io.github.tobyhs.weatherweight.databinding.ActivityForecastBinding
@@ -27,6 +27,7 @@ import javax.inject.Inject
 /**
  * Main activity to enter a location to retrieve a weather forecast
  */
+@AndroidEntryPoint
 class ForecastActivity :
     MvpLceViewStateActivity<LinearLayout, ForecastResultSet, ForecastContract.View, ForecastPresenter>(),
     ForecastContract.View, SearchView.OnQueryTextListener, OnRefreshListener {
@@ -37,7 +38,6 @@ class ForecastActivity :
     private lateinit var forecastItemAdapter: ItemAdapter<ForecastCardItem>
 
     override fun onCreate(savedInstanceState: Bundle?) {
-        AndroidInjection.inject(this)
         super.onCreate(savedInstanceState)
         binding = ActivityForecastBinding.inflate(layoutInflater)
         setContentView(binding.root)

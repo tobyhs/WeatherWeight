@@ -1,6 +1,7 @@
 apply plugin: 'com.android.application'
 apply plugin: 'kotlin-android'
 apply plugin: 'kotlin-kapt'
+apply plugin: 'dagger.hilt.android.plugin'
 
 def secretProps = new Properties()
 rootProject.file("secret.properties").withInputStream { secretProps.load(it) }
@@ -55,6 +56,10 @@ android {
     }
 }
 
+kapt {
+    correctErrorTypes true
+}
+
 dependencies {
     implementation fileTree(dir: 'libs', include: ['*.jar'])
 
@@ -65,16 +70,14 @@ dependencies {
     implementation 'androidx.recyclerview:recyclerview:1.2.1'
     implementation 'androidx.swiperefreshlayout:swiperefreshlayout:1.1.0'
 
-    final daggerVersion = '2.42'
     [
-            "com.google.dagger:dagger-compiler:$daggerVersion",
-            "com.google.dagger:dagger-android-processor:$daggerVersion",
+            "com.google.dagger:hilt-compiler:$daggerVersion",
     ].each {
         kapt it
         kaptTest it
     }
-    implementation "com.google.dagger:dagger:$daggerVersion"
-    implementation "com.google.dagger:dagger-android:$daggerVersion"
+    implementation "com.google.dagger:hilt-android:$daggerVersion"
+    testImplementation "com.google.dagger:hilt-android-testing:$daggerVersion"
 
     final mosbyVersion = '3.1.1'
     implementation "com.hannesdorfmann.mosby3:mvp:$mosbyVersion"
