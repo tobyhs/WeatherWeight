@@ -8,6 +8,7 @@ import androidx.test.ext.junit.runners.AndroidJUnit4
 
 import com.hannesdorfmann.mosby3.mvp.viewstate.lce.data.RetainingLceViewState
 
+import dagger.hilt.android.testing.BindValue
 import dagger.hilt.android.testing.HiltAndroidRule
 import dagger.hilt.android.testing.HiltAndroidTest
 
@@ -26,6 +27,7 @@ import org.junit.runner.RunWith
 import org.mockito.ArgumentMatchers.anyString
 import org.mockito.Mockito
 import org.mockito.Mockito.clearInvocations
+import org.mockito.Mockito.mock
 import org.mockito.Mockito.never
 import org.mockito.Mockito.verify
 
@@ -36,6 +38,9 @@ import org.robolectric.Shadows.shadowOf
 class ForecastActivityTest {
     @get:Rule
     val hiltRule = HiltAndroidRule(this)
+
+    @BindValue
+    val presenter: ForecastPresenter = mock(ForecastPresenter::class.java)
 
     @get:Rule
     val activityScenarioRule = ActivityScenarioRule(ForecastActivity::class.java)
@@ -49,22 +54,22 @@ class ForecastActivityTest {
 
     @Test
     fun onCreateWithNullSavedInstanceState() {
-        activityScenarioRule.scenario.onActivity { activity ->
-            verify(activity.presenter).loadLastForecast()
+        activityScenarioRule.scenario.onActivity {
+            verify(presenter).loadLastForecast()
         }
     }
 
     @Test
     fun onCreateWithPresentSavedInstanceState() {
         val scenario = activityScenarioRule.scenario
-        scenario.onActivity { activity ->
+        scenario.onActivity {
             // Clearing so we can check loadLastForecast isn't called on the 2nd onCreate
-            clearInvocations(activity.presenter)
+            clearInvocations(presenter)
         }
 
         scenario.recreate()
-        scenario.onActivity { activity ->
-            verify(activity.presenter, never()).loadLastForecast()
+        scenario.onActivity {
+            verify(presenter, never()).loadLastForecast()
         }
     }
 
@@ -79,7 +84,7 @@ class ForecastActivityTest {
     fun getData() {
         activityScenarioRule.scenario.onActivity { activity ->
             val forecastResultSet = ForecastResultSetFactory.create()
-            Mockito.`when`(activity.presenter.forecastResultSet).thenReturn(forecastResultSet)
+            Mockito.`when`(presenter.forecastResultSet).thenReturn(forecastResultSet)
 
             assertThat(activity.data, equalTo(forecastResultSet))
         }
@@ -150,7 +155,7 @@ class ForecastActivityTest {
 
             assertThat(activity.binding.locationSearch.query.toString(), equalTo(location))
             assertThat(activity.binding.locationSearch.hasFocus(), equalTo(false))
-            verify(activity.presenter, never()).search(anyString())
+            verify(presenter, never()).search(anyString())
         }
     }
 
@@ -159,7 +164,7 @@ class ForecastActivityTest {
         activityScenarioRule.scenario.onActivity { activity ->
             val location = "San Francisco, CA"
             activity.binding.locationSearch.setQuery(location, true)
-            verify(activity.presenter).search(location)
+            verify(presenter).search(location)
         }
     }
 
@@ -176,7 +181,7 @@ class ForecastActivityTest {
             val location = "Current"
             activity.binding.locationSearch.setQuery(location, false)
             activity.onRefresh()
-            verify(activity.presenter).search(location)
+            verify(presenter).search(location)
         }
     }
 
