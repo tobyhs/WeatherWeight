@@ -1,10 +1,11 @@
-package io.github.tobyhs.weatherweight
+package io.github.tobyhs.weatherweight.di
 
 import android.annotation.SuppressLint
 import androidx.test.core.app.ApplicationProvider
 
 import com.github.tobyhs.rxsecretary.android.AndroidSchedulerProvider
 
+import io.github.tobyhs.weatherweight.App
 import io.github.tobyhs.weatherweight.api.accuweather.AccuWeatherApiKeyInterceptor
 import io.github.tobyhs.weatherweight.api.accuweather.AccuWeatherService
 import io.github.tobyhs.weatherweight.data.AccuWeatherRepository

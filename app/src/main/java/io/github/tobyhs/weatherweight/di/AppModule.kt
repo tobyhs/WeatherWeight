@@ -1,4 +1,4 @@
-package io.github.tobyhs.weatherweight
+package io.github.tobyhs.weatherweight.di
 
 import android.content.Context
 
@@ -13,6 +13,7 @@ import dagger.hilt.InstallIn
 import dagger.hilt.android.qualifiers.ApplicationContext
 import dagger.hilt.components.SingletonComponent
 
+import io.github.tobyhs.weatherweight.BuildConfig
 import io.github.tobyhs.weatherweight.api.accuweather.AccuWeatherApiKeyInterceptor
 import io.github.tobyhs.weatherweight.api.accuweather.AccuWeatherService
 import io.github.tobyhs.weatherweight.data.AccuWeatherRepository

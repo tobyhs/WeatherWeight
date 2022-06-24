@@ -8,7 +8,7 @@ import org.hamcrest.MatcherAssert.assertThat
 
 import org.junit.Test
 
-import io.github.tobyhs.weatherweight.AppModule
+import io.github.tobyhs.weatherweight.di.AppModule
 
 class DailyForecastResponseTest {
     @Test

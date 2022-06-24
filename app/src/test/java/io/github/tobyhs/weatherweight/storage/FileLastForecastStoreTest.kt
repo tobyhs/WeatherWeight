@@ -1,6 +1,6 @@
 package io.github.tobyhs.weatherweight.storage
 
-import io.github.tobyhs.weatherweight.AppModule
+import io.github.tobyhs.weatherweight.di.AppModule
 import io.github.tobyhs.weatherweight.data.model.ForecastSearch
 import io.github.tobyhs.weatherweight.test.ForecastSearchFactory
 

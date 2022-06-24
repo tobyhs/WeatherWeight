@@ -1,6 +1,6 @@
 package io.github.tobyhs.weatherweight.api.accuweather.locations
 
-import io.github.tobyhs.weatherweight.AppModule
+import io.github.tobyhs.weatherweight.di.AppModule
 
 import java.io.InputStreamReader
 
