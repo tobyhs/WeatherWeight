@@ -22,8 +22,6 @@ import org.hamcrest.CoreMatchers.isA
 import org.hamcrest.CoreMatchers.notNullValue
 import org.hamcrest.MatcherAssert.assertThat
 
-import org.junit.After
-import org.junit.Before
 import org.junit.Test
 import org.junit.runner.RunWith
 
@@ -39,23 +37,8 @@ import retrofit2.converter.moshi.MoshiConverterFactory
 @RunWith(RobolectricTestRunner::class)
 @Config(application = App::class)
 class AppModuleTest {
-    private var originalTrustStore: String? = null
-    private lateinit var app: App
+    private val app: App by lazy { ApplicationProvider.getApplicationContext() }
     private val module = AppModule()
-
-    @Before
-    fun setup() {
-        originalTrustStore = System.getProperty(TRUST_STORE_PROPERTY)
-        System.setProperty(TRUST_STORE_PROPERTY, "NONE")
-        app = ApplicationProvider.getApplicationContext()
-    }
-
-    @After
-    fun teardown() {
-        if (originalTrustStore != null) {
-            System.setProperty(TRUST_STORE_PROPERTY, originalTrustStore)
-        }
-    }
 
     @Test
     fun provideSchedulerProvider() {
@@ -119,9 +102,5 @@ class AppModuleTest {
         // Check that the following don't throw an IllegalArgumentException
         moshi.adapter(LocalDate::class.java)
         moshi.adapter(ZonedDateTime::class.java)
-    }
-
-    companion object {
-        private const val TRUST_STORE_PROPERTY = "javax.net.ssl.trustStore"
     }
 }
