@@ -108,6 +108,7 @@ dependencies {
     implementation "com.mikepenz:fastadapter:$fastAdapterVersion"
     implementation "com.mikepenz:fastadapter-extensions-binding:$fastAdapterVersion"
 
+    testImplementation 'androidx.arch.core:core-testing:2.1.0'
     testImplementation 'androidx.test:core:1.4.0'
     testImplementation 'androidx.test.ext:junit:1.1.3'
     testImplementation 'junit:junit:4.13.2'
