@@ -3,28 +3,33 @@ package io.github.tobyhs.weatherweight.forecast
 import android.content.Intent
 import android.net.Uri
 import android.widget.TextView
+
+import androidx.core.view.isVisible
+import androidx.lifecycle.MutableLiveData
+import androidx.lifecycle.ViewModel
+import androidx.lifecycle.ViewModelProvider
 import androidx.test.ext.junit.rules.ActivityScenarioRule
 import androidx.test.ext.junit.runners.AndroidJUnit4
-
-import com.hannesdorfmann.mosby3.mvp.viewstate.lce.data.RetainingLceViewState
 
 import dagger.hilt.android.testing.BindValue
 import dagger.hilt.android.testing.HiltAndroidRule
 import dagger.hilt.android.testing.HiltAndroidTest
+import dagger.hilt.android.testing.UninstallModules
 
 import io.github.tobyhs.weatherweight.R
+import io.github.tobyhs.weatherweight.data.model.ForecastResultSet
+import io.github.tobyhs.weatherweight.di.ViewModelFactoryProducer
+import io.github.tobyhs.weatherweight.di.ViewModelFactoryProducerModule
 import io.github.tobyhs.weatherweight.test.ForecastResultSetFactory
+import io.github.tobyhs.weatherweight.ui.LoadState
 
 import org.hamcrest.CoreMatchers.equalTo
-import org.hamcrest.CoreMatchers.instanceOf
-import org.hamcrest.CoreMatchers.notNullValue
 import org.hamcrest.MatcherAssert.assertThat
 
 import org.junit.Rule
 import org.junit.Test
 import org.junit.runner.RunWith
 
-import org.mockito.ArgumentMatchers.anyString
 import org.mockito.Mockito
 import org.mockito.Mockito.clearInvocations
 import org.mockito.Mockito.mock
@@ -34,13 +39,32 @@ import org.mockito.Mockito.verify
 import org.robolectric.Shadows.shadowOf
 
 @RunWith(AndroidJUnit4::class)
+@UninstallModules(ViewModelFactoryProducerModule::class)
 @HiltAndroidTest
 class ForecastActivityTest {
     @get:Rule
     val hiltRule = HiltAndroidRule(this)
 
+    private val locationInputLiveData: MutableLiveData<String> = MutableLiveData("")
+    private val forecastStatesLiveData: MutableLiveData<LoadState<ForecastResultSet>> = MutableLiveData()
+    private val viewModel: ForecastViewModel = mock(ForecastViewModel::class.java).also {
+        Mockito.`when`(it.locationInput).thenReturn(locationInputLiveData)
+        Mockito.`when`(it.forecastState).thenReturn(forecastStatesLiveData)
+    }
+
     @BindValue
-    val presenter: ForecastPresenter = mock(ForecastPresenter::class.java)
+    val viewModelFactoryProducer: ViewModelFactoryProducer = {
+        object : ViewModelProvider.Factory {
+            override fun <T : ViewModel> create(modelClass: Class<T>): T {
+                if (modelClass == viewModel.javaClass) {
+                    @Suppress("UNCHECKED_CAST")
+                    return viewModel as T
+                } else {
+                    throw UnsupportedOperationException()
+                }
+            }
+        }
+    }
 
     @get:Rule
     val activityScenarioRule = ActivityScenarioRule(ForecastActivity::class.java)
@@ -49,54 +73,57 @@ class ForecastActivityTest {
     fun onCreate() {
         activityScenarioRule.scenario.onActivity { activity ->
             assertThat(activity.binding.locationSearch.isSubmitButtonEnabled, equalTo(true))
+            assertThat(activity.binding.loadingView.isVisible, equalTo(false))
+            assertThat(activity.binding.contentView.isVisible, equalTo(false))
+            assertThat(activity.binding.errorView.isVisible, equalTo(false))
+            verify(viewModel).loadLastForecast()
         }
     }
 
     @Test
-    fun onCreateWithNullSavedInstanceState() {
-        activityScenarioRule.scenario.onActivity {
-            verify(presenter).loadLastForecast()
-        }
-    }
-
-    @Test
-    fun onCreateWithPresentSavedInstanceState() {
+    fun `onCreate with non-null savedInstanceState`() {
         val scenario = activityScenarioRule.scenario
         scenario.onActivity {
             // Clearing so we can check loadLastForecast isn't called on the 2nd onCreate
-            clearInvocations(presenter)
+            clearInvocations(viewModel)
         }
 
         scenario.recreate()
         scenario.onActivity {
-            verify(presenter, never()).loadLastForecast()
+            verify(viewModel, never()).loadLastForecast()
         }
     }
 
     @Test
-    fun createPresenter() {
+    fun `when viewModel locationInput changes`() {
         activityScenarioRule.scenario.onActivity { activity ->
-            assertThat(activity.createPresenter(), notNullValue())
+            val location = "VM location changed"
+            locationInputLiveData.value = location
+            assertThat(activity.binding.locationSearch.query.toString(), equalTo(location))
         }
     }
 
     @Test
-    fun getData() {
+    fun `when viewModel forecastState is Loading`() {
         activityScenarioRule.scenario.onActivity { activity ->
-            val forecastResultSet = ForecastResultSetFactory.create()
-            Mockito.`when`(presenter.forecastResultSet).thenReturn(forecastResultSet)
-
-            assertThat(activity.data, equalTo(forecastResultSet))
+            forecastStatesLiveData.value = LoadState.Loading()
+            assertThat(activity.binding.loadingView.isVisible, equalTo(true))
+            assertThat(activity.binding.contentView.isVisible, equalTo(false))
+            assertThat(activity.binding.errorView.isVisible, equalTo(false))
         }
     }
 
     @Test
-    fun setData() {
+    fun `when viewModel forecastState is Content`() {
         activityScenarioRule.scenario.onActivity { activity ->
             val binding = activity.binding
             binding.forecastSwipeContainer.isRefreshing = true
             val forecastResultSet = ForecastResultSetFactory.create()
-            activity.data = forecastResultSet
+            forecastStatesLiveData.value = LoadState.Content(forecastResultSet)
+
+            assertThat(binding.loadingView.isVisible, equalTo(false))
+            assertThat(binding.contentView.isVisible, equalTo(true))
+            assertThat(binding.errorView.isVisible, equalTo(false))
 
             assertThat(binding.locationFound.text.toString(), equalTo("Oakland, CA, US"))
             assertThat(binding.pubDate.text.toString(), equalTo("Fri, 1 Feb 2019 12:00:00 GMT"))
@@ -125,68 +152,44 @@ class ForecastActivityTest {
     }
 
     @Test
-    fun setDataWithNull() {
+    fun `when viewModel forecastState is Error`() {
         activityScenarioRule.scenario.onActivity { activity ->
-            // To check that a NullPointerException isn't thrown
-            activity.data = null
-        }
-    }
-
-    @Test
-    fun getErrorMessage() {
-        activityScenarioRule.scenario.onActivity { activity ->
-            val throwable = Throwable("test error")
-            assertThat(activity.getErrorMessage(throwable, false), equalTo(throwable.toString()))
-        }
-    }
-
-    @Test
-    fun createViewState() {
-        activityScenarioRule.scenario.onActivity { activity ->
-            assertThat(activity.createViewState(), instanceOf(RetainingLceViewState::class.java))
-        }
-    }
-
-    @Test
-    fun setLocationInputText() {
-        activityScenarioRule.scenario.onActivity { activity ->
-            val location = "Saved City, SC"
-            activity.setLocationInputText(location)
-
-            assertThat(activity.binding.locationSearch.query.toString(), equalTo(location))
-            assertThat(activity.binding.locationSearch.hasFocus(), equalTo(false))
-            verify(presenter, never()).search(anyString())
+            val errorMessage = "test error"
+            forecastStatesLiveData.value = LoadState.Error(Exception(errorMessage))
+            assertThat(activity.binding.loadingView.isVisible, equalTo(false))
+            assertThat(activity.binding.contentView.isVisible, equalTo(false))
+            assertThat(activity.binding.errorView.isVisible, equalTo(true))
+            assertThat(activity.binding.errorView.text.toString(), equalTo(errorMessage))
         }
     }
 
     @Test
     fun onQueryTextSubmit() {
         activityScenarioRule.scenario.onActivity { activity ->
-            val location = "San Francisco, CA"
-            activity.binding.locationSearch.setQuery(location, true)
-            verify(presenter).search(location)
+            activity.binding.locationSearch.setQuery("Submit", true)
+            verify(viewModel).search()
         }
     }
 
     @Test
     fun onQueryTextChange() {
         activityScenarioRule.scenario.onActivity { activity ->
-            assertThat(activity.onQueryTextChange("i"), equalTo(true))
+            val location = "Query Changed"
+            activity.binding.locationSearch.setQuery(location, false)
+            assertThat(locationInputLiveData.value, equalTo(location))
         }
     }
 
     @Test
     fun onRefresh() {
         activityScenarioRule.scenario.onActivity { activity ->
-            val location = "Current"
-            activity.binding.locationSearch.setQuery(location, false)
             activity.onRefresh()
-            verify(presenter).search(location)
+            verify(viewModel).search()
         }
     }
 
     @Test
-    fun openAttributionUrl() {
+    fun `clicking the AccuWeather link`() {
         activityScenarioRule.scenario.onActivity { activity ->
             activity.binding.accuweatherLogo.performClick()
             val actual = shadowOf(activity).nextStartedActivity
