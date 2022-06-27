@@ -84,11 +84,6 @@ dependencies {
     implementation "com.google.dagger:hilt-android:$daggerVersion"
     testImplementation "com.google.dagger:hilt-android-testing:$daggerVersion"
 
-    final mosbyVersion = '3.1.1'
-    implementation "com.hannesdorfmann.mosby3:mvp:$mosbyVersion"
-    implementation "com.hannesdorfmann.mosby3:viewstate:$mosbyVersion"
-    implementation "com.hannesdorfmann.mosby3:mvp-lce:$mosbyVersion"
-
     final moshiVersion = '1.13.0'
     implementation "com.squareup.moshi:moshi:$moshiVersion"
     kapt "com.squareup.moshi:moshi-kotlin-codegen:$moshiVersion"
