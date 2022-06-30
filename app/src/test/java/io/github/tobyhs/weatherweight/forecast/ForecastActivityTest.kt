@@ -6,8 +6,8 @@ import android.widget.TextView
 
 import androidx.core.view.isVisible
 import androidx.lifecycle.MutableLiveData
-import androidx.lifecycle.ViewModel
-import androidx.lifecycle.ViewModelProvider
+import androidx.lifecycle.viewmodel.initializer
+import androidx.lifecycle.viewmodel.viewModelFactory
 import androidx.test.ext.junit.rules.ActivityScenarioRule
 import androidx.test.ext.junit.runners.AndroidJUnit4
 
@@ -54,16 +54,7 @@ class ForecastActivityTest {
 
     @BindValue
     val viewModelFactoryProducer: ViewModelFactoryProducer = {
-        object : ViewModelProvider.Factory {
-            override fun <T : ViewModel> create(modelClass: Class<T>): T {
-                if (modelClass == viewModel.javaClass) {
-                    @Suppress("UNCHECKED_CAST")
-                    return viewModel as T
-                } else {
-                    throw UnsupportedOperationException()
-                }
-            }
-        }
+        viewModelFactory { initializer { viewModel } }
     }
 
     @get:Rule

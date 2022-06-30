@@ -37,7 +37,7 @@ class ForecastActivity : AppCompatActivity(), SearchView.OnQueryTextListener, On
         super.onCreate(savedInstanceState)
         binding = ActivityForecastBinding.inflate(layoutInflater)
         setContentView(binding.root)
-        viewModel = viewModels<ForecastViewModel>(viewModelFactoryProducer).value
+        viewModel = viewModels<ForecastViewModel>(factoryProducer = viewModelFactoryProducer).value
         initializeViews()
         setupObservers()
 
