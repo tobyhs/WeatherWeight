@@ -28,7 +28,7 @@ import javax.inject.Inject
  */
 @AndroidEntryPoint
 class ForecastActivity : AppCompatActivity(), SearchView.OnQueryTextListener, OnRefreshListener {
-    lateinit var binding: ActivityForecastBinding
+    private lateinit var binding: ActivityForecastBinding
     @set:Inject var viewModelFactoryProducer: ViewModelFactoryProducer? = null
     private lateinit var viewModel: ForecastViewModel
     private lateinit var forecastItemAdapter: ItemAdapter<ForecastCardItem>
