@@ -26,7 +26,7 @@ import org.hamcrest.MatcherAssert.assertThat
 import org.junit.Test
 import org.junit.runner.RunWith
 
-import org.mockito.Mockito.mock
+import org.mockito.kotlin.mock
 
 import org.robolectric.RobolectricTestRunner
 import org.robolectric.annotation.Config
@@ -58,7 +58,7 @@ class AppModuleTest {
 
     @Test
     fun provideAccuWeatherRetrofit() {
-        val client = mock(OkHttpClient::class.java)
+        val client = mock<OkHttpClient>()
         val retrofit = module.provideAccuWeatherRetrofit(
             client,
             AppModule.provideMoshi(),
@@ -80,7 +80,7 @@ class AppModuleTest {
 
     @Test
     fun provideWeatherRepository() {
-        val service = mock(AccuWeatherService::class.java)
+        val service = mock<AccuWeatherService>()
         val repo = module.provideWeatherRepository(service)
         assertThat(repo, instanceOf(AccuWeatherRepository::class.java))
     }

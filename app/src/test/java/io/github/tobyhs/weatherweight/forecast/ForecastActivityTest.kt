@@ -44,11 +44,11 @@ import org.junit.Rule
 import org.junit.Test
 import org.junit.runner.RunWith
 
-import org.mockito.Mockito
-import org.mockito.Mockito.clearInvocations
-import org.mockito.Mockito.mock
-import org.mockito.Mockito.never
-import org.mockito.Mockito.verify
+import org.mockito.kotlin.clearInvocations
+import org.mockito.kotlin.doReturn
+import org.mockito.kotlin.mock
+import org.mockito.kotlin.never
+import org.mockito.kotlin.verify
 
 @RunWith(AndroidJUnit4::class)
 @UninstallModules(ViewModelFactoryProducerModule::class)
@@ -58,9 +58,9 @@ class ForecastActivityTest {
 
     private val locationInputLiveData: MutableLiveData<String> = MutableLiveData("")
     private val forecastStatesLiveData: MutableLiveData<LoadState<ForecastResultSet>> = MutableLiveData()
-    private val viewModel: ForecastViewModel = mock(ForecastViewModel::class.java).also {
-        Mockito.`when`(it.locationInput).thenReturn(locationInputLiveData)
-        Mockito.`when`(it.forecastState).thenReturn(forecastStatesLiveData)
+    private val viewModel: ForecastViewModel = mock {
+        on { locationInput } doReturn locationInputLiveData
+        on { forecastState } doReturn forecastStatesLiveData
     }
 
     @BindValue

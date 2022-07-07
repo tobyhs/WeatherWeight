@@ -30,16 +30,16 @@ import org.hamcrest.MatcherAssert.assertThat
 import org.junit.Rule
 import org.junit.Test
 
-import org.mockito.Mockito
-import org.mockito.Mockito.mock
-import org.mockito.Mockito.verify
+import org.mockito.kotlin.mock
+import org.mockito.kotlin.verify
+import org.mockito.kotlin.whenever
 
 class ForecastViewModelTest : BaseTestCase() {
     @get:Rule val instantTaskExecutorRule = InstantTaskExecutorRule()
 
     private val schedulerProvider: SchedulerProvider = TrampolineSchedulerProvider()
-    private val weatherRepository: WeatherRepository = mock(WeatherRepository::class.java)
-    private val lastForecastStore: LastForecastStore = mock(LastForecastStore::class.java)
+    private val weatherRepository = mock<WeatherRepository>()
+    private val lastForecastStore = mock<LastForecastStore>()
     private val viewModel = ForecastViewModel(
         schedulerProvider,
         weatherRepository,
@@ -49,7 +49,7 @@ class ForecastViewModelTest : BaseTestCase() {
     @Test
     fun `loadLastForecast when there is a previous forecast result`() {
         val forecastSearch = ForecastSearchFactory.create()
-        Mockito.`when`(lastForecastStore.get()).thenReturn(Maybe.just(forecastSearch))
+        whenever(lastForecastStore.get()).thenReturn(Maybe.just(forecastSearch))
         viewModel.loadLastForecast()
         assertThat(viewModel.locationInput.value, equalTo(forecastSearch.input))
         val forecastResultSet = forecastSearch.forecastResultSet
@@ -59,14 +59,14 @@ class ForecastViewModelTest : BaseTestCase() {
     @Test
     fun `loadLastForecast when there is an error`() {
         val error = Exception("LastForecastStore error")
-        Mockito.`when`(lastForecastStore.get()).thenReturn(Maybe.error(error))
+        whenever(lastForecastStore.get()).thenReturn(Maybe.error(error))
         viewModel.loadLastForecast()
         assertThat(viewModel.forecastState.value, equalTo(LoadState.Error(error)))
     }
 
     @Test
     fun `loadLastForecast when there is no previous forecast result`() {
-        Mockito.`when`(lastForecastStore.get()).thenReturn(Maybe.empty())
+        whenever(lastForecastStore.get()).thenReturn(Maybe.empty())
         viewModel.loadLastForecast()
         assertThat(viewModel.locationInput.value, equalTo(""))
         assertThat(viewModel.forecastState.value, nullValue())
@@ -74,13 +74,12 @@ class ForecastViewModelTest : BaseTestCase() {
 
     @Test
     fun `search on success`() {
-        val previousGetForecastDisposable = mock(Disposable::class.java)
+        val previousGetForecastDisposable = mock<Disposable>()
         viewModel.getForecastDisposable = previousGetForecastDisposable
 
         val location = "San Francisco, CA"
         val forecastResultSet = ForecastResultSetFactory.create()
-        Mockito.`when`(weatherRepository.getForecast(location))
-            .thenReturn(Single.just(forecastResultSet))
+        whenever(weatherRepository.getForecast(location)).thenReturn(Single.just(forecastResultSet))
         viewModel.locationInput.value = location
 
         var completableSubscribed = false
@@ -89,7 +88,7 @@ class ForecastViewModelTest : BaseTestCase() {
             input = location,
             forecastResultSet = forecastResultSet,
         )
-        Mockito.`when`(lastForecastStore.save(forecastSearch)).thenReturn(saveCompletable)
+        whenever(lastForecastStore.save(forecastSearch)).thenReturn(saveCompletable)
 
         val forecastStates = searchAndObserveForecastStates()
         assertThat(forecastStates.size, equalTo(2))
@@ -105,7 +104,7 @@ class ForecastViewModelTest : BaseTestCase() {
     fun `search on error`() {
         val location = "Parts Unknown"
         val error = LocationNotFoundError(location)
-        Mockito.`when`(weatherRepository.getForecast(location)).thenReturn(Single.error(error))
+        whenever(weatherRepository.getForecast(location)).thenReturn(Single.error(error))
         viewModel.locationInput.value = location
 
         val forecastStates = searchAndObserveForecastStates()
@@ -116,8 +115,8 @@ class ForecastViewModelTest : BaseTestCase() {
 
     @Test
     fun onCleared() {
-        val loadLastForecastDisposable = mock(Disposable::class.java)
-        val getForecastDisposable = mock(Disposable::class.java)
+        val loadLastForecastDisposable = mock<Disposable>()
+        val getForecastDisposable = mock<Disposable>()
         viewModel.loadLastForecastDisposable = loadLastForecastDisposable
         viewModel.getForecastDisposable = getForecastDisposable
         viewModel.onCleared()
