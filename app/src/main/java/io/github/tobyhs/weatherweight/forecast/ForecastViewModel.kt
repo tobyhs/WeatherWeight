@@ -1,6 +1,5 @@
 package io.github.tobyhs.weatherweight.forecast
 
-import androidx.annotation.VisibleForTesting
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
@@ -40,8 +39,8 @@ class ForecastViewModel
     /** Loading state of the forecast result */
     val forecastState: LiveData<LoadState<ForecastResultSet>> = _forecastState
 
-    @VisibleForTesting var loadLastForecastDisposable: Disposable? = null
-    @VisibleForTesting var getForecastDisposable: Disposable? = null
+    private var loadLastForecastDisposable: Disposable? = null
+    private var getForecastDisposable: Disposable? = null
 
     /**
      * Loads the last [ForecastSearch] that was saved when the activity first starts.

@@ -23,23 +23,23 @@ import io.reactivex.rxjava3.disposables.Disposable
 
 import org.hamcrest.CoreMatchers.equalTo
 import org.hamcrest.CoreMatchers.instanceOf
-import org.hamcrest.CoreMatchers.not
 import org.hamcrest.CoreMatchers.nullValue
 import org.hamcrest.MatcherAssert.assertThat
 
 import org.junit.Rule
 import org.junit.Test
 
+import org.mockito.Mockito.RETURNS_DEEP_STUBS
+import org.mockito.kotlin.any
 import org.mockito.kotlin.mock
-import org.mockito.kotlin.verify
 import org.mockito.kotlin.whenever
 
 class ForecastViewModelTest : BaseTestCase() {
     @get:Rule val instantTaskExecutorRule = InstantTaskExecutorRule()
 
     private val schedulerProvider: SchedulerProvider = TrampolineSchedulerProvider()
-    private val weatherRepository = mock<WeatherRepository>()
-    private val lastForecastStore = mock<LastForecastStore>()
+    private val weatherRepository = mock<WeatherRepository>(defaultAnswer = RETURNS_DEEP_STUBS)
+    private val lastForecastStore = mock<LastForecastStore>(defaultAnswer = RETURNS_DEEP_STUBS)
     private val viewModel = ForecastViewModel(
         schedulerProvider,
         weatherRepository,
@@ -74,9 +74,6 @@ class ForecastViewModelTest : BaseTestCase() {
 
     @Test
     fun `search on success`() {
-        val previousGetForecastDisposable = mock<Disposable>()
-        viewModel.getForecastDisposable = previousGetForecastDisposable
-
         val location = "San Francisco, CA"
         val forecastResultSet = ForecastResultSetFactory.create()
         whenever(weatherRepository.getForecast(location)).thenReturn(Single.just(forecastResultSet))
@@ -95,9 +92,18 @@ class ForecastViewModelTest : BaseTestCase() {
         assertThat(forecastStates[0], instanceOf(LoadState.Loading::class.java))
         assertThat(forecastStates[1], equalTo(LoadState.Content(forecastResultSet)))
 
-        verify(previousGetForecastDisposable).dispose()
-        assertThat(viewModel.getForecastDisposable, not(previousGetForecastDisposable))
         assertThat(completableSubscribed, equalTo(true))
+    }
+
+    @Test
+    fun `search when getForecastDisposable is present`() {
+        val firstGetForecastDisposable = Disposable.empty()
+        stubGetForecastChain(firstGetForecastDisposable, Disposable.empty())
+
+        viewModel.search()
+        assertThat(firstGetForecastDisposable.isDisposed, equalTo(false))
+        viewModel.search()
+        assertThat(firstGetForecastDisposable.isDisposed, equalTo(true))
     }
 
     @Test
@@ -115,14 +121,24 @@ class ForecastViewModelTest : BaseTestCase() {
 
     @Test
     fun onCleared() {
-        val loadLastForecastDisposable = mock<Disposable>()
-        val getForecastDisposable = mock<Disposable>()
-        viewModel.loadLastForecastDisposable = loadLastForecastDisposable
-        viewModel.getForecastDisposable = getForecastDisposable
-        viewModel.onCleared()
+        val loadLastForecastDisposable = Disposable.empty()
+        whenever(
+            lastForecastStore.get()
+                .subscribeOn(schedulerProvider.io())
+                .observeOn(schedulerProvider.ui())
+                .subscribe(any(), any())
+        ).thenReturn(loadLastForecastDisposable)
+        viewModel.loadLastForecast()
 
-        verify(loadLastForecastDisposable).dispose()
-        verify(getForecastDisposable).dispose()
+        val getForecastDisposable = Disposable.empty()
+        stubGetForecastChain(getForecastDisposable)
+        viewModel.search()
+
+        assertThat(loadLastForecastDisposable.isDisposed, equalTo(false))
+        assertThat(getForecastDisposable.isDisposed, equalTo(false))
+        viewModel.onCleared()
+        assertThat(loadLastForecastDisposable.isDisposed, equalTo(true))
+        assertThat(getForecastDisposable.isDisposed, equalTo(true))
     }
 
     /**
@@ -139,5 +155,18 @@ class ForecastViewModelTest : BaseTestCase() {
         viewModel.search()
         viewModel.forecastState.removeObserver(forecastStateObserver)
         return forecastStates
+    }
+
+    private fun stubGetForecastChain(
+        disposableToReturn: Disposable, vararg otherDisposablesToReturn: Disposable
+    ) {
+        val location = "Stub City, CA"
+        viewModel.locationInput.value = location
+        whenever(
+            weatherRepository.getForecast(location)
+                .subscribeOn(schedulerProvider.io())
+                .observeOn(schedulerProvider.ui())
+                .subscribe(any(), any())
+        ).thenReturn(disposableToReturn, *otherDisposablesToReturn)
     }
 }
