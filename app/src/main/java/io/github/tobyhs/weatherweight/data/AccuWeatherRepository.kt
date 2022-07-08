@@ -58,22 +58,18 @@ class AccuWeatherRepository
     private fun convertDailyForecastResponse(
         dailyForecasts: List<io.github.tobyhs.weatherweight.api.accuweather.forecasts.DailyForecast>
     ): List<DailyForecast> {
-        val result = ArrayList<DailyForecast>(dailyForecasts.size)
-        for (forecast in dailyForecasts) {
+        return dailyForecasts.map { forecast ->
             var text = forecast.day.iconPhrase
             val nightPhrase = forecast.night.iconPhrase
             if (text != nightPhrase) {
                 text += " / $nightPhrase"
             }
-            result.add(
-                DailyForecast(
-                    date = forecast.date.toLocalDate(),
-                    low = forecast.temperature.minimum.value.toInt(),
-                    high = forecast.temperature.maximum.value.toInt(),
-                    text = text,
-                )
+            DailyForecast(
+                date = forecast.date.toLocalDate(),
+                low = forecast.temperature.minimum.value.toInt(),
+                high = forecast.temperature.maximum.value.toInt(),
+                text = text,
             )
         }
-        return result
     }
 }
