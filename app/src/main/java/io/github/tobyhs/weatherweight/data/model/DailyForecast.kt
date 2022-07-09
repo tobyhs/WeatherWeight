@@ -11,6 +11,7 @@ import java.time.LocalDate
  * @property low forecasted low temperature
  * @property high forecasted high temperature
  * @property text description of forecasted conditions
+ * @property precipitationProbability percent representing the probability of precipitation
  */
 @JsonClass(generateAdapter = true)
 data class DailyForecast(
@@ -18,4 +19,5 @@ data class DailyForecast(
     val low: Int,
     val high: Int,
     val text: String,
+    val precipitationProbability: Int,
 )

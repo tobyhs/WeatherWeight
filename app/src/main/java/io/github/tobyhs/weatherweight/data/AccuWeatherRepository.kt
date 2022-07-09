@@ -10,6 +10,8 @@ import io.reactivex.rxjava3.core.Single
 import java.time.Clock
 import java.time.ZonedDateTime
 
+import kotlin.math.max
+
 /**
  * Implementation of [WeatherRepository] that uses AccuWeather's APIs
  */
@@ -69,6 +71,10 @@ class AccuWeatherRepository
                 low = forecast.temperature.minimum.value.toInt(),
                 high = forecast.temperature.maximum.value.toInt(),
                 text = text,
+                precipitationProbability = max(
+                    forecast.day.precipitationProbability,
+                    forecast.night.precipitationProbability
+                ),
             )
         }
     }

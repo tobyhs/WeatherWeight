@@ -98,11 +98,13 @@ class AccuWeatherRepositoryTest {
         assertThat(dailyForecast.low, equalTo(50))
         assertThat(dailyForecast.high, equalTo(60))
         assertThat(dailyForecast.text, equalTo("Sunny"))
+        assertThat(dailyForecast.precipitationProbability, equalTo(1))
 
         dailyForecast = result.forecasts[1]
         assertThat(dailyForecast.date.toString(), equalTo("2018-01-30"))
         assertThat(dailyForecast.low, equalTo(52))
         assertThat(dailyForecast.high, equalTo(62))
         assertThat(dailyForecast.text, equalTo("Cloudy / Showers"))
+        assertThat(dailyForecast.precipitationProbability, equalTo(70))
     }
 }

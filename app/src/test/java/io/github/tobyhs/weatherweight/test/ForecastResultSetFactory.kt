@@ -23,7 +23,19 @@ object ForecastResultSetFactory {
      * @return a list of daily forecasts for testing
      */
     fun createForecasts(): List<DailyForecast> = listOf(
-        DailyForecast(date = LocalDate.parse("2019-02-01"), low = 60, high = 65, text = "Cloudy"),
-        DailyForecast(date = LocalDate.parse("2019-02-02"), low = 58, high = 64, text = "Showers"),
+        DailyForecast(
+            date = LocalDate.parse("2019-02-01"),
+            low = 60,
+            high = 65,
+            text = "Cloudy",
+            precipitationProbability = 10,
+        ),
+        DailyForecast(
+            date = LocalDate.parse("2019-02-02"),
+            low = 58,
+            high = 64,
+            text = "Showers",
+            precipitationProbability = 70,
+        ),
     )
 }
