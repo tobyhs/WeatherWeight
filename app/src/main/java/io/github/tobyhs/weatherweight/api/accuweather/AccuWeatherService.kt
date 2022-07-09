@@ -33,6 +33,6 @@ interface AccuWeatherService {
      * @param locationKey key of a city/location from AccuWeather's Locations API
      * @return a 5-day forecast
      */
-    @GET("forecasts/v1/daily/5day/{locationKey}")
+    @GET("forecasts/v1/daily/5day/{locationKey}?details=true")
     fun get5DayForecast(@Path("locationKey") locationKey: String): Single<Response<DailyForecastResponse>>
 }

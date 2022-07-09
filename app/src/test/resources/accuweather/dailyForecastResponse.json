@@ -28,11 +28,13 @@
             },
             "Day": {
                 "Icon": 12,
-                "IconPhrase": "Showers"
+                "IconPhrase": "Showers",
+                "PrecipitationProbability": 80
             },
             "Night": {
                 "Icon": 18,
-                "IconPhrase": "Rain"
+                "IconPhrase": "Rain",
+                "PrecipitationProbability": 60
             },
             "Sources": [
                 "AccuWeather"

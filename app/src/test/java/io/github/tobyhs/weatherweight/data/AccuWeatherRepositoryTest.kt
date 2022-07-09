@@ -68,8 +68,8 @@ class AccuWeatherRepositoryTest {
                     minimum = Temperature(value = 50.0),
                     maximum = Temperature(value = 60.0),
                 ),
-                day = DayPeriod(iconPhrase = "Sunny"),
-                night = DayPeriod(iconPhrase = "Sunny"),
+                day = DayPeriod(iconPhrase = "Sunny", precipitationProbability = 0),
+                night = DayPeriod(iconPhrase = "Sunny", precipitationProbability = 1),
             ),
             DailyForecast(
                 date = time.plusDays(1),
@@ -77,8 +77,8 @@ class AccuWeatherRepositoryTest {
                     minimum = Temperature(value = 52.0),
                     maximum = Temperature(value = 62.0),
                 ),
-                day = DayPeriod(iconPhrase = "Cloudy"),
-                night = DayPeriod(iconPhrase = "Showers"),
+                day = DayPeriod(iconPhrase = "Cloudy", precipitationProbability = 70),
+                night = DayPeriod(iconPhrase = "Showers", precipitationProbability = 50),
             ),
         )
         val response = DailyForecastResponse(dailyForecasts = dailyForecasts)

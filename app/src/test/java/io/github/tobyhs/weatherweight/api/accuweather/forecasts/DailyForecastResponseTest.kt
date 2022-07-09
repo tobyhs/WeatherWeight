@@ -29,7 +29,9 @@ class DailyForecastResponseTest {
                 assertThat(dailyForecast.temperature.minimum.value, equalTo(52.0))
                 assertThat(dailyForecast.temperature.maximum.value, equalTo(57.0))
                 assertThat(dailyForecast.day.iconPhrase, equalTo("Showers"))
+                assertThat(dailyForecast.day.precipitationProbability, equalTo(80))
                 assertThat(dailyForecast.night.iconPhrase, equalTo("Rain"))
+                assertThat(dailyForecast.night.precipitationProbability, equalTo(60))
             }
         }
     }
