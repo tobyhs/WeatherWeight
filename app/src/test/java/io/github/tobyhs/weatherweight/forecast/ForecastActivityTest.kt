@@ -119,6 +119,7 @@ class ForecastActivityTest {
         onView(allOf(descendantMatcher, withId(R.id.date))).check(matches(withText("Feb 1")))
         onView(allOf(descendantMatcher, withId(R.id.temperatureLow))).check(matches(withText("60")))
         onView(allOf(descendantMatcher, withId(R.id.temperatureHigh))).check(matches(withText("65")))
+        onView(allOf(descendantMatcher, withId(R.id.precipitationProbability))).check(matches(withText("10%")))
         onView(allOf(descendantMatcher, withId(R.id.description))).check(matches(withText("Cloudy")))
     }
 

@@ -16,8 +16,9 @@ import org.robolectric.RobolectricTestRunner
 
 @RunWith(RobolectricTestRunner::class)
 class ForecastCardItemTest {
+    private val app: Application = ApplicationProvider.getApplicationContext()
     private val dailyForecast = ForecastResultSetFactory.createForecasts().first()
-    private val forecastCardItem = ForecastCardItem(dailyForecast)
+    private val forecastCardItem = ForecastCardItem(app, dailyForecast)
 
     @Test
     fun getType() {
@@ -26,7 +27,6 @@ class ForecastCardItemTest {
 
     @Test
     fun bindView() {
-        val app: Application = ApplicationProvider.getApplicationContext()
         val binding = forecastCardItem.createBinding(LayoutInflater.from(app))
         forecastCardItem.bindView(binding, emptyList())
 
@@ -34,6 +34,7 @@ class ForecastCardItemTest {
         assertThat(binding.date.text, equalTo("Feb 1"))
         assertThat(binding.temperatureLow.text, equalTo("60"))
         assertThat(binding.temperatureHigh.text, equalTo("65"))
+        assertThat(binding.precipitationProbability.text, equalTo("10%"))
         assertThat(binding.description.text, equalTo("Cloudy"))
     }
 }

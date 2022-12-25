@@ -95,7 +95,7 @@ class ForecastActivity : AppCompatActivity(), SearchView.OnQueryTextListener, On
                 binding.pubDate.text = pubDate.format(DateTimeFormatter.RFC_1123_DATE_TIME)
                 binding.forecastSwipeContainer.isRefreshing = false
                 forecastItemAdapter.set(forecastResultSet.forecasts.map { dailyForecast ->
-                    ForecastCardItem(dailyForecast)
+                    ForecastCardItem(applicationContext, dailyForecast)
                 })
             } else if (forecastState is LoadState.Error) {
                 binding.errorView.text = forecastState.error.message

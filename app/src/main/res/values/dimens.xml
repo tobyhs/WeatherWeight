@@ -10,4 +10,5 @@
     <dimen name="forecast_card_day_width">36dp</dimen>
     <dimen name="forecast_card_date_width">56dp</dimen>
     <dimen name="forecast_card_temperature_width">32dp</dimen>
+    <dimen name="forecast_card_precipitation_probability_width">40dp</dimen>
 </resources>
