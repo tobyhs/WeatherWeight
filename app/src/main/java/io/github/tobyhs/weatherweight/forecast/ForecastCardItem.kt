@@ -10,7 +10,6 @@ import io.github.tobyhs.weatherweight.R
 import io.github.tobyhs.weatherweight.data.model.DailyForecast
 import io.github.tobyhs.weatherweight.databinding.ForecastCardBinding
 
-import java.time.format.DateTimeFormatter
 import java.time.format.TextStyle
 import java.util.Locale
 
@@ -43,5 +42,3 @@ class ForecastCardItem(
         return ForecastCardBinding.inflate(inflater, parent, false)
     }
 }
-
-val DATE_FORMATTER: DateTimeFormatter = DateTimeFormatter.ofPattern("MMM d")
