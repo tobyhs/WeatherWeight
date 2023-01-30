@@ -1,8 +1,9 @@
 package io.github.tobyhs.weatherweight.forecast
 
 import androidx.compose.ui.test.assertTextEquals
+import androidx.compose.ui.test.junit4.ComposeTestRule
 import androidx.compose.ui.test.junit4.createComposeRule
-import androidx.compose.ui.test.onNodeWithTag
+import androidx.compose.ui.test.onAllNodesWithTag
 import androidx.test.ext.junit.runners.AndroidJUnit4
 
 import io.github.tobyhs.weatherweight.test.ForecastResultSetFactory
@@ -21,11 +22,17 @@ class ForecastCardTest {
             ForecastCard(ForecastResultSetFactory.createForecasts()[0])
         }
 
-        composeRule.onNodeWithTag("dayOfWeek").assertTextEquals("Fri")
-        composeRule.onNodeWithTag("date").assertTextEquals("Feb 1")
-        composeRule.onNodeWithTag("lowTemperature").assertTextEquals("60")
-        composeRule.onNodeWithTag("highTemperature").assertTextEquals("65")
-        composeRule.onNodeWithTag("precipitationProbability").assertTextEquals("10%")
-        composeRule.onNodeWithTag("forecastDescription").assertTextEquals("Cloudy")
+        checkContent(composeRule)
+    }
+
+    companion object {
+        fun checkContent(composeRule: ComposeTestRule) {
+            composeRule.onAllNodesWithTag("dayOfWeek")[0].assertTextEquals("Fri")
+            composeRule.onAllNodesWithTag("date")[0].assertTextEquals("Feb 1")
+            composeRule.onAllNodesWithTag("lowTemperature")[0].assertTextEquals("60")
+            composeRule.onAllNodesWithTag("highTemperature")[0].assertTextEquals("65")
+            composeRule.onAllNodesWithTag("precipitationProbability")[0].assertTextEquals("10%")
+            composeRule.onAllNodesWithTag("forecastDescription")[0].assertTextEquals("Cloudy")
+        }
     }
 }
