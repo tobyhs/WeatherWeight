@@ -1,6 +1,8 @@
 package io.github.tobyhs.weatherweight.forecast
 
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
@@ -27,8 +29,10 @@ fun ForecastScreenContent(forecastResultSet: ForecastResultSet) {
             modifier = Modifier.testTag("publicationTime"),
         )
 
-        for (forecast in forecastResultSet.forecasts) {
-            ForecastCard(forecast)
+        Column(Modifier.verticalScroll(rememberScrollState())) {
+            for (forecast in forecastResultSet.forecasts) {
+                ForecastCard(forecast)
+            }
         }
     }
 }

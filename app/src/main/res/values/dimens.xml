@@ -3,8 +3,8 @@
 
     <dimen name="forecast_card_padding">2dp</dimen>
     <dimen name="forecast_card_row_horizontal_padding">4dp</dimen>
-    <dimen name="forecast_card_day_width">36dp</dimen>
-    <dimen name="forecast_card_date_width">56dp</dimen>
-    <dimen name="forecast_card_temperature_width">32dp</dimen>
-    <dimen name="forecast_card_precipitation_probability_width">40dp</dimen>
+    <dimen name="forecast_card_day_width">40dp</dimen>
+    <dimen name="forecast_card_date_width">72dp</dimen>
+    <dimen name="forecast_card_temperature_width">40dp</dimen>
+    <dimen name="forecast_card_precipitation_probability_width">48dp</dimen>
 </resources>
