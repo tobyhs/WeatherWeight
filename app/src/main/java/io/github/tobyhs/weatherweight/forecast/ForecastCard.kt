@@ -10,6 +10,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.res.dimensionResource
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 
 import com.google.accompanist.flowlayout.FlowRow
@@ -56,6 +57,7 @@ fun ForecastCard(forecast: DailyForecast) {
                 modifier = Modifier
                     .width(dimensionResource(R.dimen.forecast_card_temperature_width))
                     .testTag("lowTemperature"),
+                textAlign = TextAlign.Right,
             )
 
             Text(
@@ -63,14 +65,18 @@ fun ForecastCard(forecast: DailyForecast) {
                 modifier = Modifier
                     .width(dimensionResource(R.dimen.forecast_card_temperature_width))
                     .testTag("highTemperature"),
+                textAlign = TextAlign.Right,
             )
 
             Text(
                 stringResource(R.string.percent, forecast.precipitationProbability),
                 modifier = Modifier
                     .width(dimensionResource(R.dimen.forecast_card_precipitation_probability_width))
-                    .testTag("precipitationProbability")
+                    .testTag("precipitationProbability"),
+                textAlign = TextAlign.Right,
             )
+
+            Text("", Modifier.width(dimensionResource(R.dimen.forecast_card_description_spacing)))
 
             Text(forecast.text, modifier = Modifier.testTag("forecastDescription"))
         }
@@ -110,8 +116,8 @@ internal val previewDataForecasts = listOf(
     ),
     DailyForecast(
         date = LocalDate.parse("2023-01-19"),
-        low = 65,
-        high = 72,
+        low = 100,
+        high = 105,
         text = "Sunny",
         precipitationProbability = 0,
     ),
