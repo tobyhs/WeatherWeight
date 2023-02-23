@@ -92,7 +92,8 @@ dependencies {
     implementation "androidx.lifecycle:lifecycle-livedata-ktx:$lifecycleVersion"
     implementation "androidx.lifecycle:lifecycle-viewmodel-ktx:$lifecycleVersion"
 
-    implementation 'com.google.accompanist:accompanist-flowlayout:0.28.0'
+    final accompanistVersion = '0.28.0'
+    implementation "com.google.accompanist:accompanist-flowlayout:$accompanistVersion"
 
     [
             "com.google.dagger:hilt-compiler:$daggerVersion",
@@ -126,6 +127,7 @@ dependencies {
     testImplementation "androidx.test.espresso:espresso-intents:$espressoVersion"
     testImplementation 'androidx.test.ext:junit:1.1.5'
 
+    testImplementation "com.google.accompanist:accompanist-testharness:$accompanistVersion"
     testImplementation 'junit:junit:4.13.2'
     testImplementation 'org.mockito.kotlin:mockito-kotlin:4.0.0'
     testImplementation 'org.mockito:mockito-core:4.6.1'

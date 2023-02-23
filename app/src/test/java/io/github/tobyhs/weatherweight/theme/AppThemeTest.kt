@@ -9,6 +9,8 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.test.junit4.createComposeRule
 import androidx.test.ext.junit.runners.AndroidJUnit4
 
+import com.google.accompanist.testharness.TestHarness
+
 import org.hamcrest.CoreMatchers.equalTo
 import org.hamcrest.MatcherAssert.assertThat
 
@@ -35,9 +37,11 @@ class AppThemeTest {
         var colorScheme: ColorScheme? = null
         var contentColor: Color? = null
         composeRule.setContent {
-            AppTheme(useDarkTheme = useDarkTheme) {
-                colorScheme = MaterialTheme.colorScheme
-                contentColor = LocalContentColor.current
+            TestHarness(darkMode = useDarkTheme) {
+                AppTheme {
+                    colorScheme = MaterialTheme.colorScheme
+                    contentColor = LocalContentColor.current
+                }
             }
         }
 
