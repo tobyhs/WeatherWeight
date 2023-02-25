@@ -1,5 +1,6 @@
 package io.github.tobyhs.weatherweight.forecast
 
+import androidx.compose.foundation.layout.defaultMinSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
@@ -78,7 +79,12 @@ fun ForecastCard(forecast: DailyForecast) {
 
             Text("", Modifier.width(dimensionResource(R.dimen.forecast_card_description_spacing)))
 
-            Text(forecast.text, modifier = Modifier.testTag("forecastDescription"))
+            Text(
+                forecast.text,
+                modifier = Modifier
+                    .defaultMinSize(minWidth = dimensionResource(R.dimen.forecast_card_description_min_width))
+                    .testTag("forecastDescription")
+            )
         }
     }
 }

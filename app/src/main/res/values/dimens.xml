@@ -8,4 +8,5 @@
     <dimen name="forecast_card_temperature_width">40dp</dimen>
     <dimen name="forecast_card_precipitation_probability_width">48dp</dimen>
     <dimen name="forecast_card_description_spacing">16dp</dimen>
+    <dimen name="forecast_card_description_min_width">180dp</dimen>
 </resources>
