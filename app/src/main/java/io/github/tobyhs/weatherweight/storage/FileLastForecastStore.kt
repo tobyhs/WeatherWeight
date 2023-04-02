@@ -21,11 +21,11 @@ class FileLastForecastStore
     private val moshiAdapter by lazy { moshi.adapter(ForecastSearch::class.java) }
 
     override fun get(): Maybe<ForecastSearch> {
-        return Maybe.fromCallable {
+        return Maybe.create {
             if (file.exists()) {
-                moshiAdapter.fromJson(file.readText())
+                it.onSuccess(moshiAdapter.fromJson(file.readText())!!)
             } else {
-                null
+                it.onComplete()
             }
         }
     }
