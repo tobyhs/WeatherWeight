@@ -15,7 +15,7 @@ class DailyForecastResponseTest {
     fun parseJson() {
         javaClass.getResourceAsStream("/accuweather/dailyForecastResponse.json").use { stream ->
             InputStreamReader(stream).use { reader ->
-                val moshi = AppModule.provideMoshi()
+                val moshi = AppModule().provideMoshi()
                 val moshiAdapter = moshi.adapter(DailyForecastResponse::class.java)
                 val dailyForecastResponse = moshiAdapter.fromJson(reader.readText())!!
                 val dailyForecasts = dailyForecastResponse.dailyForecasts

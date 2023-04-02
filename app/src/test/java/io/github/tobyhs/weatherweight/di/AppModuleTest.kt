@@ -61,7 +61,7 @@ class AppModuleTest {
         val client = mock<OkHttpClient>()
         val retrofit = module.provideAccuWeatherRetrofit(
             client,
-            AppModule.provideMoshi(),
+            module.provideMoshi(),
         )
         assertThat(retrofit.baseUrl().toString(), equalTo("https://dataservice.accuweather.com/"))
         assertThat(retrofit.callFactory(), equalTo(client))
@@ -87,7 +87,7 @@ class AppModuleTest {
 
     @Test
     fun provideLastForecastStore() {
-        val moshi = AppModule.provideMoshi()
+        val moshi = module.provideMoshi()
         val store = module.provideLastForecastStore(app, moshi)
         assertThat(store, instanceOf(FileLastForecastStore::class.java))
 
@@ -99,7 +99,7 @@ class AppModuleTest {
     @Test
     @SuppressLint("CheckResult")
     fun provideMoshi() {
-        val moshi = AppModule.provideMoshi()
+        val moshi = module.provideMoshi()
         // Check that the following don't throw an IllegalArgumentException
         moshi.adapter(LocalDate::class.java)
         moshi.adapter(ZonedDateTime::class.java)

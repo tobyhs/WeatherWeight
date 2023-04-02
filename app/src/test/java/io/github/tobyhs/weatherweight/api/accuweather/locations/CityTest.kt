@@ -14,7 +14,7 @@ class CityTest {
     fun parseJson() {
         javaClass.getResourceAsStream("/accuweather/city.json").use { stream ->
             InputStreamReader(stream).use { reader ->
-                val moshi = AppModule.provideMoshi()
+                val moshi = AppModule().provideMoshi()
                 val moshiAdapter = moshi.adapter(City::class.java)
                 val city = moshiAdapter.fromJson(reader.readText())!!
 

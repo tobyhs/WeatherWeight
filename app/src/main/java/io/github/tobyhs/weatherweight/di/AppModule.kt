@@ -113,15 +113,13 @@ class AppModule {
         return FileLastForecastStore(context.cacheDir, moshi)
     }
 
-    companion object {
-        /**
-         * @return a Moshi instance
-         */
-        @Provides
-        @Singleton
-        fun provideMoshi(): Moshi = Moshi.Builder()
-            .add(LocalDateAdapter())
-            .add(ZonedDateTimeAdapter())
-            .build()
-    }
+    /**
+     * @return a Moshi instance
+     */
+    @Provides
+    @Singleton
+    fun provideMoshi(): Moshi = Moshi.Builder()
+        .add(LocalDateAdapter())
+        .add(ZonedDateTimeAdapter())
+        .build()
 }

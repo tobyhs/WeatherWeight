@@ -14,7 +14,7 @@ import java.io.File
 
 class FileLastForecastStoreTest {
     private val directory = File("/tmp")
-    private val moshi = AppModule.provideMoshi()
+    private val moshi = AppModule().provideMoshi()
     private val forecastSearchAdapter = moshi.adapter(ForecastSearch::class.java)
     private val store = FileLastForecastStore(directory, moshi)
     private val file = File(directory, "lastForecast.json")
