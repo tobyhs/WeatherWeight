@@ -82,12 +82,12 @@ dependencies {
     debugImplementation 'androidx.compose.ui:ui-test-manifest'
     debugImplementation 'androidx.compose.ui:ui-tooling'
 
-    final activityVersion = '1.6.1'
+    final activityVersion = '1.7.0'
     implementation "androidx.activity:activity-compose:$activityVersion"
     implementation "androidx.activity:activity-ktx:$activityVersion"
-    implementation 'androidx.annotation:annotation:1.5.0'
+    implementation 'androidx.annotation:annotation:1.6.0'
     implementation 'androidx.appcompat:appcompat:1.6.1'
-    final lifecycleVersion = '2.5.1'
+    final lifecycleVersion = '2.6.1'
     implementation "androidx.lifecycle:lifecycle-livedata-ktx:$lifecycleVersion"
     implementation "androidx.lifecycle:lifecycle-viewmodel-ktx:$lifecycleVersion"
 
@@ -118,7 +118,7 @@ dependencies {
     implementation "com.squareup.retrofit2:adapter-rxjava3:$retrofitVersion"
     implementation "com.squareup.retrofit2:converter-moshi:$retrofitVersion"
 
-    testImplementation 'androidx.arch.core:core-testing:2.1.0'
+    testImplementation 'androidx.arch.core:core-testing:2.2.0'
     testImplementation 'androidx.compose.ui:ui-test-junit4'
     testImplementation 'androidx.test:core:1.5.0'
     final espressoVersion = '3.5.1'
