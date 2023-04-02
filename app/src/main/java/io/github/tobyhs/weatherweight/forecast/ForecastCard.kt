@@ -1,5 +1,7 @@
 package io.github.tobyhs.weatherweight.forecast
 
+import androidx.compose.foundation.layout.ExperimentalLayoutApi
+import androidx.compose.foundation.layout.FlowRow
 import androidx.compose.foundation.layout.defaultMinSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
@@ -14,8 +16,6 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 
-import com.google.accompanist.flowlayout.FlowRow
-
 import io.github.tobyhs.weatherweight.R
 import io.github.tobyhs.weatherweight.data.model.DailyForecast
 
@@ -29,6 +29,7 @@ import java.util.Locale
  *
  * @param forecast the forecast to display data for
  */
+@OptIn(ExperimentalLayoutApi::class)
 @Composable
 fun ForecastCard(forecast: DailyForecast) {
     val locale = Locale.getDefault()
