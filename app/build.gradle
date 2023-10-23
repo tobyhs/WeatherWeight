@@ -8,8 +8,7 @@ rootProject.file("secret.properties").withInputStream { secretProps.load(it) }
 
 android {
     namespace 'io.github.tobyhs.weatherweight'
-    compileSdkVersion 33
-    buildToolsVersion '33.0.0'
+    compileSdk 33
 
     defaultConfig {
         applicationId "io.github.tobyhs.weatherweight"
