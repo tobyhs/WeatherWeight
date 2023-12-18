@@ -40,12 +40,12 @@ android {
     }
 
     compileOptions {
-        sourceCompatibility JavaVersion.VERSION_11
-        targetCompatibility JavaVersion.VERSION_11
+        sourceCompatibility = 17
+        targetCompatibility = 17
     }
 
     kotlin {
-        jvmToolchain(11)
+        jvmToolchain(17)
     }
 
     buildFeatures {
@@ -54,7 +54,7 @@ android {
     }
 
     composeOptions {
-        kotlinCompilerExtensionVersion = '1.4.2'
+        kotlinCompilerExtensionVersion = '1.5.5'
     }
 
     testOptions {
@@ -100,7 +100,7 @@ dependencies {
     implementation "com.google.dagger:hilt-android:$daggerVersion"
     testImplementation "com.google.dagger:hilt-android-testing:$daggerVersion"
 
-    final moshiVersion = '1.14.0'
+    final moshiVersion = '1.15.0'
     implementation "com.squareup.moshi:moshi:$moshiVersion"
     kapt "com.squareup.moshi:moshi-kotlin-codegen:$moshiVersion"
 
