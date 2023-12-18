@@ -82,12 +82,12 @@ dependencies {
     debugImplementation 'androidx.compose.ui:ui-test-manifest'
     debugImplementation 'androidx.compose.ui:ui-tooling'
 
-    final activityVersion = '1.7.0'
+    final activityVersion = '1.8.2'
     implementation "androidx.activity:activity-compose:$activityVersion"
     implementation "androidx.activity:activity-ktx:$activityVersion"
-    implementation 'androidx.annotation:annotation:1.6.0'
+    implementation 'androidx.annotation:annotation:1.7.1'
     implementation 'androidx.appcompat:appcompat:1.6.1'
-    final lifecycleVersion = '2.6.1'
+    final lifecycleVersion = '2.6.2'
     implementation "androidx.lifecycle:lifecycle-livedata-ktx:$lifecycleVersion"
     implementation "androidx.lifecycle:lifecycle-viewmodel-ktx:$lifecycleVersion"
 
