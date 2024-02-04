@@ -127,6 +127,7 @@ dependencies {
 
     final accompanistVersion = '0.30.0'
     testImplementation "com.google.accompanist:accompanist-testharness:$accompanistVersion"
+    testImplementation 'io.mockk:mockk:1.13.9'
     testImplementation 'junit:junit:4.13.2'
     testImplementation 'org.mockito.kotlin:mockito-kotlin:4.0.0'
     testImplementation 'org.mockito:mockito-core:4.6.1'
