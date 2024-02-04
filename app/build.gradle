@@ -89,7 +89,7 @@ dependencies {
     implementation "androidx.activity:activity-ktx:$activityVersion"
     implementation 'androidx.annotation:annotation:1.7.1'
     implementation 'androidx.appcompat:appcompat:1.6.1'
-    final lifecycleVersion = '2.6.2'
+    final lifecycleVersion = '2.7.0'
     implementation "androidx.lifecycle:lifecycle-livedata-ktx:$lifecycleVersion"
     implementation "androidx.lifecycle:lifecycle-viewmodel-ktx:$lifecycleVersion"
 
