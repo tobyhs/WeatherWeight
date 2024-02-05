@@ -16,15 +16,13 @@ import io.github.tobyhs.weatherweight.R
 import io.github.tobyhs.weatherweight.di.ViewModelFactoryProducer
 import io.github.tobyhs.weatherweight.di.ViewModelFactoryProducerModule
 
+import io.mockk.every
+import io.mockk.mockk
+import io.mockk.verify
+
 import org.junit.Rule
 import org.junit.Test
 import org.junit.runner.RunWith
-
-import org.mockito.kotlin.clearInvocations
-import org.mockito.kotlin.doReturn
-import org.mockito.kotlin.mock
-import org.mockito.kotlin.never
-import org.mockito.kotlin.verify
 
 @RunWith(AndroidJUnit4::class)
 @UninstallModules(ViewModelFactoryProducerModule::class)
@@ -33,9 +31,9 @@ class ForecastActivityTest {
     @get:Rule
     val hiltRule = HiltAndroidRule(this)
 
-    private val viewModel: ForecastViewModel = mock {
-        on { locationInput } doReturn MutableLiveData("")
-        on { forecastState } doReturn MutableLiveData()
+    private val viewModel = mockk<ForecastViewModel>(relaxed = true) {
+        every { locationInput } returns MutableLiveData("")
+        every { forecastState } returns MutableLiveData()
     }
 
     @BindValue
@@ -48,7 +46,7 @@ class ForecastActivityTest {
 
     @Test
     fun onCreate() {
-        verify(viewModel).loadLastForecast()
+        verify { viewModel.loadLastForecast() }
         for (stringId in listOf(R.string.locationSearchHint, R.string.powered_by_accuweather)) {
             val contentDescription = composeRule.activity.getString(stringId)
             composeRule.onNodeWithContentDescription(contentDescription).assertExists()
@@ -58,12 +56,7 @@ class ForecastActivityTest {
     @Test
     fun `onCreate with non-null savedInstanceState`() {
         val scenario = composeRule.activityRule.scenario
-        scenario.onActivity {
-            // Clearing so we can check loadLastForecast isn't called on the 2nd onCreate
-            clearInvocations(viewModel)
-        }
-
         scenario.recreate()
-        scenario.onActivity { verify(viewModel, never()).loadLastForecast() }
+        scenario.onActivity { verify(exactly = 1) { viewModel.loadLastForecast() } }
     }
 }

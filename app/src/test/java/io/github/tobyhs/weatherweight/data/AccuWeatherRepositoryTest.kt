@@ -10,6 +10,9 @@ import io.github.tobyhs.weatherweight.api.accuweather.locations.AdministrativeAr
 import io.github.tobyhs.weatherweight.api.accuweather.locations.City
 import io.github.tobyhs.weatherweight.api.accuweather.locations.Country
 
+import io.mockk.every
+import io.mockk.mockk
+
 import io.reactivex.rxjava3.core.Single
 
 import java.time.Clock
@@ -21,13 +24,10 @@ import org.hamcrest.MatcherAssert.assertThat
 
 import org.junit.Test
 
-import org.mockito.kotlin.mock
-import org.mockito.kotlin.whenever
-
 import retrofit2.Response
 
 class AccuWeatherRepositoryTest {
-    private val accuWeatherService = mock<AccuWeatherService>()
+    private val accuWeatherService = mockk<AccuWeatherService>()
     private val clock = Clock.systemUTC()
     private val repository = AccuWeatherRepository(accuWeatherService, clock)
 
@@ -35,7 +35,7 @@ class AccuWeatherRepositoryTest {
     fun getForecast_locationNotFound() {
         val citiesResponse = Response.success<List<City>>(emptyList())
         val citiesSingle = Single.just(citiesResponse)
-        whenever(accuWeatherService.searchCities("Nowhere, USA", 0)).thenReturn(citiesSingle)
+        every { accuWeatherService.searchCities("Nowhere, USA", 0) } returns citiesSingle
 
         val observer = repository.getForecast("Nowhere, USA").test()
         observer.assertError(LocationNotFoundError::class.java)
@@ -58,7 +58,7 @@ class AccuWeatherRepositoryTest {
             ),
         )
         val citiesSingle = Single.just(Response.success<List<City>>(cities))
-        whenever(accuWeatherService.searchCities("San Jose", 0)).thenReturn(citiesSingle)
+        every { accuWeatherService.searchCities("San Jose", 0) } returns citiesSingle
 
         val time = ZonedDateTime.parse("2018-01-29T12:00:00Z")
         val dailyForecasts: List<DailyForecast> = listOf(
@@ -82,8 +82,8 @@ class AccuWeatherRepositoryTest {
             ),
         )
         val response = DailyForecastResponse(dailyForecasts = dailyForecasts)
-        whenever(accuWeatherService.get5DayForecast("123456"))
-            .thenReturn(Single.just(Response.success(response)))
+        every { accuWeatherService.get5DayForecast("123456") } returns
+                Single.just(Response.success(response))
         val result = repository.getForecast("San Jose").blockingGet()
 
         assertThat(result.location, equalTo("San Jose, CA, US"))

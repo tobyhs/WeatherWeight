@@ -11,6 +11,8 @@ import io.github.tobyhs.weatherweight.api.accuweather.AccuWeatherService
 import io.github.tobyhs.weatherweight.data.AccuWeatherRepository
 import io.github.tobyhs.weatherweight.storage.FileLastForecastStore
 
+import io.mockk.mockk
+
 import java.time.LocalDate
 import java.time.ZonedDateTime
 
@@ -25,8 +27,6 @@ import org.hamcrest.MatcherAssert.assertThat
 
 import org.junit.Test
 import org.junit.runner.RunWith
-
-import org.mockito.kotlin.mock
 
 import org.robolectric.RobolectricTestRunner
 import org.robolectric.annotation.Config
@@ -58,7 +58,7 @@ class AppModuleTest {
 
     @Test
     fun provideAccuWeatherRetrofit() {
-        val client = mock<OkHttpClient>()
+        val client = mockk<OkHttpClient>()
         val retrofit = module.provideAccuWeatherRetrofit(
             client,
             module.provideMoshi(),
@@ -80,7 +80,7 @@ class AppModuleTest {
 
     @Test
     fun provideWeatherRepository() {
-        val service = mock<AccuWeatherService>()
+        val service = mockk<AccuWeatherService>()
         val repo = module.provideWeatherRepository(service)
         assertThat(repo, instanceOf(AccuWeatherRepository::class.java))
     }

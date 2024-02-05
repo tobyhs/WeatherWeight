@@ -16,6 +16,9 @@ import io.github.tobyhs.weatherweight.test.ForecastResultSetFactory
 import io.github.tobyhs.weatherweight.test.ForecastSearchFactory
 import io.github.tobyhs.weatherweight.ui.LoadState
 
+import io.mockk.every
+import io.mockk.mockk
+
 import io.reactivex.rxjava3.core.Completable
 import io.reactivex.rxjava3.core.Maybe
 import io.reactivex.rxjava3.core.Single
@@ -29,17 +32,12 @@ import org.hamcrest.MatcherAssert.assertThat
 import org.junit.Rule
 import org.junit.Test
 
-import org.mockito.Mockito.RETURNS_DEEP_STUBS
-import org.mockito.kotlin.any
-import org.mockito.kotlin.mock
-import org.mockito.kotlin.whenever
-
 class ForecastViewModelTest : BaseTestCase() {
     @get:Rule val instantTaskExecutorRule = InstantTaskExecutorRule()
 
     private val schedulerProvider: SchedulerProvider = TrampolineSchedulerProvider()
-    private val weatherRepository = mock<WeatherRepository>(defaultAnswer = RETURNS_DEEP_STUBS)
-    private val lastForecastStore = mock<LastForecastStore>(defaultAnswer = RETURNS_DEEP_STUBS)
+    private val weatherRepository = mockk<WeatherRepository>()
+    private val lastForecastStore = mockk<LastForecastStore>()
     private val viewModel = ForecastViewModel(
         schedulerProvider,
         weatherRepository,
@@ -49,7 +47,7 @@ class ForecastViewModelTest : BaseTestCase() {
     @Test
     fun `loadLastForecast when there is a previous forecast result`() {
         val forecastSearch = ForecastSearchFactory.create()
-        whenever(lastForecastStore.get()).thenReturn(Maybe.just(forecastSearch))
+        every { lastForecastStore.get() } returns Maybe.just(forecastSearch)
         viewModel.loadLastForecast()
         assertThat(viewModel.locationInput.value, equalTo(forecastSearch.input))
         val forecastResultSet = forecastSearch.forecastResultSet
@@ -59,14 +57,14 @@ class ForecastViewModelTest : BaseTestCase() {
     @Test
     fun `loadLastForecast when there is an error`() {
         val error = Exception("LastForecastStore error")
-        whenever(lastForecastStore.get()).thenReturn(Maybe.error(error))
+        every { lastForecastStore.get() } returns Maybe.error(error)
         viewModel.loadLastForecast()
         assertThat(viewModel.forecastState.value, equalTo(LoadState.Error(error)))
     }
 
     @Test
     fun `loadLastForecast when there is no previous forecast result`() {
-        whenever(lastForecastStore.get()).thenReturn(Maybe.empty())
+        every { lastForecastStore.get() } returns Maybe.empty()
         viewModel.loadLastForecast()
         assertThat(viewModel.locationInput.value, equalTo(""))
         assertThat(viewModel.forecastState.value, nullValue())
@@ -76,7 +74,7 @@ class ForecastViewModelTest : BaseTestCase() {
     fun `search on success`() {
         val location = "San Francisco, CA"
         val forecastResultSet = ForecastResultSetFactory.create()
-        whenever(weatherRepository.getForecast(location)).thenReturn(Single.just(forecastResultSet))
+        every { weatherRepository.getForecast(location) } returns Single.just(forecastResultSet)
         viewModel.locationInput.value = location
 
         var completableSubscribed = false
@@ -85,7 +83,7 @@ class ForecastViewModelTest : BaseTestCase() {
             input = location,
             forecastResultSet = forecastResultSet,
         )
-        whenever(lastForecastStore.save(forecastSearch)).thenReturn(saveCompletable)
+        every { lastForecastStore.save(forecastSearch) } returns saveCompletable
 
         val forecastStates = searchAndObserveForecastStates()
         assertThat(forecastStates.size, equalTo(2))
@@ -110,7 +108,7 @@ class ForecastViewModelTest : BaseTestCase() {
     fun `search on error`() {
         val location = "Parts Unknown"
         val error = LocationNotFoundError(location)
-        whenever(weatherRepository.getForecast(location)).thenReturn(Single.error(error))
+        every { weatherRepository.getForecast(location) } returns Single.error(error)
         viewModel.locationInput.value = location
 
         val forecastStates = searchAndObserveForecastStates()
@@ -122,12 +120,12 @@ class ForecastViewModelTest : BaseTestCase() {
     @Test
     fun onCleared() {
         val loadLastForecastDisposable = Disposable.empty()
-        whenever(
+        every {
             lastForecastStore.get()
                 .subscribeOn(schedulerProvider.io())
                 .observeOn(schedulerProvider.ui())
                 .subscribe(any(), any())
-        ).thenReturn(loadLastForecastDisposable)
+        } returns loadLastForecastDisposable
         viewModel.loadLastForecast()
 
         val getForecastDisposable = Disposable.empty()
@@ -162,11 +160,11 @@ class ForecastViewModelTest : BaseTestCase() {
     ) {
         val location = "Stub City, CA"
         viewModel.locationInput.value = location
-        whenever(
+        every {
             weatherRepository.getForecast(location)
                 .subscribeOn(schedulerProvider.io())
                 .observeOn(schedulerProvider.ui())
                 .subscribe(any(), any())
-        ).thenReturn(disposableToReturn, *otherDisposablesToReturn)
+        } returnsMany listOf(disposableToReturn, *otherDisposablesToReturn)
     }
 }

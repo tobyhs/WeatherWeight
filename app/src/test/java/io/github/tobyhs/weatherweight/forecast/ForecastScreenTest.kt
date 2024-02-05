@@ -23,6 +23,11 @@ import io.github.tobyhs.weatherweight.test.BaseTestCase
 import io.github.tobyhs.weatherweight.test.ForecastResultSetFactory
 import io.github.tobyhs.weatherweight.ui.LoadState
 
+import io.mockk.every
+import io.mockk.justRun
+import io.mockk.mockk
+import io.mockk.verify
+
 import org.hamcrest.CoreMatchers.allOf
 import org.hamcrest.CoreMatchers.equalTo
 import org.hamcrest.MatcherAssert.assertThat
@@ -31,10 +36,6 @@ import org.junit.Rule
 import org.junit.Test
 import org.junit.runner.RunWith
 
-import org.mockito.kotlin.doReturn
-import org.mockito.kotlin.mock
-import org.mockito.kotlin.verify
-
 @RunWith(AndroidJUnit4::class)
 class ForecastScreenTest : BaseTestCase() {
     @get:Rule
@@ -42,9 +43,9 @@ class ForecastScreenTest : BaseTestCase() {
 
     private val locationInputLiveData: MutableLiveData<String> = MutableLiveData("")
     private val forecastStateLiveData: MutableLiveData<LoadState<ForecastResultSet>> = MutableLiveData()
-    private val viewModel: ForecastViewModel = mock {
-        on { locationInput } doReturn locationInputLiveData
-        on { forecastState } doReturn forecastStateLiveData
+    private val viewModel = mockk<ForecastViewModel> {
+        every { locationInput } returns locationInputLiveData
+        every { forecastState } returns forecastStateLiveData
     }
 
     @Test
@@ -72,8 +73,9 @@ class ForecastScreenTest : BaseTestCase() {
         locationInputNode.performTextInput(location)
         assertThat(locationInputLiveData.value, equalTo(location))
 
+        justRun { viewModel.search() }
         locationInputNode.performImeAction()
-        verify(viewModel).search()
+        verify { viewModel.search() }
     }
 
     @Test
@@ -83,8 +85,9 @@ class ForecastScreenTest : BaseTestCase() {
             ForecastScreen(viewModel)
             buttonContentDescription = stringResource(R.string.submitLocation)
         }
+        justRun { viewModel.search() }
         composeRule.onNodeWithContentDescription(buttonContentDescription).performClick()
-        verify(viewModel).search()
+        verify { viewModel.search() }
     }
 
     @Test
