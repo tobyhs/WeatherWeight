@@ -11,7 +11,6 @@ import io.github.tobyhs.weatherweight.data.WeatherRepository
 import io.github.tobyhs.weatherweight.data.model.ForecastResultSet
 import io.github.tobyhs.weatherweight.data.model.ForecastSearch
 import io.github.tobyhs.weatherweight.storage.LastForecastStore
-import io.github.tobyhs.weatherweight.test.BaseTestCase
 import io.github.tobyhs.weatherweight.test.ForecastResultSetFactory
 import io.github.tobyhs.weatherweight.test.ForecastSearchFactory
 import io.github.tobyhs.weatherweight.ui.LoadState
@@ -32,7 +31,7 @@ import org.hamcrest.MatcherAssert.assertThat
 import org.junit.Rule
 import org.junit.Test
 
-class ForecastViewModelTest : BaseTestCase() {
+class ForecastViewModelTest {
     @get:Rule val instantTaskExecutorRule = InstantTaskExecutorRule()
 
     private val schedulerProvider: SchedulerProvider = TrampolineSchedulerProvider()

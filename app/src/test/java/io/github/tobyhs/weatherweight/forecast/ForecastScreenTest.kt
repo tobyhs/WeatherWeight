@@ -19,7 +19,6 @@ import androidx.test.ext.junit.runners.AndroidJUnit4
 
 import io.github.tobyhs.weatherweight.R
 import io.github.tobyhs.weatherweight.data.model.ForecastResultSet
-import io.github.tobyhs.weatherweight.test.BaseTestCase
 import io.github.tobyhs.weatherweight.test.ForecastResultSetFactory
 import io.github.tobyhs.weatherweight.ui.LoadState
 
@@ -37,7 +36,7 @@ import org.junit.Test
 import org.junit.runner.RunWith
 
 @RunWith(AndroidJUnit4::class)
-class ForecastScreenTest : BaseTestCase() {
+class ForecastScreenTest {
     @get:Rule
     val composeRule = createComposeRule()
 
