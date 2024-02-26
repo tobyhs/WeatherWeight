@@ -1,7 +1,7 @@
 plugins {
     id 'com.android.application'
     id 'com.google.dagger.hilt.android'
-    id 'org.jetbrains.kotlin.kapt'
+    id 'com.google.devtools.ksp'
     id 'org.jetbrains.kotlin.android'
 }
 
@@ -66,10 +66,6 @@ android {
     }
 }
 
-kapt {
-    correctErrorTypes true
-}
-
 dependencies {
     implementation fileTree(dir: 'libs', include: ['*.jar'])
 
@@ -96,15 +92,15 @@ dependencies {
     [
             "com.google.dagger:hilt-compiler:$daggerVersion",
     ].each {
-        kapt it
-        kaptTest it
+        ksp it
+        kspTest it
     }
     implementation "com.google.dagger:hilt-android:$daggerVersion"
     testImplementation "com.google.dagger:hilt-android-testing:$daggerVersion"
 
     final moshiVersion = '1.15.0'
     implementation "com.squareup.moshi:moshi:$moshiVersion"
-    kapt "com.squareup.moshi:moshi-kotlin-codegen:$moshiVersion"
+    ksp "com.squareup.moshi:moshi-kotlin-codegen:$moshiVersion"
 
     implementation 'io.reactivex.rxjava3:rxjava:3.0.6'
     implementation 'io.reactivex.rxjava3:rxandroid:3.0.0'
