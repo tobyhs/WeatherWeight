@@ -71,7 +71,7 @@ dependencies {
 
     implementation "org.jetbrains.kotlin:kotlin-stdlib:$kotlinVersion"
 
-    final composeBom = platform('androidx.compose:compose-bom:2023.03.00')
+    final composeBom = platform('androidx.compose:compose-bom:2024.08.00')
     implementation composeBom
     testImplementation composeBom
     implementation 'androidx.compose.material3:material3'
@@ -80,12 +80,12 @@ dependencies {
     debugImplementation 'androidx.compose.ui:ui-test-manifest'
     debugImplementation 'androidx.compose.ui:ui-tooling'
 
-    final activityVersion = '1.8.2'
+    final activityVersion = '1.9.1'
     implementation "androidx.activity:activity-compose:$activityVersion"
     implementation "androidx.activity:activity-ktx:$activityVersion"
-    implementation 'androidx.annotation:annotation:1.7.1'
-    implementation 'androidx.appcompat:appcompat:1.6.1'
-    final lifecycleVersion = '2.7.0'
+    implementation 'androidx.annotation:annotation:1.8.2'
+    implementation 'androidx.appcompat:appcompat:1.7.0'
+    final lifecycleVersion = '2.8.4'
     implementation "androidx.lifecycle:lifecycle-livedata-ktx:$lifecycleVersion"
     implementation "androidx.lifecycle:lifecycle-viewmodel-ktx:$lifecycleVersion"
 
@@ -115,11 +115,11 @@ dependencies {
 
     testImplementation 'androidx.arch.core:core-testing:2.2.0'
     testImplementation 'androidx.compose.ui:ui-test-junit4'
-    testImplementation 'androidx.test:core:1.5.0'
-    final espressoVersion = '3.5.1'
+    testImplementation 'androidx.test:core:1.6.1'
+    final espressoVersion = '3.6.1'
     testImplementation "androidx.test.espresso:espresso-core:$espressoVersion"
     testImplementation "androidx.test.espresso:espresso-intents:$espressoVersion"
-    testImplementation 'androidx.test.ext:junit:1.1.5'
+    testImplementation 'androidx.test.ext:junit:1.2.1'
 
     final accompanistVersion = '0.30.0'
     testImplementation "com.google.accompanist:accompanist-testharness:$accompanistVersion"
