@@ -3,13 +3,13 @@
 buildscript {
     ext {
         daggerVersion = '2.49'
-        kotlinVersion = '1.9.20'
+        kotlinVersion = '1.9.21'
     }
 }
 
 plugins {
     id 'com.android.application' version '8.5.2' apply false
     id 'com.google.dagger.hilt.android' version "$daggerVersion" apply false
-    id 'com.google.devtools.ksp' version '1.9.20-1.0.14' apply false
+    id 'com.google.devtools.ksp' version '1.9.21-1.0.16' apply false
     id 'org.jetbrains.kotlin.android' version "$kotlinVersion" apply false
 }
