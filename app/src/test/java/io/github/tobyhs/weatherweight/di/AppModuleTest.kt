@@ -7,8 +7,11 @@ import com.github.tobyhs.rxsecretary.android.AndroidSchedulerProvider
 
 import io.github.tobyhs.weatherweight.App
 import io.github.tobyhs.weatherweight.api.accuweather.AccuWeatherApiKeyInterceptor
+import io.github.tobyhs.weatherweight.api.accuweather.AccuWeatherCoroutinesService
 import io.github.tobyhs.weatherweight.api.accuweather.AccuWeatherService
+import io.github.tobyhs.weatherweight.data.AccuWeatherCoroutinesRepository
 import io.github.tobyhs.weatherweight.data.AccuWeatherRepository
+import io.github.tobyhs.weatherweight.storage.FileLastForecastCoroutinesStore
 import io.github.tobyhs.weatherweight.storage.FileLastForecastStore
 
 import io.mockk.mockk
@@ -94,6 +97,26 @@ class AppModuleTest {
         val fileLastForecastStore = store as FileLastForecastStore
         assertThat(fileLastForecastStore.directory, equalTo(app.cacheDir))
         assertThat(fileLastForecastStore.moshi, equalTo(moshi))
+    }
+
+    @Test
+    fun provideAccuWeatherCoroutinesService() {
+        val retrofit = Retrofit.Builder().baseUrl("http://localhost/").build()
+        assertThat(module.provideAccuWeatherCoroutinesService(retrofit), notNullValue())
+    }
+
+    @Test
+    fun provideWeatherCoroutinesRepository() {
+        val service = mockk<AccuWeatherCoroutinesService>()
+        val repo = module.provideWeatherCoroutinesRepository(service)
+        assertThat(repo, instanceOf(AccuWeatherCoroutinesRepository::class.java))
+    }
+
+    @Test
+    fun provideLastForecastCoroutinesStore() {
+        val moshi = module.provideMoshi()
+        val store = module.provideLastForecastCoroutinesStore(app, moshi)
+        assertThat(store, instanceOf(FileLastForecastCoroutinesStore::class.java))
     }
 
     @Test
