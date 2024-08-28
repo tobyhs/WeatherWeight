@@ -3,139 +3,117 @@ package io.github.tobyhs.weatherweight.forecast
 import androidx.arch.core.executor.testing.InstantTaskExecutorRule
 import androidx.lifecycle.Observer
 
-import com.github.tobyhs.rxsecretary.SchedulerProvider
-import com.github.tobyhs.rxsecretary.TrampolineSchedulerProvider
-
 import io.github.tobyhs.weatherweight.data.LocationNotFoundError
-import io.github.tobyhs.weatherweight.data.WeatherRepository
+import io.github.tobyhs.weatherweight.data.WeatherCoroutinesRepository
 import io.github.tobyhs.weatherweight.data.model.ForecastResultSet
 import io.github.tobyhs.weatherweight.data.model.ForecastSearch
-import io.github.tobyhs.weatherweight.storage.LastForecastStore
+import io.github.tobyhs.weatherweight.storage.LastForecastCoroutinesStore
 import io.github.tobyhs.weatherweight.test.ForecastResultSetFactory
 import io.github.tobyhs.weatherweight.test.ForecastSearchFactory
 import io.github.tobyhs.weatherweight.ui.LoadState
 
-import io.mockk.every
+import io.mockk.coEvery
+import io.mockk.coJustRun
+import io.mockk.coVerify
 import io.mockk.mockk
 
-import io.reactivex.rxjava3.core.Completable
-import io.reactivex.rxjava3.core.Maybe
-import io.reactivex.rxjava3.core.Single
-import io.reactivex.rxjava3.disposables.Disposable
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.ExperimentalCoroutinesApi
+import kotlinx.coroutines.test.StandardTestDispatcher
+import kotlinx.coroutines.test.advanceUntilIdle
+import kotlinx.coroutines.test.resetMain
+import kotlinx.coroutines.test.runTest
+import kotlinx.coroutines.test.setMain
 
 import org.hamcrest.CoreMatchers.equalTo
 import org.hamcrest.CoreMatchers.instanceOf
 import org.hamcrest.CoreMatchers.nullValue
 import org.hamcrest.MatcherAssert.assertThat
 
+import org.junit.After
+import org.junit.Before
 import org.junit.Rule
 import org.junit.Test
 
+@OptIn(ExperimentalCoroutinesApi::class)
 class ForecastViewModelTest {
     @get:Rule val instantTaskExecutorRule = InstantTaskExecutorRule()
 
-    private val schedulerProvider: SchedulerProvider = TrampolineSchedulerProvider()
-    private val weatherRepository = mockk<WeatherRepository>()
-    private val lastForecastStore = mockk<LastForecastStore>()
-    private val viewModel = ForecastViewModel(
-        schedulerProvider,
-        weatherRepository,
-        lastForecastStore,
-    )
+    private val testDispatcher = StandardTestDispatcher()
+    private val weatherRepository = mockk<WeatherCoroutinesRepository>()
+    private val lastForecastStore = mockk<LastForecastCoroutinesStore>()
+    private val viewModel = ForecastViewModel(weatherRepository, lastForecastStore)
+
+    @Before
+    fun setup() {
+        Dispatchers.setMain(testDispatcher)
+    }
+
+    @After
+    fun teardown() {
+        Dispatchers.resetMain()
+    }
 
     @Test
-    fun `loadLastForecast when there is a previous forecast result`() {
+    fun `loadLastForecast when there is a previous forecast result`() = runTest(testDispatcher) {
         val forecastSearch = ForecastSearchFactory.create()
-        every { lastForecastStore.get() } returns Maybe.just(forecastSearch)
+        coEvery { lastForecastStore.get() } returns forecastSearch
         viewModel.loadLastForecast()
+        advanceUntilIdle()
         assertThat(viewModel.locationInput.value, equalTo(forecastSearch.input))
         val forecastResultSet = forecastSearch.forecastResultSet
         assertThat(viewModel.forecastState.value, equalTo(LoadState.Content(forecastResultSet)))
     }
 
     @Test
-    fun `loadLastForecast when there is an error`() {
+    fun `loadLastForecast when there is an error`() = runTest(testDispatcher) {
         val error = Exception("LastForecastStore error")
-        every { lastForecastStore.get() } returns Maybe.error(error)
+        coEvery { lastForecastStore.get() } throws error
         viewModel.loadLastForecast()
+        advanceUntilIdle()
         assertThat(viewModel.forecastState.value, equalTo(LoadState.Error(error)))
     }
 
     @Test
-    fun `loadLastForecast when there is no previous forecast result`() {
-        every { lastForecastStore.get() } returns Maybe.empty()
+    fun `loadLastForecast when there is no previous forecast result`() = runTest(testDispatcher) {
+        coEvery { lastForecastStore.get() } returns null
         viewModel.loadLastForecast()
+        advanceUntilIdle()
         assertThat(viewModel.locationInput.value, equalTo(""))
         assertThat(viewModel.forecastState.value, nullValue())
     }
 
     @Test
-    fun `search on success`() {
+    fun `search on success`() = runTest(testDispatcher) {
         val location = "San Francisco, CA"
         val forecastResultSet = ForecastResultSetFactory.create()
-        every { weatherRepository.getForecast(location) } returns Single.just(forecastResultSet)
-        viewModel.locationInput.value = location
-
-        var completableSubscribed = false
-        val saveCompletable = Completable.complete().doOnSubscribe { completableSubscribed = true }
+        coEvery { weatherRepository.getForecast(location) } returns forecastResultSet
         val forecastSearch = ForecastSearch(
             input = location,
             forecastResultSet = forecastResultSet,
         )
-        every { lastForecastStore.save(forecastSearch) } returns saveCompletable
+        coJustRun { lastForecastStore.save(forecastSearch) }
 
+        viewModel.locationInput.value = location
         val forecastStates = searchAndObserveForecastStates()
+
         assertThat(forecastStates.size, equalTo(2))
         assertThat(forecastStates[0], instanceOf(LoadState.Loading::class.java))
         assertThat(forecastStates[1], equalTo(LoadState.Content(forecastResultSet)))
-
-        assertThat(completableSubscribed, equalTo(true))
+        coVerify(exactly = 1) { lastForecastStore.save(forecastSearch) }
     }
 
     @Test
-    fun `search when getForecastDisposable is present`() {
-        val firstGetForecastDisposable = Disposable.empty()
-        stubGetForecastChain(firstGetForecastDisposable, Disposable.empty())
-
-        viewModel.search()
-        assertThat(firstGetForecastDisposable.isDisposed, equalTo(false))
-        viewModel.search()
-        assertThat(firstGetForecastDisposable.isDisposed, equalTo(true))
-    }
-
-    @Test
-    fun `search on error`() {
+    fun `search on error`() = runTest(testDispatcher) {
         val location = "Parts Unknown"
         val error = LocationNotFoundError(location)
-        every { weatherRepository.getForecast(location) } returns Single.error(error)
+        coEvery { weatherRepository.getForecast(location) } throws error
         viewModel.locationInput.value = location
 
         val forecastStates = searchAndObserveForecastStates()
         assertThat(forecastStates.size, equalTo(2))
         assertThat(forecastStates[0], instanceOf(LoadState.Loading::class.java))
         assertThat(forecastStates[1], equalTo(LoadState.Error(error)))
-    }
-
-    @Test
-    fun onCleared() {
-        val loadLastForecastDisposable = Disposable.empty()
-        every {
-            lastForecastStore.get()
-                .subscribeOn(schedulerProvider.io())
-                .observeOn(schedulerProvider.ui())
-                .subscribe(any(), any())
-        } returns loadLastForecastDisposable
-        viewModel.loadLastForecast()
-
-        val getForecastDisposable = Disposable.empty()
-        stubGetForecastChain(getForecastDisposable)
-        viewModel.search()
-
-        assertThat(loadLastForecastDisposable.isDisposed, equalTo(false))
-        assertThat(getForecastDisposable.isDisposed, equalTo(false))
-        viewModel.onCleared()
-        assertThat(loadLastForecastDisposable.isDisposed, equalTo(true))
-        assertThat(getForecastDisposable.isDisposed, equalTo(true))
     }
 
     /**
@@ -149,21 +127,11 @@ class ForecastViewModelTest {
             forecastStates.add(forecastState)
         }
         viewModel.forecastState.observeForever(forecastStateObserver)
-        viewModel.search()
+        runTest(testDispatcher) {
+            viewModel.search()
+            advanceUntilIdle()
+        }
         viewModel.forecastState.removeObserver(forecastStateObserver)
         return forecastStates
-    }
-
-    private fun stubGetForecastChain(
-        disposableToReturn: Disposable, vararg otherDisposablesToReturn: Disposable
-    ) {
-        val location = "Stub City, CA"
-        viewModel.locationInput.value = location
-        every {
-            weatherRepository.getForecast(location)
-                .subscribeOn(schedulerProvider.io())
-                .observeOn(schedulerProvider.ui())
-                .subscribe(any(), any())
-        } returnsMany listOf(disposableToReturn, *otherDisposablesToReturn)
     }
 }
