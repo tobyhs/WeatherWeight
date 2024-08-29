@@ -3,16 +3,11 @@ package io.github.tobyhs.weatherweight.di
 import android.annotation.SuppressLint
 import androidx.test.core.app.ApplicationProvider
 
-import com.github.tobyhs.rxsecretary.android.AndroidSchedulerProvider
-
 import io.github.tobyhs.weatherweight.App
 import io.github.tobyhs.weatherweight.api.accuweather.AccuWeatherApiKeyInterceptor
 import io.github.tobyhs.weatherweight.api.accuweather.AccuWeatherCoroutinesService
-import io.github.tobyhs.weatherweight.api.accuweather.AccuWeatherService
 import io.github.tobyhs.weatherweight.data.AccuWeatherCoroutinesRepository
-import io.github.tobyhs.weatherweight.data.AccuWeatherRepository
 import io.github.tobyhs.weatherweight.storage.FileLastForecastCoroutinesStore
-import io.github.tobyhs.weatherweight.storage.FileLastForecastStore
 
 import io.mockk.mockk
 
@@ -35,7 +30,6 @@ import org.robolectric.RobolectricTestRunner
 import org.robolectric.annotation.Config
 
 import retrofit2.Retrofit
-import retrofit2.adapter.rxjava3.RxJava3CallAdapterFactory
 import retrofit2.converter.moshi.MoshiConverterFactory
 
 @RunWith(RobolectricTestRunner::class)
@@ -43,14 +37,6 @@ import retrofit2.converter.moshi.MoshiConverterFactory
 class AppModuleTest {
     private val app: App by lazy { ApplicationProvider.getApplicationContext() }
     private val module = AppModule()
-
-    @Test
-    fun provideSchedulerProvider() {
-        assertThat(
-            module.provideSchedulerProvider(),
-            instanceOf(AndroidSchedulerProvider::class.java)
-        )
-    }
 
     @Test
     fun provideAccuWeatherOkHttp() {
@@ -68,35 +54,7 @@ class AppModuleTest {
         )
         assertThat(retrofit.baseUrl().toString(), equalTo("https://dataservice.accuweather.com/"))
         assertThat(retrofit.callFactory(), equalTo(client))
-        assertThat(
-            retrofit.callAdapterFactories(),
-            hasItem(isA(RxJava3CallAdapterFactory::class.java))
-        )
         assertThat(retrofit.converterFactories(), hasItem(isA(MoshiConverterFactory::class.java)))
-    }
-
-    @Test
-    fun provideAccuWeatherService() {
-        val retrofit = Retrofit.Builder().baseUrl("http://localhost/").build()
-        assertThat(module.provideAccuWeatherService(retrofit), notNullValue())
-    }
-
-    @Test
-    fun provideWeatherRepository() {
-        val service = mockk<AccuWeatherService>()
-        val repo = module.provideWeatherRepository(service)
-        assertThat(repo, instanceOf(AccuWeatherRepository::class.java))
-    }
-
-    @Test
-    fun provideLastForecastStore() {
-        val moshi = module.provideMoshi()
-        val store = module.provideLastForecastStore(app, moshi)
-        assertThat(store, instanceOf(FileLastForecastStore::class.java))
-
-        val fileLastForecastStore = store as FileLastForecastStore
-        assertThat(fileLastForecastStore.directory, equalTo(app.cacheDir))
-        assertThat(fileLastForecastStore.moshi, equalTo(moshi))
     }
 
     @Test

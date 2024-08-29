@@ -2,9 +2,6 @@ package io.github.tobyhs.weatherweight.di
 
 import android.content.Context
 
-import com.github.tobyhs.rxsecretary.SchedulerProvider
-import com.github.tobyhs.rxsecretary.android.AndroidSchedulerProvider
-
 import com.squareup.moshi.Moshi
 
 import dagger.Module
@@ -16,17 +13,12 @@ import dagger.hilt.components.SingletonComponent
 import io.github.tobyhs.weatherweight.BuildConfig
 import io.github.tobyhs.weatherweight.api.accuweather.AccuWeatherApiKeyInterceptor
 import io.github.tobyhs.weatherweight.api.accuweather.AccuWeatherCoroutinesService
-import io.github.tobyhs.weatherweight.api.accuweather.AccuWeatherService
 import io.github.tobyhs.weatherweight.data.AccuWeatherCoroutinesRepository
-import io.github.tobyhs.weatherweight.data.AccuWeatherRepository
 import io.github.tobyhs.weatherweight.data.WeatherCoroutinesRepository
-import io.github.tobyhs.weatherweight.data.WeatherRepository
 import io.github.tobyhs.weatherweight.data.adapter.LocalDateAdapter
 import io.github.tobyhs.weatherweight.data.adapter.ZonedDateTimeAdapter
 import io.github.tobyhs.weatherweight.storage.FileLastForecastCoroutinesStore
-import io.github.tobyhs.weatherweight.storage.FileLastForecastStore
 import io.github.tobyhs.weatherweight.storage.LastForecastCoroutinesStore
-import io.github.tobyhs.weatherweight.storage.LastForecastStore
 
 import kotlinx.coroutines.Dispatchers
 
@@ -39,7 +31,6 @@ import okhttp3.Cache
 import okhttp3.OkHttpClient
 
 import retrofit2.Retrofit
-import retrofit2.adapter.rxjava3.RxJava3CallAdapterFactory
 import retrofit2.converter.moshi.MoshiConverterFactory
 
 /**
@@ -48,13 +39,6 @@ import retrofit2.converter.moshi.MoshiConverterFactory
 @Module
 @InstallIn(SingletonComponent::class)
 class AppModule {
-    /**
-     * @return RxJava scheduler provider
-     */
-    @Provides
-    @Singleton
-    fun provideSchedulerProvider(): SchedulerProvider = AndroidSchedulerProvider()
-
     /**
      * @param context application context
      * @return an OkHttp client for AccuWeather's APIs
@@ -84,40 +68,8 @@ class AppModule {
         return Retrofit.Builder()
             .baseUrl("https://dataservice.accuweather.com/")
             .client(okHttpClient)
-            .addCallAdapterFactory(RxJava3CallAdapterFactory.create())
             .addConverterFactory(MoshiConverterFactory.create(moshi))
             .build()
-    }
-
-    /**
-     * @param retrofit a Retrofit instance for AccuWeather's APIs
-     * @return Retrofit service object for querying weather info from AccuWeather's APIs
-     */
-    @Provides
-    @Singleton
-    fun provideAccuWeatherService(@Named("accuWeatherRetrofit") retrofit: Retrofit): AccuWeatherService {
-        return retrofit.create(AccuWeatherService::class.java)
-    }
-
-    /**
-     * @param service Retrofit service object for querying weather data from AccuWeather's APIs
-     * @return repository object to fetch weather data
-     */
-    @Provides
-    @Singleton
-    fun provideWeatherRepository(service: AccuWeatherService): WeatherRepository {
-        return AccuWeatherRepository(service, Clock.systemDefaultZone())
-    }
-
-    /**
-     * @param context application context
-     * @param moshi Moshi instance to serialize data
-     * @return store to save or get the last forecast
-     */
-    @Provides
-    @Singleton
-    fun provideLastForecastStore(@ApplicationContext context: Context, moshi: Moshi): LastForecastStore {
-        return FileLastForecastStore(context.cacheDir, moshi)
     }
 
     /**
