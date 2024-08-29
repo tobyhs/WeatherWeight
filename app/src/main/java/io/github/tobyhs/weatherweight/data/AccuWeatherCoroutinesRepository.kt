@@ -28,7 +28,7 @@ class AccuWeatherCoroutinesRepository(
         }
         val city = cities.first()
         val forecasts = accuWeatherService.get5DayForecast(city.key).dailyForecasts
-        return@withContext ForecastResultSet(
+        ForecastResultSet(
             location = formatCity(city),
             publicationTime = ZonedDateTime.now(clock),
             forecasts = convertDailyForecastResponse(forecasts),

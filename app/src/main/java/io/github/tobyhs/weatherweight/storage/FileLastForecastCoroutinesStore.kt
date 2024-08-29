@@ -22,9 +22,9 @@ class FileLastForecastCoroutinesStore(
 
     override suspend fun get(): ForecastSearch? = withContext(ioDispatcher) {
         if (file.exists()) {
-            return@withContext moshiAdapter.fromJson(file.readText())
+            moshiAdapter.fromJson(file.readText())
         } else {
-            return@withContext null
+            null
         }
     }
 
