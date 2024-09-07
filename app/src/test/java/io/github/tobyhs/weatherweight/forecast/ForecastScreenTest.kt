@@ -11,7 +11,6 @@ import androidx.compose.ui.test.onNodeWithTag
 import androidx.compose.ui.test.performClick
 import androidx.compose.ui.test.performImeAction
 import androidx.compose.ui.test.performTextInput
-import androidx.lifecycle.MutableLiveData
 import androidx.test.espresso.intent.Intents
 import androidx.test.espresso.intent.matcher.IntentMatchers.hasAction
 import androidx.test.espresso.intent.matcher.IntentMatchers.hasData
@@ -27,6 +26,8 @@ import io.mockk.justRun
 import io.mockk.mockk
 import io.mockk.verify
 
+import kotlinx.coroutines.flow.MutableStateFlow
+
 import org.hamcrest.CoreMatchers.allOf
 import org.hamcrest.CoreMatchers.equalTo
 import org.hamcrest.MatcherAssert.assertThat
@@ -40,17 +41,17 @@ class ForecastScreenTest {
     @get:Rule
     val composeRule = createComposeRule()
 
-    private val locationInputLiveData: MutableLiveData<String> = MutableLiveData("")
-    private val forecastStateLiveData: MutableLiveData<LoadState<ForecastResultSet>> = MutableLiveData()
+    private val locationInputFlow = MutableStateFlow("")
+    private val forecastStateFlow: MutableStateFlow<LoadState<ForecastResultSet>?> = MutableStateFlow(null)
     private val viewModel = mockk<ForecastViewModel> {
-        every { locationInput } returns locationInputLiveData
-        every { forecastState } returns forecastStateLiveData
+        every { locationInput } returns locationInputFlow
+        every { forecastState } returns forecastStateFlow
     }
 
     @Test
     fun `locationInput initially set`() {
         val location = "Initial Location"
-        locationInputLiveData.value = location
+        locationInputFlow.value = location
         lateinit var inputContentDescription: String
         composeRule.setContent {
             ForecastScreen(viewModel)
@@ -70,7 +71,7 @@ class ForecastScreenTest {
         val locationInputNode = composeRule.onNodeWithContentDescription(inputContentDescription)
         val location = "Search City"
         locationInputNode.performTextInput(location)
-        assertThat(locationInputLiveData.value, equalTo(location))
+        assertThat(locationInputFlow.value, equalTo(location))
 
         justRun { viewModel.search() }
         locationInputNode.performImeAction()
@@ -97,14 +98,14 @@ class ForecastScreenTest {
 
     @Test
     fun loading() {
-        forecastStateLiveData.value = LoadState.Loading()
+        forecastStateFlow.value = LoadState.Loading()
         setContent()
         checkLce("loading")
     }
 
     @Test
     fun content() {
-        forecastStateLiveData.value = LoadState.Content(ForecastResultSetFactory.create())
+        forecastStateFlow.value = LoadState.Content(ForecastResultSetFactory.create())
         setContent()
         checkLce("locationFound")
         ForecastScreenContentTest.checkContent(composeRule)
@@ -113,7 +114,7 @@ class ForecastScreenTest {
     @Test
     fun error() {
         val errorMessage = "Test Error"
-        forecastStateLiveData.value = LoadState.Error(Error(errorMessage))
+        forecastStateFlow.value = LoadState.Error(Error(errorMessage))
         setContent()
         checkLce("error")
         composeRule.onNodeWithTag("error").assertTextEquals(errorMessage)

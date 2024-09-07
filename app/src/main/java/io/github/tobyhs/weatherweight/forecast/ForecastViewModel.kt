@@ -1,7 +1,5 @@
 package io.github.tobyhs.weatherweight.forecast
 
-import androidx.lifecycle.LiveData
-import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 
@@ -13,6 +11,9 @@ import io.github.tobyhs.weatherweight.data.model.ForecastSearch
 import io.github.tobyhs.weatherweight.storage.LastForecastCoroutinesStore
 import io.github.tobyhs.weatherweight.ui.LoadState
 
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
 
 import javax.inject.Inject
@@ -30,11 +31,11 @@ class ForecastViewModel
     private val lastForecastStore: LastForecastCoroutinesStore,
 ) : ViewModel() {
     /** location input text */
-    val locationInput: MutableLiveData<String> = MutableLiveData("")
+    val locationInput = MutableStateFlow("")
 
-    private val _forecastState: MutableLiveData<LoadState<ForecastResultSet>> = MutableLiveData()
+    private val _forecastState: MutableStateFlow<LoadState<ForecastResultSet>?> = MutableStateFlow(null)
     /** Loading state of the forecast result */
-    val forecastState: LiveData<LoadState<ForecastResultSet>> = _forecastState
+    val forecastState: StateFlow<LoadState<ForecastResultSet>?> = _forecastState.asStateFlow()
 
     /**
      * Loads the last [ForecastSearch] that was saved when the activity first starts.
@@ -58,7 +59,7 @@ class ForecastViewModel
      */
     fun search() {
         _forecastState.value = LoadState.Loading()
-        val location = locationInput.value.toString()
+        val location = locationInput.value
 
         viewModelScope.launch {
             try {

@@ -2,7 +2,6 @@ package io.github.tobyhs.weatherweight.forecast
 
 import androidx.compose.ui.test.junit4.createAndroidComposeRule
 import androidx.compose.ui.test.onNodeWithContentDescription
-import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.viewmodel.initializer
 import androidx.lifecycle.viewmodel.viewModelFactory
 import androidx.test.ext.junit.runners.AndroidJUnit4
@@ -20,6 +19,8 @@ import io.mockk.every
 import io.mockk.mockk
 import io.mockk.verify
 
+import kotlinx.coroutines.flow.MutableStateFlow
+
 import org.junit.Rule
 import org.junit.Test
 import org.junit.runner.RunWith
@@ -32,8 +33,8 @@ class ForecastActivityTest {
     val hiltRule = HiltAndroidRule(this)
 
     private val viewModel = mockk<ForecastViewModel>(relaxed = true) {
-        every { locationInput } returns MutableLiveData("")
-        every { forecastState } returns MutableLiveData()
+        every { locationInput } returns MutableStateFlow("")
+        every { forecastState } returns MutableStateFlow(null)
     }
 
     @BindValue

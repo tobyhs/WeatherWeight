@@ -78,7 +78,6 @@ dependencies {
     implementation(composeBom)
     testImplementation(composeBom)
     implementation(libs.compose.material3)
-    implementation(libs.compose.runtime.livedata)
     implementation(libs.compose.ui.tooling.preview)
     debugImplementation(libs.compose.ui.test.manifest)
     debugImplementation(libs.compose.ui.tooling)
@@ -87,7 +86,7 @@ dependencies {
     implementation(libs.activity.ktx)
     implementation(libs.androidx.annotation)
     implementation(libs.appcompat)
-    implementation(libs.lifecycle.livedata.ktx)
+    implementation(libs.lifecycle.runtime.compose)
     implementation(libs.lifecycle.viewmodel.ktx)
 
     ksp(libs.hilt.compiler)

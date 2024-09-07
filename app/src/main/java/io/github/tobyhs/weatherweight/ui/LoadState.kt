@@ -9,7 +9,11 @@ sealed class LoadState<T> {
     /**
      * When the content is loading
      */
-    class Loading<T> : LoadState<T>()
+    class Loading<T> : LoadState<T>() {
+        override fun equals(other: Any?): Boolean = other is Loading<*>
+
+        override fun hashCode(): Int = 1
+    }
 
     /**
      * When the content was successfully loaded

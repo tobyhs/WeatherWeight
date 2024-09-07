@@ -1,7 +1,6 @@
 package io.github.tobyhs.weatherweight.forecast
 
 import androidx.arch.core.executor.testing.InstantTaskExecutorRule
-import androidx.lifecycle.Observer
 
 import io.github.tobyhs.weatherweight.data.LocationNotFoundError
 import io.github.tobyhs.weatherweight.data.WeatherCoroutinesRepository
@@ -19,14 +18,16 @@ import io.mockk.mockk
 
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.ExperimentalCoroutinesApi
+import kotlinx.coroutines.flow.toList
+import kotlinx.coroutines.launch
 import kotlinx.coroutines.test.StandardTestDispatcher
+import kotlinx.coroutines.test.UnconfinedTestDispatcher
 import kotlinx.coroutines.test.advanceUntilIdle
 import kotlinx.coroutines.test.resetMain
 import kotlinx.coroutines.test.runTest
 import kotlinx.coroutines.test.setMain
 
 import org.hamcrest.CoreMatchers.equalTo
-import org.hamcrest.CoreMatchers.instanceOf
 import org.hamcrest.CoreMatchers.nullValue
 import org.hamcrest.MatcherAssert.assertThat
 
@@ -93,13 +94,13 @@ class ForecastViewModelTest {
             forecastResultSet = forecastResultSet,
         )
         coJustRun { lastForecastStore.save(forecastSearch) }
-
         viewModel.locationInput.value = location
-        val forecastStates = searchAndObserveForecastStates()
 
-        assertThat(forecastStates.size, equalTo(2))
-        assertThat(forecastStates[0], instanceOf(LoadState.Loading::class.java))
-        assertThat(forecastStates[1], equalTo(LoadState.Content(forecastResultSet)))
+        assertThat(searchAndObserveForecastStates(), equalTo(listOf(
+            null,
+            LoadState.Loading(),
+            LoadState.Content(forecastResultSet),
+        )))
         coVerify(exactly = 1) { lastForecastStore.save(forecastSearch) }
     }
 
@@ -110,10 +111,11 @@ class ForecastViewModelTest {
         coEvery { weatherRepository.getForecast(location) } throws error
         viewModel.locationInput.value = location
 
-        val forecastStates = searchAndObserveForecastStates()
-        assertThat(forecastStates.size, equalTo(2))
-        assertThat(forecastStates[0], instanceOf(LoadState.Loading::class.java))
-        assertThat(forecastStates[1], equalTo(LoadState.Error(error)))
+        assertThat(searchAndObserveForecastStates(), equalTo(listOf(
+            null,
+            LoadState.Loading(),
+            LoadState.Error(error),
+        )))
     }
 
     /**
@@ -121,17 +123,15 @@ class ForecastViewModelTest {
      *
      * @return the [ForecastViewModel.forecastState] values that were emitted
      */
-    private fun searchAndObserveForecastStates(): List<LoadState<ForecastResultSet>> {
-        val forecastStates = mutableListOf<LoadState<ForecastResultSet>>()
-        val forecastStateObserver = Observer<LoadState<ForecastResultSet>> { forecastState ->
-            forecastStates.add(forecastState)
-        }
-        viewModel.forecastState.observeForever(forecastStateObserver)
+    private fun searchAndObserveForecastStates(): List<LoadState<ForecastResultSet>?> {
+        val forecastStates = mutableListOf<LoadState<ForecastResultSet>?>()
         runTest(testDispatcher) {
+            backgroundScope.launch(UnconfinedTestDispatcher(testScheduler)) {
+                viewModel.forecastState.toList(forecastStates)
+            }
             viewModel.search()
             advanceUntilIdle()
         }
-        viewModel.forecastState.removeObserver(forecastStateObserver)
         return forecastStates
     }
 }
