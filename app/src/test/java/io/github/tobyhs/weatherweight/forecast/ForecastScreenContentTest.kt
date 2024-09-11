@@ -33,7 +33,7 @@ class ForecastScreenContentTest {
             composeRule.onNodeWithTag("publicationTime")
                 .assertTextEquals("Fri, 1 Feb 2019 12:00:00 GMT")
 
-            ForecastCardTest.checkContent(composeRule)
+            DailyForecastCardTest.checkContent(composeRule)
             composeRule.onAllNodesWithTag("dayOfWeek")[1].assertTextEquals("Sat")
             composeRule.onAllNodesWithTag("date")[1].assertTextEquals("Feb 2")
             composeRule.onAllNodesWithTag("lowTemperature")[1].assertTextEquals("58")

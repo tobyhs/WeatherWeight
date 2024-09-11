@@ -31,7 +31,7 @@ import java.util.Locale
  */
 @OptIn(ExperimentalLayoutApi::class)
 @Composable
-fun ForecastCard(forecast: DailyForecast) {
+fun DailyForecastCard(forecast: DailyForecast) {
     val locale = Locale.getDefault()
 
     Card(Modifier.fillMaxWidth().padding(dimensionResource(R.dimen.forecast_card_padding))) {
@@ -92,7 +92,7 @@ fun ForecastCard(forecast: DailyForecast) {
 
 internal val DATE_FORMATTER: DateTimeFormatter = DateTimeFormatter.ofPattern("MMM d")
 
-internal val previewDataForecasts = listOf(
+internal val previewDataDailyForecasts = listOf(
     DailyForecast(
         date = LocalDate.parse("2023-01-15"),
         low = 45,
@@ -132,6 +132,6 @@ internal val previewDataForecasts = listOf(
 
 @Preview
 @Composable
-private fun ForecastCardPreview() {
-    ForecastCard(previewDataForecasts[0])
+private fun DailyForecastCardPreview() {
+    DailyForecastCard(previewDataDailyForecasts[0])
 }

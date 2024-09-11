@@ -13,13 +13,13 @@ import org.junit.Test
 import org.junit.runner.RunWith
 
 @RunWith(AndroidJUnit4::class)
-class ForecastCardTest {
+class DailyForecastCardTest {
     @get:Rule val composeRule = createComposeRule()
 
     @Test
     fun compose() {
         composeRule.setContent {
-            ForecastCard(ForecastResultSetFactory.createDailyForecasts()[0])
+            DailyForecastCard(ForecastResultSetFactory.createDailyForecasts()[0])
         }
 
         checkContent(composeRule)
