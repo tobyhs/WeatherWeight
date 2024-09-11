@@ -31,7 +31,7 @@ class AccuWeatherCoroutinesRepository(
         ForecastResultSet(
             location = formatCity(city),
             publicationTime = ZonedDateTime.now(clock),
-            forecasts = convertDailyForecastResponse(forecasts),
+            dailyForecasts = convertDailyForecastResponse(forecasts),
         )
     }
 

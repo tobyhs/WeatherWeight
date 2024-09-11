@@ -16,13 +16,13 @@ object ForecastResultSetFactory {
     fun create(): ForecastResultSet = ForecastResultSet(
         location = "Oakland, CA, US",
         publicationTime = ZonedDateTime.parse("2019-02-01T12:00:00Z"),
-        forecasts = createForecasts()
+        dailyForecasts = createDailyForecasts()
     )
 
     /**
      * @return a list of daily forecasts for testing
      */
-    fun createForecasts(): List<DailyForecast> = listOf(
+    fun createDailyForecasts(): List<DailyForecast> = listOf(
         DailyForecast(
             date = LocalDate.parse("2019-02-01"),
             low = 60,

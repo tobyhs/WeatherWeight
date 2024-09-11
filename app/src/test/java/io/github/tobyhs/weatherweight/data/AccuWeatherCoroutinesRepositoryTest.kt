@@ -94,16 +94,16 @@ class AccuWeatherCoroutinesRepositoryTest {
             result.publicationTime.until(ZonedDateTime.now(clock), ChronoUnit.MINUTES),
             equalTo(0L)
         )
-        assertThat(result.forecasts.size, equalTo(2))
+        assertThat(result.dailyForecasts.size, equalTo(2))
 
-        var dailyForecast = result.forecasts[0]
+        var dailyForecast = result.dailyForecasts[0]
         assertThat(dailyForecast.date.toString(), equalTo("2018-01-29"))
         assertThat(dailyForecast.low, equalTo(50))
         assertThat(dailyForecast.high, equalTo(60))
         assertThat(dailyForecast.text, equalTo("Sunny"))
         assertThat(dailyForecast.precipitationProbability, equalTo(1))
 
-        dailyForecast = result.forecasts[1]
+        dailyForecast = result.dailyForecasts[1]
         assertThat(dailyForecast.date.toString(), equalTo("2018-01-30"))
         assertThat(dailyForecast.low, equalTo(52))
         assertThat(dailyForecast.high, equalTo(62))

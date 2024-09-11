@@ -19,7 +19,7 @@ class ForecastCardTest {
     @Test
     fun compose() {
         composeRule.setContent {
-            ForecastCard(ForecastResultSetFactory.createForecasts()[0])
+            ForecastCard(ForecastResultSetFactory.createDailyForecasts()[0])
         }
 
         checkContent(composeRule)
