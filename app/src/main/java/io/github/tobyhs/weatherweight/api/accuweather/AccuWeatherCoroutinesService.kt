@@ -1,6 +1,7 @@
 package io.github.tobyhs.weatherweight.api.accuweather
 
 import io.github.tobyhs.weatherweight.api.accuweather.forecasts.DailyForecastResponse
+import io.github.tobyhs.weatherweight.api.accuweather.forecasts.HourlyForecast
 import io.github.tobyhs.weatherweight.api.accuweather.locations.City
 
 import retrofit2.http.GET
@@ -29,4 +30,13 @@ interface AccuWeatherCoroutinesService {
      */
     @GET("forecasts/v1/daily/5day/{locationKey}?details=true")
     suspend fun get5DayForecast(@Path("locationKey") locationKey: String): DailyForecastResponse
+
+    /**
+     * Retrieves a 12-hour hourly forecast for the given location
+     *
+     * @param locationKey key of a city/location from AccuWeather's Locations API
+     * @return a 12-hour forecast
+     */
+    @GET("forecasts/v1/hourly/12hour/{locationKey}")
+    suspend fun get12HourForecast(@Path("locationKey") locationKey: String): List<HourlyForecast>
 }

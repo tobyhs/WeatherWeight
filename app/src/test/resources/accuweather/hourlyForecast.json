@@ -1,0 +1,16 @@
+{
+    "DateTime": "2024-09-12T04:00:00-07:00",
+    "EpochDateTime": 1726138800,
+    "WeatherIcon": 34,
+    "IconPhrase": "Mostly clear",
+    "HasPrecipitation": false,
+    "IsDaylight": false,
+    "Temperature": {
+        "Value": 58.0,
+        "Unit": "F",
+        "UnitType": 18
+    },
+    "PrecipitationProbability": 3,
+    "MobileLink": "http://www.accuweather.com/en/us/san-francisco-ca/94103/hourly-weather-forecast/347629?day=2&hbhhour=4&lang=en-us",
+    "Link": "http://www.accuweather.com/en/us/san-francisco-ca/94103/hourly-weather-forecast/347629?day=2&hbhhour=4&lang=en-us"
+}
