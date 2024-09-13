@@ -41,6 +41,7 @@ internal val previewDataForecastResultSet = ForecastResultSet(
     location = "Some City, ST",
     publicationTime = ZonedDateTime.of(2023, 1, 15, 12, 30, 0, 0, ZoneId.systemDefault()),
     dailyForecasts = previewDataDailyForecasts,
+    hourlyForecasts = emptyList(),
 )
 
 @Preview

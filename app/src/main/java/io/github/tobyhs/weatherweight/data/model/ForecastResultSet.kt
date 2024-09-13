@@ -16,4 +16,5 @@ data class ForecastResultSet(
     val location: String,
     val publicationTime: ZonedDateTime,
     val dailyForecasts: List<DailyForecast>,
+    val hourlyForecasts: List<HourlyForecast>,
 )

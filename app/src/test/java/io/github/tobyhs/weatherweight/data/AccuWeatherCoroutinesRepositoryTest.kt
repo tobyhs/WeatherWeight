@@ -9,6 +9,7 @@ import io.github.tobyhs.weatherweight.api.accuweather.forecasts.TemperatureRange
 import io.github.tobyhs.weatherweight.api.accuweather.locations.AdministrativeArea
 import io.github.tobyhs.weatherweight.api.accuweather.locations.City
 import io.github.tobyhs.weatherweight.api.accuweather.locations.Country
+import io.github.tobyhs.weatherweight.data.model.HourlyForecast
 
 import io.mockk.coEvery
 import io.mockk.mockk
@@ -48,9 +49,10 @@ class AccuWeatherCoroutinesRepositoryTest {
 
     @Test
     fun getForecast() = runTest(testDispatcher) {
+        val locationKey = "123456"
         val cities: List<City> = listOf(
             City(
-                key = "123456",
+                key = locationKey,
                 localizedName = "San Jose",
                 administrativeArea = AdministrativeArea(id = "CA"),
                 country = Country(id = "US"),
@@ -64,7 +66,7 @@ class AccuWeatherCoroutinesRepositoryTest {
         )
         coEvery { accuWeatherService.searchCities("San Jose", 0) } returns cities
 
-        val time = ZonedDateTime.parse("2018-01-29T12:00:00Z")
+        val time = ZonedDateTime.parse("2018-01-29T12:30:00Z")
         val dailyForecasts: List<DailyForecast> = listOf(
             DailyForecast(
                 date = time,
@@ -85,8 +87,18 @@ class AccuWeatherCoroutinesRepositoryTest {
                 night = DayPeriod(iconPhrase = "Showers", precipitationProbability = 50),
             ),
         )
-        val response = DailyForecastResponse(dailyForecasts = dailyForecasts)
-        coEvery { accuWeatherService.get5DayForecast("123456") } returns response
+        val dailyForecastResponse = DailyForecastResponse(dailyForecasts = dailyForecasts)
+        coEvery { accuWeatherService.get5DayForecast(locationKey) } returns dailyForecastResponse
+
+        val hourlyTime = ZonedDateTime.parse("2018-01-29T13:00:00Z")
+        coEvery { accuWeatherService.get12HourForecast(locationKey) } returns listOf(
+            io.github.tobyhs.weatherweight.api.accuweather.forecasts.HourlyForecast(
+                dateTime = hourlyTime,
+                iconPhrase = "Mostly sunny",
+                temperature = Temperature(value = 55.0),
+                precipitationProbability = 1,
+            )
+        )
         val result = repository.getForecast("San Jose")
 
         assertThat(result.location, equalTo("San Jose, CA, US"))
@@ -109,5 +121,14 @@ class AccuWeatherCoroutinesRepositoryTest {
         assertThat(dailyForecast.high, equalTo(62))
         assertThat(dailyForecast.text, equalTo("Cloudy / Showers"))
         assertThat(dailyForecast.precipitationProbability, equalTo(70))
+
+        assertThat(result.hourlyForecasts, equalTo(listOf(
+            HourlyForecast(
+                dateTime = hourlyTime,
+                text = "Mostly sunny",
+                temperature = 55,
+                precipitationProbability = 1,
+            )
+        )))
     }
 }

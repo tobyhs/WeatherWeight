@@ -4,14 +4,17 @@ import io.github.tobyhs.weatherweight.api.accuweather.AccuWeatherCoroutinesServi
 import io.github.tobyhs.weatherweight.api.accuweather.locations.City
 import io.github.tobyhs.weatherweight.data.model.DailyForecast
 import io.github.tobyhs.weatherweight.data.model.ForecastResultSet
+import io.github.tobyhs.weatherweight.data.model.HourlyForecast
 
 import kotlinx.coroutines.CoroutineDispatcher
+import kotlinx.coroutines.async
 import kotlinx.coroutines.withContext
 
 import java.time.Clock
 import java.time.ZonedDateTime
 
 import kotlin.math.max
+import kotlin.math.roundToInt
 
 /**
  * Implementation of [WeatherCoroutinesRepository] that uses AccuWeather's APIs
@@ -27,11 +30,14 @@ class AccuWeatherCoroutinesRepository(
             throw LocationNotFoundError(location)
         }
         val city = cities.first()
-        val forecasts = accuWeatherService.get5DayForecast(city.key).dailyForecasts
+
+        val dailyForecastsResponse = async { accuWeatherService.get5DayForecast(city.key) }
+        val hourlyForecasts = async { accuWeatherService.get12HourForecast(city.key) }
         ForecastResultSet(
             location = formatCity(city),
             publicationTime = ZonedDateTime.now(clock),
-            dailyForecasts = convertDailyForecastResponse(forecasts),
+            dailyForecasts = convertDailyForecasts(dailyForecastsResponse.await().dailyForecasts),
+            hourlyForecasts = convertHourlyForecasts(hourlyForecasts.await()),
         )
     }
 
@@ -51,7 +57,7 @@ class AccuWeatherCoroutinesRepository(
      * @param dailyForecasts daily forecasts from AccuWeather's Forecasts API
      * @return converted daily forecasts
      */
-    private fun convertDailyForecastResponse(
+    private fun convertDailyForecasts(
         dailyForecasts: List<io.github.tobyhs.weatherweight.api.accuweather.forecasts.DailyForecast>
     ): List<DailyForecast> {
         return dailyForecasts.map { forecast ->
@@ -62,8 +68,8 @@ class AccuWeatherCoroutinesRepository(
             }
             DailyForecast(
                 date = forecast.date.toLocalDate(),
-                low = forecast.temperature.minimum.value.toInt(),
-                high = forecast.temperature.maximum.value.toInt(),
+                low = forecast.temperature.minimum.value.roundToInt(),
+                high = forecast.temperature.maximum.value.roundToInt(),
                 text = text,
                 precipitationProbability = max(
                     forecast.day.precipitationProbability,
@@ -71,5 +77,16 @@ class AccuWeatherCoroutinesRepository(
                 ),
             )
         }
+    }
+
+    private fun convertHourlyForecasts(
+        hourlyForecasts: List<io.github.tobyhs.weatherweight.api.accuweather.forecasts.HourlyForecast>
+    ): List<HourlyForecast> = hourlyForecasts.map { forecast ->
+        HourlyForecast(
+            dateTime = forecast.dateTime,
+            text = forecast.iconPhrase,
+            temperature = forecast.temperature.value.roundToInt(),
+            precipitationProbability = forecast.precipitationProbability,
+        )
     }
 }
