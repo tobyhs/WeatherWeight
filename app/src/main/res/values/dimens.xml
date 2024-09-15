@@ -9,4 +9,6 @@
     <dimen name="forecast_card_precipitation_probability_width">48dp</dimen>
     <dimen name="forecast_card_description_spacing">16dp</dimen>
     <dimen name="forecast_card_description_min_width">180dp</dimen>
+
+    <dimen name="hourly_forecast_card_hour_width">40dp</dimen>
 </resources>
