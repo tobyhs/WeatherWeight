@@ -2,6 +2,7 @@ package io.github.tobyhs.weatherweight.forecast
 
 import androidx.compose.foundation.layout.ExperimentalLayoutApi
 import androidx.compose.foundation.layout.FlowRow
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.defaultMinSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
@@ -78,7 +79,7 @@ fun DailyForecastCard(forecast: DailyForecast) {
                 textAlign = TextAlign.Right,
             )
 
-            Text("", Modifier.width(dimensionResource(R.dimen.forecast_card_description_spacing)))
+            Spacer(Modifier.width(dimensionResource(R.dimen.forecast_card_description_spacing)))
 
             Text(
                 forecast.text,
