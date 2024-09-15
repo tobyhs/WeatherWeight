@@ -15,15 +15,13 @@ import org.junit.runner.RunWith
 
 @RunWith(AndroidJUnit4::class)
 class ForecastScreenContentTest {
-    @get:Rule
-    val composeRule = createComposeRule()
+    @get:Rule val composeRule = createComposeRule()
 
     @Test
     fun compose() {
         composeRule.setContent {
             ForecastScreenContent(ForecastResultSetFactory.create())
         }
-
         checkContent(composeRule)
     }
 
@@ -34,12 +32,26 @@ class ForecastScreenContentTest {
                 .assertTextEquals("Fri, 1 Feb 2019 12:00:00 GMT")
 
             DailyForecastCardTest.checkContent(composeRule)
-            composeRule.onAllNodesWithTag("dayOfWeek")[1].assertTextEquals("Sat")
-            composeRule.onAllNodesWithTag("date")[1].assertTextEquals("Feb 2")
-            composeRule.onAllNodesWithTag("lowTemperature")[1].assertTextEquals("58")
-            composeRule.onAllNodesWithTag("highTemperature")[1].assertTextEquals("64")
-            composeRule.onAllNodesWithTag("precipitationProbability")[1].assertTextEquals("70%")
-            composeRule.onAllNodesWithTag("forecastDescription")[1].assertTextEquals("Showers")
+            listOf(
+                "dayOfWeek" to "Sat",
+                "date" to "Feb 2",
+                "lowTemperature" to "58",
+                "highTemperature" to "64",
+                "precipitationProbability" to "70%",
+                "forecastDescription" to "Showers",
+            ).forEach { (testTag, expectedText) ->
+                composeRule.onAllNodesWithTag(testTag)[1].assertTextEquals(expectedText)
+            }
+
+            HourlyForecastCardTest.checkContent(composeRule)
+            listOf(
+                "hour" to "12:00",
+                "hourlyTemperature" to "67",
+                "hourlyPrecipitationProbability" to "10%",
+                "hourlyForecastDescription" to "Cloudy",
+            ).forEach { (testTag, expectedText) ->
+                composeRule.onAllNodesWithTag(testTag)[1].assertTextEquals(expectedText)
+            }
         }
     }
 }

@@ -1,13 +1,16 @@
 package io.github.tobyhs.weatherweight.forecast
 
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
+import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.unit.dp
 
 import io.github.tobyhs.weatherweight.data.model.ForecastResultSet
 
@@ -33,6 +36,12 @@ fun ForecastScreenContent(forecastResultSet: ForecastResultSet) {
             for (forecast in forecastResultSet.dailyForecasts) {
                 DailyForecastCard(forecast)
             }
+
+            HorizontalDivider(Modifier.padding(vertical = 8.dp))
+
+            for (forecast in forecastResultSet.hourlyForecasts) {
+                HourlyForecastCard(forecast)
+            }
         }
     }
 }
@@ -41,7 +50,7 @@ internal val previewDataForecastResultSet = ForecastResultSet(
     location = "Some City, ST",
     publicationTime = ZonedDateTime.of(2023, 1, 15, 12, 30, 0, 0, ZoneId.systemDefault()),
     dailyForecasts = previewDataDailyForecasts,
-    hourlyForecasts = emptyList(),
+    hourlyForecasts = previewDataHourlyForecasts,
 )
 
 @Preview
