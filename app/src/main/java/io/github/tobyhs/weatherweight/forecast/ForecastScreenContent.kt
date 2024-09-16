@@ -4,14 +4,21 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
-import androidx.compose.material3.HorizontalDivider
+import androidx.compose.material3.ScrollableTabRow
+import androidx.compose.material3.Tab
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableIntStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.testTag
-import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.tooling.preview.PreviewScreenSizes
 import androidx.compose.ui.unit.dp
 
+import io.github.tobyhs.weatherweight.R
 import io.github.tobyhs.weatherweight.data.model.ForecastResultSet
 
 import java.time.ZoneId
@@ -32,15 +39,31 @@ fun ForecastScreenContent(forecastResultSet: ForecastResultSet) {
             modifier = Modifier.testTag("publicationTime"),
         )
 
-        Column(Modifier.verticalScroll(rememberScrollState())) {
-            for (forecast in forecastResultSet.dailyForecasts) {
-                DailyForecastCard(forecast)
+        var tabIndex by remember { mutableIntStateOf(0) }
+        val tabTitleResources = listOf(R.string.daily, R.string.hourly)
+        ScrollableTabRow(tabIndex, modifier = Modifier.padding(top = 4.dp), edgePadding = 0.dp) {
+            tabTitleResources.forEachIndexed { index, titleRes ->
+                Tab(
+                    text = { Text(stringResource(titleRes)) },
+                    modifier = Modifier.testTag("forecastTab_${index}"),
+                    selected = tabIndex == index,
+                    onClick = { tabIndex = index },
+                )
             }
+        }
 
-            HorizontalDivider(Modifier.padding(vertical = 8.dp))
-
-            for (forecast in forecastResultSet.hourlyForecasts) {
-                HourlyForecastCard(forecast)
+        Column(Modifier.verticalScroll(rememberScrollState())) {
+            when (tabTitleResources[tabIndex]) {
+                R.string.daily -> {
+                    for (forecast in forecastResultSet.dailyForecasts) {
+                        DailyForecastCard(forecast)
+                    }
+                }
+                R.string.hourly -> {
+                    for (forecast in forecastResultSet.hourlyForecasts) {
+                        HourlyForecastCard(forecast)
+                    }
+                }
             }
         }
     }
@@ -53,7 +76,7 @@ internal val previewDataForecastResultSet = ForecastResultSet(
     hourlyForecasts = previewDataHourlyForecasts,
 )
 
-@Preview
+@PreviewScreenSizes
 @Composable
 private fun ForecastScreenContentPreview() {
     ForecastScreenContent(previewDataForecastResultSet)

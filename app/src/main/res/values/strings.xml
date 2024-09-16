@@ -1,5 +1,7 @@
 <resources>
     <string name="app_name">Weather Weight</string>
+    <string name="daily">Daily</string>
+    <string name="hourly">Hourly</string>
     <string name="location">Location</string>
     <string name="locationSearchHint">Enter Location</string>
     <string name="submitLocation">Submit Location</string>
