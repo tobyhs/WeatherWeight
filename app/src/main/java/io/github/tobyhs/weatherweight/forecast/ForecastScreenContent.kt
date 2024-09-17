@@ -2,8 +2,6 @@ package io.github.tobyhs.weatherweight.forecast
 
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.rememberScrollState
-import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.ScrollableTabRow
 import androidx.compose.material3.Tab
 import androidx.compose.material3.Text
@@ -52,17 +50,15 @@ fun ForecastScreenContent(forecastResultSet: ForecastResultSet) {
             }
         }
 
-        Column(Modifier.verticalScroll(rememberScrollState())) {
-            when (tabTitleResources[tabIndex]) {
-                R.string.daily -> {
-                    for (forecast in forecastResultSet.dailyForecasts) {
-                        DailyForecastCard(forecast)
-                    }
+        when (tabTitleResources[tabIndex]) {
+            R.string.daily -> {
+                for (forecast in forecastResultSet.dailyForecasts) {
+                    DailyForecastCard(forecast)
                 }
-                R.string.hourly -> {
-                    for (forecast in forecastResultSet.hourlyForecasts) {
-                        HourlyForecastCard(forecast)
-                    }
+            }
+            R.string.hourly -> {
+                for (forecast in forecastResultSet.hourlyForecasts) {
+                    HourlyForecastCard(forecast)
                 }
             }
         }

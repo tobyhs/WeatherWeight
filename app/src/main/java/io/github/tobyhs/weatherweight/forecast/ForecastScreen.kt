@@ -11,8 +11,10 @@ import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Search
 import androidx.compose.material3.CircularProgressIndicator
@@ -65,7 +67,11 @@ private fun ForecastScreen(
     onLocationInputChange: (String) -> Unit = {},
     onSubmit: () -> Unit = {},
 ) {
-    Column(Modifier.padding(all = dimensionResource(R.dimen.forecast_screen_padding))) {
+    Column(
+        Modifier
+            .padding(all = dimensionResource(R.dimen.forecast_screen_padding))
+            .verticalScroll(rememberScrollState())
+    ) {
         val inputContentDescription = stringResource(R.string.locationSearchHint)
         OutlinedTextField(
             value = locationInput,
@@ -86,7 +92,7 @@ private fun ForecastScreen(
         )
         Spacer(Modifier.height(8.dp))
 
-        Box(Modifier.fillMaxWidth().weight(1f)) {
+        Box(Modifier.fillMaxWidth()) {
             when (forecastState) {
                 is LoadState.Loading -> {
                     CircularProgressIndicator(
@@ -102,6 +108,7 @@ private fun ForecastScreen(
             }
         }
 
+        Spacer(Modifier.height(8.dp))
         Text(stringResource(R.string.powered_by))
         val context = LocalContext.current
         Image(
