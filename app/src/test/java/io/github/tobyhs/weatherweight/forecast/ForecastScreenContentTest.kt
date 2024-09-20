@@ -2,6 +2,7 @@ package io.github.tobyhs.weatherweight.forecast
 
 import androidx.compose.ui.test.assertTextEquals
 import androidx.compose.ui.test.junit4.ComposeTestRule
+import androidx.compose.ui.test.junit4.StateRestorationTester
 import androidx.compose.ui.test.junit4.createComposeRule
 import androidx.compose.ui.test.onAllNodesWithTag
 import androidx.compose.ui.test.onNodeWithTag
@@ -20,10 +21,15 @@ class ForecastScreenContentTest {
 
     @Test
     fun compose() {
-        composeRule.setContent {
+        val restorationTester = StateRestorationTester(composeRule)
+        restorationTester.setContent {
             ForecastScreenContent(ForecastResultSetFactory.create())
         }
         checkContent(composeRule)
+
+        composeRule.onNodeWithTag("forecastTab_1").performClick()
+        restorationTester.emulateSavedInstanceStateRestore()
+        HourlyForecastCardTest.checkContent(composeRule)
     }
 
     companion object {
