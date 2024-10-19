@@ -1,7 +1,7 @@
 [versions]
 accompanist = "0.30.0"
 activity = "1.9.1"
-agp = "8.6.0"
+agp = "8.7.1"
 androidxAnnotation = "1.8.2"
 androidxCoreTesting = "2.2.0"
 androidxJunit = "1.2.1"
