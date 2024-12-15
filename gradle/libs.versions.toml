@@ -9,11 +9,11 @@ androidxTestCore = "1.6.1"
 appcompat = "1.7.0"
 composeBom = "2024.11.00"
 coroutines = "1.8.1"
-dagger = "2.49"
+dagger = "2.53.1"
 espresso = "3.6.1"
 junit = "4.13.2"
-kotlin = "1.9.24"
-ksp = "1.9.24-1.0.20"
+kotlin = "2.1.0"
+ksp = "2.1.0-1.0.29"
 lifecycle = "2.8.7"
 mockk = "1.13.9"
 moshi = "1.15.1"
@@ -56,6 +56,7 @@ robolectric = { module = "org.robolectric:robolectric", version.ref = "robolectr
 
 [plugins]
 android-application = { id = "com.android.application", version.ref = "agp" }
+compose-compiler = { id = "org.jetbrains.kotlin.plugin.compose", version.ref = "kotlin" }
 hilt-android = { id = "com.google.dagger.hilt.android", version.ref = "dagger" }
 kotlin-android = { id = "org.jetbrains.kotlin.android", version.ref = "kotlin" }
 ksp = { id = "com.google.devtools.ksp", version.ref = "ksp" }
