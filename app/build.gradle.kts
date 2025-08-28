@@ -104,7 +104,6 @@ dependencies {
     testImplementation(libs.espresso.intents)
     testImplementation(libs.androidx.junit)
 
-    testImplementation(libs.accompanist.testharness)
     testImplementation(libs.mockk)
     testImplementation(libs.junit)
     testImplementation(libs.robolectric)
