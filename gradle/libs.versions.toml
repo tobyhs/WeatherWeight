@@ -18,7 +18,7 @@ lifecycle = "2.8.7"
 mockk = "1.13.9"
 moshi = "1.15.1"
 retrofit = "2.11.0"
-robolectric = "4.14.1"
+robolectric = "4.16"
 
 [libraries]
 accompanist-testharness = { module = "com.google.accompanist:accompanist-testharness", version.ref = "accompanist" }

@@ -13,12 +13,12 @@ rootProject.file("secret.properties").inputStream().use { secretProps.load(it) }
 
 android {
     namespace = "io.github.tobyhs.weatherweight"
-    compileSdk = 35
+    compileSdk = 36
 
     defaultConfig {
         applicationId = "io.github.tobyhs.weatherweight"
         minSdk = 26
-        targetSdk = 35
+        targetSdk = 36
         versionCode = 1
         versionName = "1.0"
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
