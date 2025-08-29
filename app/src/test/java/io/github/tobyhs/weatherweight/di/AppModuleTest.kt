@@ -41,8 +41,8 @@ class AppModuleTest {
     @Test
     fun provideAccuWeatherOkHttp() {
         val client = module.provideAccuWeatherOkHttp(app)
-        assertThat(client.interceptors(), hasItem(isA(AccuWeatherApiKeyInterceptor::class.java)))
-        assertThat(client.cache(), notNullValue())
+        assertThat(client.interceptors, hasItem(isA(AccuWeatherApiKeyInterceptor::class.java)))
+        assertThat(client.cache, notNullValue())
     }
 
     @Test

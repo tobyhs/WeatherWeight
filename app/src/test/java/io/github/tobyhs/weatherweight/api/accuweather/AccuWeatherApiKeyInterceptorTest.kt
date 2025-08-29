@@ -28,7 +28,7 @@ class AccuWeatherApiKeyInterceptorTest {
         val requestMatcher = object : Matcher<Request> {
             override fun match(arg: Request?): Boolean {
                 if (arg == null) return false
-                return arg.method() == "GET" && arg.url().toString() == "${url}&apikey=${apiKey}"
+                return arg.method == "GET" && arg.url.toString() == "${url}&apikey=${apiKey}"
             }
         }
         every { chain.proceed(match(requestMatcher)) } returns expectedResponse
