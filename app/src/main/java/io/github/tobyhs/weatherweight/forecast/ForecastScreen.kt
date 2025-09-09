@@ -103,7 +103,7 @@ private fun ForecastScreen(
                 }
                 is LoadState.Content -> ForecastScreenContent(forecastState.content)
                 is LoadState.Error -> Text(
-                    forecastState.error.message.toString(),
+                    stringResource(R.string.error, forecastState.error.message.toString()),
                     Modifier.testTag("error")
                 )
                 null -> {}

@@ -117,7 +117,7 @@ class ForecastScreenTest {
         forecastStateFlow.value = LoadState.Error(Error(errorMessage))
         setContent()
         checkLce("error")
-        composeRule.onNodeWithTag("error").assertTextEquals(errorMessage)
+        composeRule.onNodeWithTag("error").assertTextEquals("Error: $errorMessage")
     }
 
     @Test
