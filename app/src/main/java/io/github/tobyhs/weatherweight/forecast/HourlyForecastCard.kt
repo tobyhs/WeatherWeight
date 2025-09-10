@@ -1,6 +1,5 @@
 package io.github.tobyhs.weatherweight.forecast
 
-import androidx.compose.foundation.layout.ExperimentalLayoutApi
 import androidx.compose.foundation.layout.FlowRow
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.defaultMinSize
@@ -23,7 +22,6 @@ import io.github.tobyhs.weatherweight.data.model.HourlyForecast
 import java.time.ZonedDateTime
 import java.time.format.DateTimeFormatter
 
-@OptIn(ExperimentalLayoutApi::class)
 @Composable
 fun HourlyForecastCard(forecast: HourlyForecast) {
     Card(Modifier.fillMaxWidth().padding(dimensionResource(R.dimen.forecast_card_padding))) {
