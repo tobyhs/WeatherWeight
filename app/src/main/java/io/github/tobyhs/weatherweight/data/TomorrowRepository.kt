@@ -27,7 +27,7 @@ class TomorrowRepository(
             location = forecast.location.name,
             publicationTime = ZonedDateTime.now(clock),
             dailyForecasts = convertDailyForecasts(forecast.timelines.daily),
-            hourlyForecasts = convertHourlyForecasts(forecast.timelines.hourly),
+            hourlyForecasts = convertHourlyForecasts(forecast.timelines.hourly.take(24)),
         )
     }
 

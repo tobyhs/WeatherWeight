@@ -60,16 +60,16 @@ class TomorrowRepositoryTest {
                         )
                     )
                 ),
-                hourly = listOf(
+                hourly = (0L until 120).map { i ->
                     HourlyForecast(
-                        time = time,
+                        time = time.plusHours(i),
                         values = HourlyForecastValues(
                             temperature = 67.0,
                             precipitationProbability = 2,
                             weatherCode = 2000,
                         )
                     )
-                )
+                }
             ),
             location = Location(name = "San Francisco, California, United States")
         )
@@ -95,5 +95,6 @@ class TomorrowRepositoryTest {
             temperature = 67,
             precipitationProbability = 2,
         )))
+        assertThat(result.hourlyForecasts.size, equalTo(24))
     }
 }
