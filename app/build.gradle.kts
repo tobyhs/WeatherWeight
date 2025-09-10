@@ -23,7 +23,7 @@ android {
         versionName = "1.0"
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
 
-        buildConfigField("String", "ACCUWEATHER_API_KEY", "\"${secretProps["accuweatherApiKey"]}\"")
+        buildConfigField("String", "TOMORROW_API_KEY", "\"${secretProps["tomorrowApiKey"]}\"")
     }
 
     buildTypes {

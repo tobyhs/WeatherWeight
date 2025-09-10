@@ -4,9 +4,9 @@ import android.annotation.SuppressLint
 import androidx.test.core.app.ApplicationProvider
 
 import io.github.tobyhs.weatherweight.App
-import io.github.tobyhs.weatherweight.api.accuweather.AccuWeatherApiKeyInterceptor
-import io.github.tobyhs.weatherweight.api.accuweather.AccuWeatherCoroutinesService
-import io.github.tobyhs.weatherweight.data.AccuWeatherCoroutinesRepository
+import io.github.tobyhs.weatherweight.api.tomorrow.TomorrowApiKeyInterceptor
+import io.github.tobyhs.weatherweight.api.tomorrow.TomorrowService
+import io.github.tobyhs.weatherweight.data.TomorrowRepository
 import io.github.tobyhs.weatherweight.storage.FileLastForecastCoroutinesStore
 
 import io.mockk.mockk
@@ -39,35 +39,34 @@ class AppModuleTest {
     private val module = AppModule()
 
     @Test
-    fun provideAccuWeatherOkHttp() {
-        val client = module.provideAccuWeatherOkHttp(app)
-        assertThat(client.interceptors, hasItem(isA(AccuWeatherApiKeyInterceptor::class.java)))
-        assertThat(client.cache, notNullValue())
+    fun provideTomorrowOkHttp() {
+        val client = module.provideTomorrowOkHttp()
+        assertThat(client.interceptors, hasItem(isA(TomorrowApiKeyInterceptor::class.java)))
     }
 
     @Test
-    fun provideAccuWeatherRetrofit() {
+    fun provideTomorrowRetrofit() {
         val client = mockk<OkHttpClient>()
-        val retrofit = module.provideAccuWeatherRetrofit(
+        val retrofit = module.provideTomorrowRetrofit(
             client,
             module.provideMoshi(),
         )
-        assertThat(retrofit.baseUrl().toString(), equalTo("https://dataservice.accuweather.com/"))
+        assertThat(retrofit.baseUrl().toString(), equalTo("https://api.tomorrow.io/"))
         assertThat(retrofit.callFactory(), equalTo(client))
         assertThat(retrofit.converterFactories(), hasItem(isA(MoshiConverterFactory::class.java)))
     }
 
     @Test
-    fun provideAccuWeatherCoroutinesService() {
+    fun provideTomorrowService() {
         val retrofit = Retrofit.Builder().baseUrl("http://localhost/").build()
-        assertThat(module.provideAccuWeatherCoroutinesService(retrofit), notNullValue())
+        assertThat(module.provideTomorrowService(retrofit), notNullValue())
     }
 
     @Test
     fun provideWeatherCoroutinesRepository() {
-        val service = mockk<AccuWeatherCoroutinesService>()
+        val service = mockk<TomorrowService>()
         val repo = module.provideWeatherCoroutinesRepository(service)
-        assertThat(repo, instanceOf(AccuWeatherCoroutinesRepository::class.java))
+        assertThat(repo, instanceOf(TomorrowRepository::class.java))
     }
 
     @Test

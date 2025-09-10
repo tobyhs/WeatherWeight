@@ -1,7 +1,5 @@
 package io.github.tobyhs.weatherweight.forecast
 
-import android.content.Intent
-
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.test.assertTextContains
 import androidx.compose.ui.test.assertTextEquals
@@ -11,9 +9,6 @@ import androidx.compose.ui.test.onNodeWithTag
 import androidx.compose.ui.test.performClick
 import androidx.compose.ui.test.performImeAction
 import androidx.compose.ui.test.performTextInput
-import androidx.test.espresso.intent.Intents
-import androidx.test.espresso.intent.matcher.IntentMatchers.hasAction
-import androidx.test.espresso.intent.matcher.IntentMatchers.hasData
 import androidx.test.ext.junit.runners.AndroidJUnit4
 
 import io.github.tobyhs.weatherweight.R
@@ -28,7 +23,6 @@ import io.mockk.verify
 
 import kotlinx.coroutines.flow.MutableStateFlow
 
-import org.hamcrest.CoreMatchers.allOf
 import org.hamcrest.CoreMatchers.equalTo
 import org.hamcrest.MatcherAssert.assertThat
 
@@ -118,20 +112,6 @@ class ForecastScreenTest {
         setContent()
         checkLce("error")
         composeRule.onNodeWithTag("error").assertTextEquals("Error: $errorMessage")
-    }
-
-    @Test
-    fun `clicking the AccuWeather image`() {
-        Intents.init()
-        lateinit var accuweatherContentDescription: String
-        composeRule.setContent {
-            ForecastScreen(viewModel)
-            accuweatherContentDescription = stringResource(R.string.powered_by_accuweather)
-        }
-        composeRule.onNodeWithContentDescription(accuweatherContentDescription).performClick()
-        Intents.intended(
-            allOf(hasAction(Intent.ACTION_VIEW), hasData("https://www.accuweather.com"))
-        )
     }
 
     private fun setContent() {

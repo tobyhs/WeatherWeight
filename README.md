@@ -1,7 +1,7 @@
 # Weather Weight
 
-Weather Weight is a lightweight weather app for Android. It uses [AccuWeather's
-APIs](https://developer.accuweather.com).
+Weather Weight is a lightweight weather app for Android. It uses [Tomorrow.io's
+API](https://www.tomorrow.io/weather-api/).
 
 Reasons for developing:
 * Popular weather apps I tried were on the heavy side with respect to features
@@ -13,7 +13,7 @@ Reasons for developing:
 ## Development
 
 You will need to create a `secret.properties` file in the project root with
-your AccuWeather API key:
+your Tomorrow.io API key:
 ```gradle
-accuweatherApiKey=abc123
+tomorrowApiKey=abc123
 ```

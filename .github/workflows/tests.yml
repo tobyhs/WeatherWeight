@@ -14,5 +14,5 @@ jobs:
           java-version: '21'
           distribution: temurin
           cache: gradle
-      - run: echo accuweatherApiKey=fakeKey > secret.properties
+      - run: echo tomorrowApiKey=fakeKey > secret.properties
       - run: ./gradlew --no-daemon --stacktrace testDebugUnitTest

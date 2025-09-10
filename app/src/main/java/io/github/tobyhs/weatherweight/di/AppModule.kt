@@ -11,9 +11,9 @@ import dagger.hilt.android.qualifiers.ApplicationContext
 import dagger.hilt.components.SingletonComponent
 
 import io.github.tobyhs.weatherweight.BuildConfig
-import io.github.tobyhs.weatherweight.api.accuweather.AccuWeatherApiKeyInterceptor
-import io.github.tobyhs.weatherweight.api.accuweather.AccuWeatherCoroutinesService
-import io.github.tobyhs.weatherweight.data.AccuWeatherCoroutinesRepository
+import io.github.tobyhs.weatherweight.api.tomorrow.TomorrowApiKeyInterceptor
+import io.github.tobyhs.weatherweight.api.tomorrow.TomorrowService
+import io.github.tobyhs.weatherweight.data.TomorrowRepository
 import io.github.tobyhs.weatherweight.data.WeatherCoroutinesRepository
 import io.github.tobyhs.weatherweight.data.adapter.LocalDateAdapter
 import io.github.tobyhs.weatherweight.data.adapter.ZonedDateTimeAdapter
@@ -22,12 +22,9 @@ import io.github.tobyhs.weatherweight.storage.LastForecastCoroutinesStore
 
 import kotlinx.coroutines.Dispatchers
 
-import java.io.File
 import java.time.Clock
-import javax.inject.Named
 import javax.inject.Singleton
 
-import okhttp3.Cache
 import okhttp3.OkHttpClient
 
 import retrofit2.Retrofit
@@ -40,58 +37,51 @@ import retrofit2.converter.moshi.MoshiConverterFactory
 @InstallIn(SingletonComponent::class)
 class AppModule {
     /**
-     * @param context application context
-     * @return an OkHttp client for AccuWeather's APIs
+     * @return an OkHttp client for Tomorrow.io's API
      */
     @Provides
-    @Named("accuWeatherOkHttp")
     @Singleton
-    fun provideAccuWeatherOkHttp(@ApplicationContext context: Context): OkHttpClient {
-        return OkHttpClient.Builder()
-            .addInterceptor(AccuWeatherApiKeyInterceptor(BuildConfig.ACCUWEATHER_API_KEY))
-            .cache(Cache(File(context.cacheDir, "AccuWeather"), 96000))
-            .build()
-    }
+    @TomorrowApi
+    fun provideTomorrowOkHttp(): OkHttpClient = OkHttpClient.Builder()
+        .addInterceptor(TomorrowApiKeyInterceptor(BuildConfig.TOMORROW_API_KEY))
+        .build()
 
     /**
-     * @param okHttpClient HTTP client for AccuWeather's APIs
+     * @param okHttpClient HTTP client for Tomorrow.io's API
      * @param moshi Moshi instance for parsing JSON responses
-     * @return a Retrofit instance for AccuWeather's APIs
+     * @return a Retrofit instance for Tomorrow.io's API
      */
     @Provides
-    @Named("accuWeatherRetrofit")
     @Singleton
-    fun provideAccuWeatherRetrofit(
-        @Named("accuWeatherOkHttp") okHttpClient: OkHttpClient,
-        moshi: Moshi,
-    ): Retrofit {
+    @TomorrowApi
+    fun provideTomorrowRetrofit(@TomorrowApi okHttpClient: OkHttpClient, moshi: Moshi): Retrofit {
         return Retrofit.Builder()
-            .baseUrl("https://dataservice.accuweather.com/")
+            .baseUrl("https://api.tomorrow.io/")
             .client(okHttpClient)
             .addConverterFactory(MoshiConverterFactory.create(moshi))
             .build()
     }
 
     /**
-     * @param retrofit a Retrofit instance for AccuWeather's APIs
-     * @return Retrofit service object for querying weather info from AccuWeather's APIs
+     * @param retrofit a Retrofit instance for Tomorrow.io's API
+     * @return Retrofit service object for querying weather info from Tomorrow.io's API
      */
     @Provides
     @Singleton
-    fun provideAccuWeatherCoroutinesService(
-        @Named("accuWeatherRetrofit") retrofit: Retrofit
-    ): AccuWeatherCoroutinesService = retrofit.create(AccuWeatherCoroutinesService::class.java)
+    fun provideTomorrowService(@TomorrowApi retrofit: Retrofit): TomorrowService = retrofit.create(
+        TomorrowService::class.java
+    )
 
     /**
-     * @param service Retrofit service object for querying weather data from AccuWeather's APIs
+     * @param service Retrofit service object for querying weather data from Tomorrow.io's API
      * @return repository object to fetch weather data
      */
     @Provides
     @Singleton
     fun provideWeatherCoroutinesRepository(
-        service: AccuWeatherCoroutinesService
+        service: TomorrowService
     ): WeatherCoroutinesRepository {
-        return AccuWeatherCoroutinesRepository(service, Clock.systemDefaultZone(), Dispatchers.IO)
+        return TomorrowRepository(service, Clock.systemDefaultZone(), Dispatchers.IO)
     }
 
     /**

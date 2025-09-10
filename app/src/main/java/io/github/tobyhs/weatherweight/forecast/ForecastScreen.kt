@@ -1,10 +1,5 @@
 package io.github.tobyhs.weatherweight.forecast
 
-import android.content.Intent
-import android.net.Uri
-
-import androidx.compose.foundation.Image
-import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
@@ -27,10 +22,8 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.res.dimensionResource
-import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.semantics.contentDescription
 import androidx.compose.ui.semantics.semantics
@@ -109,21 +102,8 @@ private fun ForecastScreen(
                 null -> {}
             }
         }
-
-        Spacer(Modifier.height(8.dp))
-        Text(stringResource(R.string.powered_by))
-        val context = LocalContext.current
-        Image(
-            painterResource(R.drawable.accuweather),
-            contentDescription = stringResource(R.string.powered_by_accuweather),
-            modifier = Modifier.clickable {
-                context.startActivity(Intent(Intent.ACTION_VIEW, ACCUWEATHER_URI))
-            },
-        )
     }
 }
-
-private val ACCUWEATHER_URI = Uri.parse("https://www.accuweather.com")
 
 @Preview
 @Composable

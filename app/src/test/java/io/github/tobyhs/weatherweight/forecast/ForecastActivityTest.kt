@@ -48,10 +48,8 @@ class ForecastActivityTest {
     @Test
     fun onCreate() {
         verify { viewModel.loadLastForecast() }
-        for (stringId in listOf(R.string.locationSearchHint, R.string.powered_by_accuweather)) {
-            val contentDescription = composeRule.activity.getString(stringId)
-            composeRule.onNodeWithContentDescription(contentDescription).assertExists()
-        }
+        val contentDescription = composeRule.activity.getString(R.string.locationSearchHint)
+        composeRule.onNodeWithContentDescription(contentDescription).assertExists()
     }
 
     @Test
