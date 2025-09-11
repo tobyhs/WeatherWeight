@@ -4,7 +4,6 @@ import android.annotation.SuppressLint
 import androidx.test.core.app.ApplicationProvider
 
 import io.github.tobyhs.weatherweight.App
-import io.github.tobyhs.weatherweight.api.tomorrow.TomorrowApiKeyInterceptor
 import io.github.tobyhs.weatherweight.api.tomorrow.TomorrowService
 import io.github.tobyhs.weatherweight.data.TomorrowRepository
 import io.github.tobyhs.weatherweight.storage.FileLastForecastCoroutinesStore
@@ -14,13 +13,7 @@ import io.mockk.mockk
 import java.time.LocalDate
 import java.time.ZonedDateTime
 
-import okhttp3.OkHttpClient
-
-import org.hamcrest.CoreMatchers.equalTo
-import org.hamcrest.CoreMatchers.hasItem
 import org.hamcrest.CoreMatchers.instanceOf
-import org.hamcrest.CoreMatchers.isA
-import org.hamcrest.CoreMatchers.notNullValue
 import org.hamcrest.MatcherAssert.assertThat
 
 import org.junit.Test
@@ -29,38 +22,11 @@ import org.junit.runner.RunWith
 import org.robolectric.RobolectricTestRunner
 import org.robolectric.annotation.Config
 
-import retrofit2.Retrofit
-import retrofit2.converter.moshi.MoshiConverterFactory
-
 @RunWith(RobolectricTestRunner::class)
 @Config(application = App::class)
 class AppModuleTest {
     private val app: App by lazy { ApplicationProvider.getApplicationContext() }
     private val module = AppModule()
-
-    @Test
-    fun provideTomorrowOkHttp() {
-        val client = module.provideTomorrowOkHttp()
-        assertThat(client.interceptors, hasItem(isA(TomorrowApiKeyInterceptor::class.java)))
-    }
-
-    @Test
-    fun provideTomorrowRetrofit() {
-        val client = mockk<OkHttpClient>()
-        val retrofit = module.provideTomorrowRetrofit(
-            client,
-            module.provideMoshi(),
-        )
-        assertThat(retrofit.baseUrl().toString(), equalTo("https://api.tomorrow.io/"))
-        assertThat(retrofit.callFactory(), equalTo(client))
-        assertThat(retrofit.converterFactories(), hasItem(isA(MoshiConverterFactory::class.java)))
-    }
-
-    @Test
-    fun provideTomorrowService() {
-        val retrofit = Retrofit.Builder().baseUrl("http://localhost/").build()
-        assertThat(module.provideTomorrowService(retrofit), notNullValue())
-    }
 
     @Test
     fun provideWeatherCoroutinesRepository() {

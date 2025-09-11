@@ -10,8 +10,6 @@ import dagger.hilt.InstallIn
 import dagger.hilt.android.qualifiers.ApplicationContext
 import dagger.hilt.components.SingletonComponent
 
-import io.github.tobyhs.weatherweight.BuildConfig
-import io.github.tobyhs.weatherweight.api.tomorrow.TomorrowApiKeyInterceptor
 import io.github.tobyhs.weatherweight.api.tomorrow.TomorrowService
 import io.github.tobyhs.weatherweight.data.TomorrowRepository
 import io.github.tobyhs.weatherweight.data.WeatherCoroutinesRepository
@@ -25,53 +23,12 @@ import kotlinx.coroutines.Dispatchers
 import java.time.Clock
 import javax.inject.Singleton
 
-import okhttp3.OkHttpClient
-
-import retrofit2.Retrofit
-import retrofit2.converter.moshi.MoshiConverterFactory
-
 /**
  * Dagger module to provide common dependencies
  */
 @Module
 @InstallIn(SingletonComponent::class)
 class AppModule {
-    /**
-     * @return an OkHttp client for Tomorrow.io's API
-     */
-    @Provides
-    @Singleton
-    @TomorrowApi
-    fun provideTomorrowOkHttp(): OkHttpClient = OkHttpClient.Builder()
-        .addInterceptor(TomorrowApiKeyInterceptor(BuildConfig.TOMORROW_API_KEY))
-        .build()
-
-    /**
-     * @param okHttpClient HTTP client for Tomorrow.io's API
-     * @param moshi Moshi instance for parsing JSON responses
-     * @return a Retrofit instance for Tomorrow.io's API
-     */
-    @Provides
-    @Singleton
-    @TomorrowApi
-    fun provideTomorrowRetrofit(@TomorrowApi okHttpClient: OkHttpClient, moshi: Moshi): Retrofit {
-        return Retrofit.Builder()
-            .baseUrl("https://api.tomorrow.io/")
-            .client(okHttpClient)
-            .addConverterFactory(MoshiConverterFactory.create(moshi))
-            .build()
-    }
-
-    /**
-     * @param retrofit a Retrofit instance for Tomorrow.io's API
-     * @return Retrofit service object for querying weather info from Tomorrow.io's API
-     */
-    @Provides
-    @Singleton
-    fun provideTomorrowService(@TomorrowApi retrofit: Retrofit): TomorrowService = retrofit.create(
-        TomorrowService::class.java
-    )
-
     /**
      * @param service Retrofit service object for querying weather data from Tomorrow.io's API
      * @return repository object to fetch weather data
