@@ -10,6 +10,7 @@ import androidx.compose.ui.test.performClick
 import androidx.test.ext.junit.runners.AndroidJUnit4
 
 import io.github.tobyhs.weatherweight.test.ForecastResultSetFactory
+import io.github.tobyhs.weatherweight.test.TestCompositionLocalProvider
 
 import org.junit.Rule
 import org.junit.Test
@@ -23,7 +24,9 @@ class ForecastScreenContentTest {
     fun compose() {
         val restorationTester = StateRestorationTester(composeRule)
         restorationTester.setContent {
-            ForecastScreenContent(ForecastResultSetFactory.create())
+            TestCompositionLocalProvider {
+                ForecastScreenContent(ForecastResultSetFactory.create())
+            }
         }
         checkContent(composeRule)
 
@@ -41,7 +44,7 @@ class ForecastScreenContentTest {
             composeRule.onNodeWithTag("forecastTab_1").performClick()
             HourlyForecastCardTest.checkContent(composeRule)
             listOf(
-                "hour" to "12:00",
+                "hour" to "04:00",
                 "hourlyTemperature" to "67",
                 "hourlyPrecipitationProbability" to "10%",
                 "hourlyForecastDescription" to "Cloudy",

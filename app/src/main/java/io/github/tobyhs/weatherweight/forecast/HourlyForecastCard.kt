@@ -18,6 +18,7 @@ import androidx.compose.ui.tooling.preview.Preview
 
 import io.github.tobyhs.weatherweight.R
 import io.github.tobyhs.weatherweight.data.model.HourlyForecast
+import io.github.tobyhs.weatherweight.ui.LocalClock
 
 import java.time.ZonedDateTime
 import java.time.format.DateTimeFormatter
@@ -31,7 +32,7 @@ fun HourlyForecastCard(forecast: HourlyForecast) {
             )
         ) {
             Text(
-                forecast.dateTime.format(HOUR_FORMATTER),
+                forecast.dateTime.withZoneSameInstant(LocalClock.current.zone).format(HOUR_FORMATTER),
                 modifier = Modifier
                     .width(dimensionResource(R.dimen.hourly_forecast_card_hour_width))
                     .testTag("hour"),
