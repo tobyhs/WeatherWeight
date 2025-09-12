@@ -7,7 +7,7 @@ import androidx.compose.ui.test.onAllNodesWithTag
 import androidx.test.ext.junit.runners.AndroidJUnit4
 
 import io.github.tobyhs.weatherweight.test.ForecastResultSetFactory
-import io.github.tobyhs.weatherweight.test.TestCompositionLocalProvider
+import io.github.tobyhs.weatherweight.test.setContentWithTestProvider
 
 import org.junit.Rule
 import org.junit.Test
@@ -19,10 +19,8 @@ class HourlyForecastCardTest {
 
     @Test
     fun compose() {
-        composeRule.setContent {
-            TestCompositionLocalProvider {
-                HourlyForecastCard(ForecastResultSetFactory.createHourlyForecasts()[0])
-            }
+        setContentWithTestProvider(composeRule) {
+            HourlyForecastCard(ForecastResultSetFactory.createHourlyForecasts()[0])
         }
         checkContent(composeRule)
     }

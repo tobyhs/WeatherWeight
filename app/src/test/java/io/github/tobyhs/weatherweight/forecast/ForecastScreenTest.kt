@@ -14,7 +14,7 @@ import androidx.test.ext.junit.runners.AndroidJUnit4
 import io.github.tobyhs.weatherweight.R
 import io.github.tobyhs.weatherweight.data.model.ForecastResultSet
 import io.github.tobyhs.weatherweight.test.ForecastResultSetFactory
-import io.github.tobyhs.weatherweight.test.TestCompositionLocalProvider
+import io.github.tobyhs.weatherweight.test.setContentWithTestProvider
 import io.github.tobyhs.weatherweight.ui.LoadState
 
 import io.mockk.every
@@ -116,10 +116,8 @@ class ForecastScreenTest {
     }
 
     private fun setContent() {
-        composeRule.setContent {
-            TestCompositionLocalProvider {
-                ForecastScreen(viewModel)
-            }
+        setContentWithTestProvider(composeRule) {
+            ForecastScreen(viewModel)
         }
     }
 
