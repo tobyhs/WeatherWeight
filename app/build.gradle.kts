@@ -4,7 +4,6 @@ plugins {
     alias(libs.plugins.android.application)
     alias(libs.plugins.compose.compiler)
     alias(libs.plugins.hilt.android)
-    alias(libs.plugins.kotlin.android)
     alias(libs.plugins.ksp)
 }
 
@@ -49,10 +48,6 @@ android {
         targetCompatibility = JavaVersion.VERSION_21
     }
 
-    kotlin {
-        jvmToolchain(21)
-    }
-
     buildFeatures {
         buildConfig = true
     }
@@ -65,8 +60,6 @@ android {
 }
 
 dependencies {
-    implementation(libs.kotlin.stdlib)
-
     implementation(libs.coroutines.android)
     testImplementation(libs.coroutines.test)
 
