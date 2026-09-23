@@ -12,7 +12,7 @@ rootProject.file("secret.properties").inputStream().use { secretProps.load(it) }
 
 android {
     namespace = "io.github.tobyhs.weatherweight"
-    compileSdk = 36
+    compileSdk = 37
 
     defaultConfig {
         applicationId = "io.github.tobyhs.weatherweight"
