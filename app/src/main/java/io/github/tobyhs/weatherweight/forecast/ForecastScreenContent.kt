@@ -2,7 +2,7 @@ package io.github.tobyhs.weatherweight.forecast
 
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.padding
-import androidx.compose.material3.ScrollableTabRow
+import androidx.compose.material3.PrimaryScrollableTabRow
 import androidx.compose.material3.Tab
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -39,7 +39,7 @@ fun ForecastScreenContent(forecastResultSet: ForecastResultSet) {
 
         var tabIndex by rememberSaveable { mutableIntStateOf(0) }
         val tabTitleResources = listOf(R.string.daily, R.string.hourly)
-        ScrollableTabRow(tabIndex, modifier = Modifier.padding(top = 4.dp), edgePadding = 0.dp) {
+        PrimaryScrollableTabRow(tabIndex, modifier = Modifier.padding(top = 4.dp), edgePadding = 0.dp) {
             tabTitleResources.forEachIndexed { index, titleRes ->
                 Tab(
                     text = { Text(stringResource(titleRes)) },
